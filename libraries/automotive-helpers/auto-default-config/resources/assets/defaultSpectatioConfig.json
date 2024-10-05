@@ -1429,7 +1429,7 @@
     },
     "MINIMIZED_MEDIA_CONTROLS": {
       "TYPE": "RESOURCE_ID",
-      "VALUE": "minimized_playback_controls",
+      "VALUE": "minimized_control_bar_layout",
       "PACKAGE": "com.android.car.media"
     },
     "ARTIST_TITLE": {
@@ -1581,6 +1581,11 @@
     "DEVICE_HEADER_SUMMARY": {
       "TYPE": "RESOURCE_ID",
       "VALUE": "entity_header_summary",
+      "PACKAGE": "com.android.car.settings"
+    },
+    "DEVICE_HEADER_TITLE": {
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "entity_header_title",
       "PACKAGE": "com.android.car.settings"
     },
     "DEVICE_CONNECTION_TEXT": {
