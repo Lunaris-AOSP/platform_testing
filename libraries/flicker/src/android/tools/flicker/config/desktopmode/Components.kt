@@ -76,6 +76,12 @@ object Components {
                     associatedTransition.changes.first { it.transitMode == TransitionType.OPEN }
                 FullComponentIdMatcher(change.windowId, change.layerId)
             }
+            ScenarioId("MINIMIZE_APP"),
+            ScenarioId("MINIMIZE_LAST_APP") -> {
+                val change =
+                    associatedTransition.changes.first { it.transitMode == TransitionType.TO_BACK }
+                FullComponentIdMatcher(change.windowId, change.layerId)
+            }
             ScenarioId("CORNER_RESIZE"),
             ScenarioId("CORNER_RESIZE_TO_MINIMUM_SIZE"),
             ScenarioId("CORNER_RESIZE_TO_MAXIMUM_SIZE"),
@@ -87,6 +93,11 @@ object Components {
             ScenarioId("MAXIMIZE_APP"),
             ScenarioId("MAXIMIZE_APP_NON_RESIZABLE") -> {
                 val change = associatedTransition.changes.first()
+                FullComponentIdMatcher(change.windowId, change.layerId)
+            }
+            ScenarioId("BRING_APPS_TO_FRONT") -> {
+                val change =
+                    associatedTransition.changes.first { it.transitMode == TransitionType.TO_FRONT }
                 FullComponentIdMatcher(change.windowId, change.layerId)
             }
             else -> error("Unsupported transition type")
