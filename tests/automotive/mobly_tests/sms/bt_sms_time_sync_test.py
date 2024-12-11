@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 import logging
+from mobly import asserts
 
 from utilities import constants
 from bluetooth_test import bluetooth_base_test
@@ -32,6 +33,11 @@ class SMSTimeSyncTest(bluetooth_base_test.BluetoothBaseTest):
         self.call_utils.update_device_timezone(constants.TIMEZONE_DICT[expected_timezone])
         # TODO: Add extra verifications after sms unread tests are merged.
 
+    def teardown_test(self):
+        # Go to home screen
+        self.call_utils.press_home()
+        self.call_utils.open_sms_app()
+        super().teardown_no_video_recording()
 
 if __name__ == '__main__':
     common_main()

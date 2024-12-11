@@ -98,8 +98,9 @@ class MediaUtils:
     def get_song_metadata(self):
         logging.info("Getting song metadata from phone device")
         # get dumpsys
-        dumpsys_metadata = self.execute_shell_on_device(constants.GET_DUMPSYS_METADATA).decode(
+        dumpsys_metadata = self.execute_shell_on_device(constants.GET_MEDIA_DUMPSYS_METADATA).decode(
             'utf8')
+        logging.debug("Song metadata on phone device before matching regex: %s", dumpsys_metadata)
 
         # compile regex
         regex_pattern = re.compile(constants.SONG_METADATA_PATTERN)

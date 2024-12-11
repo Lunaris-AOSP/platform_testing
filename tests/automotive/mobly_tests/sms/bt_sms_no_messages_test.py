@@ -24,7 +24,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
+import logging
+from mobly import asserts
 from bluetooth_sms_test import bluetooth_sms_base_test
 from mobly.controllers import android_device
 from utilities.main_utils import common_main
@@ -33,7 +34,7 @@ from utilities.common_utils import CommonUtils
 # Number of seconds for the target to stay discoverable on Bluetooth.
 DISCOVERABLE_TIME = 60
 
-class SMSNewUnreadSMSAutoSyncTest(bluetooth_sms_base_test.BluetoothSMSBaseTest):
+class SMSNoSMSTest(bluetooth_sms_base_test.BluetoothSMSBaseTest):
 
     def setup_class(self):
       super().setup_class()
@@ -62,8 +63,9 @@ class SMSNewUnreadSMSAutoSyncTest(bluetooth_sms_base_test.BluetoothSMSBaseTest):
       # Open the sms app
       self.call_utils.open_sms_app()
 
-      # Verify that there is no new sms currently
-      self.call_utils.verify_sms_no_messages_displayed(True)
+      logging.info("Verifying that there is no sms currently")
+      asserts.assert_false(self.call_utils.verify_sms_app_unread_message(),
+              'Message app should be empty, but found existing messages.')
 
     def teardown_test(self):
       # Go to home screen

@@ -24,6 +24,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from mobly import asserts
 from utilities import constants
 from utilities.main_utils import common_main
 from utilities.common_utils import CommonUtils
@@ -64,8 +65,9 @@ class SMSUnreadMessageDBSyncTest(bluetooth_sms_base_test.BluetoothSMSBaseTest):
         # Open the sms app
         self.call_utils.open_sms_app()
         # Perform the verifications
-        self.call_utils.verify_sms_app_unread_message(True)
-        self.call_utils.verify_sms_preview_text(True, constants.SMS_TEXT)
+        asserts.assert_true(self.call_utils.verify_sms_app_unread_message(),
+                                    'Message app should contain an unread msg, but there are no unread messages')
+        self.call_utils.verify_sms_preview_text(constants.SMS_TEXT)
         self.call_utils.verify_sms_preview_timestamp(True)
 
     def teardown_test(self):
