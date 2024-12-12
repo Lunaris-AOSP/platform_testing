@@ -318,6 +318,15 @@ internal constructor(
         Root.get().bubble
     }
 
+    /** Clicks the "show bubble" button to show a bubble bar bubble. */
+    fun showBubbleBarBubble() {
+        // Create bubble from the notification
+        TaplUiDevice.waitForObject(BUBBLE_BUTTON_SELECTOR, "Show bubble button").click()
+
+        // Verify that a bubble is visible
+        Root.get().bubbleBar
+    }
+
     /** Taps the snooze button on the notification */
     fun snooze(): Notification = also {
         ensureThat { notification.isLongClickable }
