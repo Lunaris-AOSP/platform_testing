@@ -452,6 +452,7 @@ public class StatusBarHelperImpl extends AbstractStandardAppHelper implements IA
                                 getCommandFromConfig(AutomotiveConfigConstants.DAY_MODE_COMMAND));
 
         boolean result = dayModeResult.contains("changed to: day");
+        getSpectatioUiUtil().wait5Seconds();
         return result;
     }
 
@@ -463,6 +464,7 @@ public class StatusBarHelperImpl extends AbstractStandardAppHelper implements IA
                         .executeShellCommand(
                                 getCommandFromConfig(AutomotiveConfigConstants.NIGHT_MODE_COMMAND));
         boolean result = nightModeResult.contains("changed to: night");
+        getSpectatioUiUtil().wait5Seconds();
         return result;
     }
 

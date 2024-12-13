@@ -17,6 +17,13 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+filegroup {
+    name: "perfetto_configs",
+    srcs: [
+        "configs/*",
+    ],
+}
+
 android_test {
     name: "AndroidAutomotiveMultiuserScenarioTests",
     min_sdk_version: "24",
@@ -46,5 +53,8 @@ android_test {
         "ats",
     ],
     privileged: true,
-    data: [":perfetto_artifacts"],
+    data: [
+        ":perfetto_artifacts",
+        ":perfetto_configs",
+    ],
 }
