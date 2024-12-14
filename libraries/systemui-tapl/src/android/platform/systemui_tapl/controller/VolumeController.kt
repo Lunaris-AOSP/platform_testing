@@ -20,9 +20,9 @@ import android.Manifest.permission
 import android.content.ContentResolver
 import android.media.AudioManager
 import android.os.VibratorManager
-import android.platform.uiautomator_helpers.DeviceHelpers.context
-import android.platform.uiautomator_helpers.ShellPrivilege
-import android.platform.uiautomator_helpers.WaitUtils.ensureThat
+import android.platform.uiautomatorhelpers.DeviceHelpers.context
+import android.platform.uiautomatorhelpers.ShellPrivilege
+import android.platform.uiautomatorhelpers.WaitUtils.ensureThat
 import android.provider.Settings
 
 /** Controller for adjusting the device volume. */

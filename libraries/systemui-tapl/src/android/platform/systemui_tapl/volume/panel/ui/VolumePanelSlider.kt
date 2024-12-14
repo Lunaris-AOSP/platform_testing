@@ -17,7 +17,7 @@
 package android.platform.systemui_tapl.volume.panel.ui
 
 import android.platform.systemui_tapl.utils.DeviceUtils
-import android.platform.uiautomator_helpers.DeviceHelpers.waitForObj
+import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiObject2

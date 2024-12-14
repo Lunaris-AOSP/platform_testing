@@ -20,9 +20,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.platform.uiautomator_helpers.DeviceHelpers.context
-import android.platform.uiautomator_helpers.DeviceHelpers.shell
-import android.platform.uiautomator_helpers.WaitUtils.ensureThat
+import android.platform.uiautomatorhelpers.DeviceHelpers.context
+import android.platform.uiautomatorhelpers.DeviceHelpers.shell
+import android.platform.uiautomatorhelpers.WaitUtils.ensureThat
 import android.util.Log
 import java.time.Duration
 import org.junit.rules.ExternalResource

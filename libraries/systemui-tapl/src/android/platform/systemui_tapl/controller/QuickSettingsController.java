@@ -16,7 +16,7 @@
 
 package android.platform.systemui_tapl.controller;
 
-import static android.platform.uiautomator_helpers.DeviceHelpers.getUiDevice;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getUiDevice;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 

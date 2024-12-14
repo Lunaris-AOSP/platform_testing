@@ -16,8 +16,6 @@
 
 package android.system.helpers;
 
-import static com.android.systemui.Flags.keyguardBottomAreaRefactor;
-
 import static junit.framework.Assert.assertTrue;
 
 import android.app.KeyguardManager;
@@ -55,9 +53,6 @@ public class LockscreenHelper {
     private static final int DEFAULT_FLING_STEPS = 5;
     private static final int DEFAULT_SCROLL_STEPS = 15;
     private static final long MAX_SCREEN_LOCK_WAIT_TIME_MS = 5_000;
-    private static final BySelector KEYGUARD_BOTTOM_AREA_VIEW =
-            By.res("com.android.systemui", "keyguard_bottom_area");
-
     protected static final BySelector KEYGUARD_ROOT_VIEW =
             By.res("com.android.systemui", "keyguard_root_view");
     private static final String PIN_ENTRY = "com.android.systemui:id/pinEntry";
@@ -425,11 +420,7 @@ public class LockscreenHelper {
     }
 
     public void waitLockscreenVisible() {
-        if (keyguardBottomAreaRefactor()) {
-            assertTrue(mDevice.wait(Until.hasObject(KEYGUARD_ROOT_VIEW), MAX_SCREEN_LOCK_WAIT_TIME_MS));
-        } else {
-            assertTrue(mDevice.wait(Until.hasObject(KEYGUARD_BOTTOM_AREA_VIEW), MAX_SCREEN_LOCK_WAIT_TIME_MS));
-        }
+        assertTrue(mDevice.wait(Until.hasObject(KEYGUARD_ROOT_VIEW), MAX_SCREEN_LOCK_WAIT_TIME_MS));
     }
 
     /* Returns screen coordinates for each pattern dot

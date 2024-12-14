@@ -20,8 +20,8 @@ import android.app.ActivityManager
 import android.app.IUserSwitchObserver
 import android.app.UserSwitchObserver
 import android.platform.helpers.CommonUtils.println
-import android.platform.uiautomator_helpers.DeviceHelpers.assertInvisible
-import android.platform.uiautomator_helpers.TracingUtils.trace
+import android.platform.uiautomatorhelpers.DeviceHelpers.assertInvisible
+import android.platform.uiautomatorhelpers.TracingUtils.trace
 import android.util.Log
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.StaleObjectException

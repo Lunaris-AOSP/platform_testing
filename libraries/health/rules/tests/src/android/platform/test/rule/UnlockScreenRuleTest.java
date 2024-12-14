@@ -15,8 +15,6 @@
  */
 package android.platform.test.rule;
 
-import static com.android.systemui.Flags.keyguardBottomAreaRefactor;
-
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -99,11 +97,7 @@ public class UnlockScreenRuleTest {
         @Override
         protected UiDevice getUiDevice() {
             BySelector screenLock;
-            if (keyguardBottomAreaRefactor()) {
-                screenLock = KEYGUARD_ROOT_VIEW;
-            } else {
-                screenLock = KEYGUARD_BOTTOM_AREA_VIEW;
-            }
+            screenLock = KEYGUARD_ROOT_VIEW;
 
             try {
                 when(mUiDevice.isScreenOn()).thenReturn(mIsScreenOn);

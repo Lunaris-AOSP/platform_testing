@@ -24,8 +24,8 @@ import static android.app.NotificationManager.IMPORTANCE_MIN;
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.platform.systemui_tapl.ui.Notification.NOTIFICATION_BIG_TEXT;
 import static android.platform.test.util.HealthTestingUtils.waitForCondition;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getContext;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getUiDevice;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getContext;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getUiDevice;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 

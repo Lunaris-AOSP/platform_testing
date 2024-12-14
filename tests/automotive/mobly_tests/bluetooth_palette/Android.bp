@@ -51,8 +51,8 @@ python_test_host {
     libs: [
         "mobly",
         "utilities",
-        "bluetooth_test"
-        ],
+        "bluetooth_test",
+    ],
     test_suites: [
         "catbox",
     ],
@@ -105,8 +105,35 @@ python_test_host {
     libs: [
         "mobly",
         "utilities",
-        "bluetooth_test"
-        ],
+        "bluetooth_test",
+    ],
+    test_suites: [
+        "catbox",
+    ],
+    test_options: {
+        unit_test: false,
+    },
+    device_common_data: [
+        // Package the snippet with the mobly test
+        ":AutomotiveSnippet",
+        ":PhoneSnippet",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}
+
+python_test_host {
+    name: "BluetoothReconnectingBTPalette",
+    main: "bluetooth_reconnecting_bt_palette_test.py",
+    srcs: ["bluetooth_reconnecting_bt_palette_test.py"],
+    libs: [
+        "mobly",
+        "utilities",
+        "bluetooth_test",
+    ],
     test_suites: [
         "catbox",
     ],

@@ -17,7 +17,7 @@
 package android.platform.systemui_tapl.controller;
 
 import static android.platform.helpers.CommonUtils.executeShellCommand;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getContext;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getContext;
 import static android.view.KeyEvent.KEYCODE_POWER;
 
 import static com.google.common.truth.Truth.assertThat;

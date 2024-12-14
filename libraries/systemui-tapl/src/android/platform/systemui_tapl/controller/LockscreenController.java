@@ -23,10 +23,10 @@ import static android.platform.helpers.LockscreenUtils.LockscreenType.PATTERN;
 import static android.platform.helpers.LockscreenUtils.LockscreenType.PIN;
 import static android.platform.helpers.LockscreenUtils.LockscreenType.SWIPE;
 import static android.platform.test.util.HealthTestingUtils.waitForCondition;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getContext;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getUiDevice;
-import static android.platform.uiautomator_helpers.DeviceHelpers.isScreenOnSettled;
-import static android.platform.uiautomator_helpers.WaitUtils.ensureThat;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getContext;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getUiDevice;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.isScreenOnSettled;
+import static android.platform.uiautomatorhelpers.WaitUtils.ensureThat;
 
 import static com.google.common.truth.Truth.assertThat;
 

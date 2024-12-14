@@ -598,6 +598,23 @@ class CallUtils:
         logging.info('Is Bluetooth Button Enabled')
         return self.device.mbs.isBluetoothButtonEnabled()
 
+    def has_bluetooth_toggle_on_message_displayed(self):
+        logging.info('Has Bluetooth Toggle On Message Displayed')
+        return self.device.mbs.hasBluetoothPaletteToggleOnMessage()
+
+    def has_bluetooth_toggle_off_message_displayed(self):
+        logging.info('Has Bluetooth Toggle Off Message Displayed')
+        return self.device.mbs.hasBluetoothPaletteToggleOffMessage()
+
+    def turn_on_off_bluetooth_switch_on_palette(self, switchstate):
+        self.device.mbs.turnOnOffBluetoothSwitchOnPalette(switchstate)
+        logging.info('Expected bluetooth toggle switch status: <%s>',
+                     switchstate)
+
+    def is_bluetooth_toggle_switch_in_palette_on(self):
+        logging.info('Verify whether bluetooth toggle button is enabled in Bluetooth palette')
+        return self.device.mbs.isBluetoothToggleSwitchInPaletteOn()
+
     def is_active_call_enabled(self):
         logging.info("Verifying whether active call is enabled")
         return self.device.mbs.isActiveCallEnabled()

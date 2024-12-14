@@ -15,8 +15,6 @@
  */
 package android.support.test.launcherhelper2;
 
-import static com.android.systemui.Flags.keyguardBottomAreaRefactor;
-
 import android.graphics.Rect;
 import android.os.RemoteException;
 import android.os.SystemClock;
@@ -44,9 +42,6 @@ public class CommonLauncherHelper {
     private static final int MIN_INTERACT_SIZE = 100;
     private static final int APP_LAUNCH_TIMEOUT = 10000;
     private static CommonLauncherHelper sInstance;
-
-    private static final BySelector KEYGUARD_BOTTOM_AREA_VIEW =
-            By.res("com.android.systemui", "keyguard_bottom_area");
 
     private static final BySelector KEYGUARD_ROOT_VIEW =
             By.res("com.android.systemui", "keyguard_root_view");
@@ -262,11 +257,7 @@ public class CommonLauncherHelper {
         }
 
         BySelector screenLock;
-        if (keyguardBottomAreaRefactor()) {
-            screenLock = KEYGUARD_ROOT_VIEW;
-        } else {
-            screenLock = KEYGUARD_BOTTOM_AREA_VIEW;
-        }
+        screenLock = KEYGUARD_ROOT_VIEW;
 
         // Check for lock screen element
         if (mDevice.hasObject(screenLock)) {

@@ -105,6 +105,30 @@ public class StatusBarSnippet implements Snippet {
         return mStatusBarHelper.get().hasBluetoothPaletteMediaButton();
     }
 
+    /** Toggle On or OFF bluetooth from Bluetooth Palette */
+    @Rpc(description = "Palette Bluetooth toggle switch ")
+    public void turnOnOffBluetoothSwitchOnPalette(boolean onOff) {
+        mStatusBarHelper.get().turnOnOffBluetooth(onOff);
+    }
+
+    /** Is bluetooth toggle On or OFF from Bluetooth Palette */
+    @Rpc(description = "is Bluetooth toggle switch in Bluetooth Palette is 'ON'")
+    public boolean isBluetoothToggleSwitchInPaletteOn() {
+        return mStatusBarHelper.get().isBluetoothOn();
+    }
+
+    /** Toggle On bluetooth Message in Bluetooth Palette */
+    @Rpc(description = "Has Bluetooth Toggle ON Message Displayed")
+    public boolean hasBluetoothPaletteToggleOnMessage() {
+        return mStatusBarHelper.get().hasToggleOnMessage();
+    }
+
+    /** Toggle Off bluetooth Message in Bluetooth Palette */
+    @Rpc(description = "Has Bluetooth Toggle Off Message Displayed")
+    public boolean hasBluetoothPaletteToggleOffMessage() {
+        return mStatusBarHelper.get().hasToggleOffMessage();
+    }
+
     @Override
     public void shutdown() {}
 }

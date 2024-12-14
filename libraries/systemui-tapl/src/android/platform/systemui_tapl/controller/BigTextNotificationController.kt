@@ -21,7 +21,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.platform.systemui_tapl.ui.Notification.Companion.NOTIFICATION_BIG_TEXT
-import android.platform.uiautomator_helpers.DeviceHelpers
+import android.platform.uiautomatorhelpers.DeviceHelpers
 
 object BigTextNotificationController {
     /** Id of the high importance channel created by the controller. */

@@ -16,8 +16,8 @@
 
 package android.platform.systemui_tapl.controller;
 
-import static android.platform.uiautomator_helpers.DeviceHelpers.getUiDevice;
-import static android.platform.uiautomator_helpers.DeviceHelpers.shell;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getUiDevice;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.shell;
 
 /** Controller for manipulating status bar state. */
 public class StatusBarController {

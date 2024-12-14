@@ -16,8 +16,8 @@
 
 package android.platform.systemui_tapl.controller
 
-import android.platform.uiautomator_helpers.DeviceHelpers.shell
-import android.platform.uiautomator_helpers.DeviceHelpers.uiDevice
+import android.platform.uiautomatorhelpers.DeviceHelpers.shell
+import android.platform.uiautomatorhelpers.DeviceHelpers.uiDevice
 
 private const val BASE_FLAG_COMMAND = "cmd statusbar flag"
 

@@ -19,8 +19,6 @@ package android.platform.helpers;
 import static android.content.pm.PackageManager.FLAG_PERMISSION_USER_SET;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-import static com.android.systemui.Flags.keyguardBottomAreaRefactor;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
@@ -103,9 +101,6 @@ public abstract class AbstractStandardAppHelper2 implements IAppHelper {
     // Spectatio Utils
     private SpectatioConfigUtil mSpectatioConfigUtil;
     private SpectatioUiUtil mSpectatioUiUtil;
-
-    private static final BySelector KEYGUARD_BOTTOM_AREA_VIEW =
-            By.res("com.android.systemui", "keyguard_bottom_area");
 
     private static final BySelector KEYGUARD_ROOT_VIEW =
             By.res("com.android.systemui", "keyguard_root_view");
@@ -234,13 +229,7 @@ public abstract class AbstractStandardAppHelper2 implements IAppHelper {
         }
 
         BySelector screenLock;
-        // keyguardBottomAreaRefactor() needs READ_DEVICE_CONFIG permission
-        // which is only available for system app.
-        if (!mUnrootNonPixel && keyguardBottomAreaRefactor()) {
-            screenLock = KEYGUARD_ROOT_VIEW;
-        } else {
-            screenLock = KEYGUARD_BOTTOM_AREA_VIEW;
-        }
+        screenLock = KEYGUARD_ROOT_VIEW;
 
         // Unlock the screen if necessary.
         Trace.beginSection("unlock screen");

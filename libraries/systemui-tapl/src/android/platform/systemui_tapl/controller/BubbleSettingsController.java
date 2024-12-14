@@ -17,7 +17,7 @@
 package android.platform.systemui_tapl.controller;
 
 import static android.content.Context.STATUS_BAR_SERVICE;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getContext;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getContext;
 
 import android.app.INotificationManager;
 import android.app.NotificationManager;

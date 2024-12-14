@@ -18,9 +18,9 @@ package android.platform.systemui_tapl.controller;
 
 import static android.platform.helpers.CommonUtils.executeShellCommand;
 import static android.platform.test.util.HealthTestingUtils.waitForCondition;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getContext;
-import static android.platform.uiautomator_helpers.DeviceHelpers.getUiDevice;
-import static android.platform.uiautomator_helpers.DeviceHelpers.shell;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getContext;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.getUiDevice;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.shell;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
