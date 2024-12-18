@@ -20,14 +20,19 @@ import static junit.framework.Assert.assertEquals;
 
 import android.platform.helpers.HelperAccessor;
 import android.platform.helpers.IAutoStatusBarHelper;
+import android.platform.test.rules.ConditionalIgnore;
+import android.platform.test.rules.ConditionalIgnoreRule;
+import android.platform.test.rules.IgnoreOnPortrait;
 
 import androidx.test.runner.AndroidJUnit4;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class CurrentDateTimeTest {
+    @Rule public ConditionalIgnoreRule rule = new ConditionalIgnoreRule();
 
     private HelperAccessor<IAutoStatusBarHelper> mStatusBarHelper;
 
@@ -36,6 +41,7 @@ public class CurrentDateTimeTest {
     }
 
     @Test
+    @ConditionalIgnore(condition = IgnoreOnPortrait.class)
     public void testCurrentTime() {
         assertEquals(
                 "Current local Time",

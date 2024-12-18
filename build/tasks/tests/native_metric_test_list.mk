@@ -23,6 +23,7 @@ native_metric_tests := \
     libandroidfw_benchmarks \
     libhwbinder_benchmark \
     libjavacore-benchmarks \
+    libgui_benchmarks \
     libpowermanager_benchmarks \
     libvibratorservice_benchmarks \
     minikin_perftests \
@@ -30,7 +31,8 @@ native_metric_tests := \
     netd_benchmark \
     VibratorHalIntegrationBenchmark \
     librenderengine_bench \
-    statsd_benchmark
+    statsd_benchmark \
+    surfaceflinger_microbenchmarks
 
 ifneq ($(strip $(BOARD_PERFSETUP_SCRIPT)),)
 native_metric_tests += perf-setup
