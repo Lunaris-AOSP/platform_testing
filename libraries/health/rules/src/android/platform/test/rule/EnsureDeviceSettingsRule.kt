@@ -1,7 +1,7 @@
 package android.platform.test.rule
 
 import android.os.SystemProperties
-import android.platform.uiautomator_helpers.DeviceHelpers.shell
+import android.platform.uiautomatorhelpers.DeviceHelpers.shell
 import android.provider.Settings
 import org.junit.runner.Description
 
@@ -13,6 +13,7 @@ import org.junit.runner.Description
 class EnsureDeviceSettingsRule : TestWatcher() {
 
     private val setupErrors = mutableListOf<SetupError>()
+
     override fun starting(description: Description?) {
         checkAdbRootEnabled()
         checkTestHarnessEnabled()
@@ -27,7 +28,7 @@ class EnsureDeviceSettingsRule : TestWatcher() {
             setupErrors.add(
                 SetupError(
                     description = "ADB root access is required but disabled.",
-                    adbCommandToFixIt = "adb root"
+                    adbCommandToFixIt = "adb root",
                 )
             )
         }
@@ -56,13 +57,13 @@ class EnsureDeviceSettingsRule : TestWatcher() {
         val stayAwakeResult =
             Settings.Global.getInt(
                 context.contentResolver,
-                Settings.Global.STAY_ON_WHILE_PLUGGED_IN
+                Settings.Global.STAY_ON_WHILE_PLUGGED_IN,
             )
         if (stayAwakeResult == 0) {
             setupErrors.add(
                 SetupError(
                     description = "'Stay awake' option in developer settings should be enabled",
-                    adbCommandToFixIt = "adb shell settings put global stay_on_while_plugged_in 7"
+                    adbCommandToFixIt = "adb shell settings put global stay_on_while_plugged_in 7",
                 )
             )
         }
@@ -87,10 +88,7 @@ class EnsureDeviceSettingsRule : TestWatcher() {
         )
     }
 
-    private data class SetupError(
-        val description: String,
-        val adbCommandToFixIt: String,
-    )
+    private data class SetupError(val description: String, val adbCommandToFixIt: String)
 
     private companion object {
         const val TEST_HARNESS_PROP = "ro.test_harness"

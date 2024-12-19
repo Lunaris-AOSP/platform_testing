@@ -15,7 +15,7 @@
  */
 package android.platform.helpers.uinput
 
-import android.platform.uiautomator_helpers.DeviceHelpers.waitForObj
+import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.UiObject2
 
@@ -142,6 +142,7 @@ class UInputStylus(
             sendEventWithValues(inputDeviceId, EV_KEY, BTN_TOUCH, KEY_UP)
         }
     }
+
     private companion object {
         const val KEY_UP = 0
         const val KEY_DOWN = 1
@@ -149,25 +150,14 @@ class UInputStylus(
         const val EV_KEY = 1
         const val EV_ABS = 3
         // EV_KEY
-        val SUPPORTED_ENVBITS =
-            listOf(
-                EV_KEY,
-                EV_ABS,
-            )
+        val SUPPORTED_ENVBITS = listOf(EV_KEY, EV_ABS)
         const val ABS_X = 0
         const val ABS_Y = 1
         const val ABS_PRESSURE = 24
         const val ABS_TILT_X = 26
         const val ABS_TILT_Y = 27
         // UI_SET_ABSBIT
-        val SUPPORTED_ABSBITS =
-            listOf(
-                ABS_X,
-                ABS_Y,
-                ABS_PRESSURE,
-                ABS_TILT_X,
-                ABS_TILT_Y,
-            )
+        val SUPPORTED_ABSBITS = listOf(ABS_X, ABS_Y, ABS_PRESSURE, ABS_TILT_X, ABS_TILT_Y)
         const val BTN_TOOL_PEN = 320
         const val BTN_TOUCH = 330
         const val BTN_STYLUS = 331
@@ -175,13 +165,7 @@ class UInputStylus(
         const val KEY_JOURNAL = 578
         // UI_SET_KEYBIT
         val SUPPORTED_KEYBITS =
-            listOf(
-                BTN_TOOL_PEN,
-                BTN_TOUCH,
-                BTN_STYLUS,
-                BTN_STYLUS2,
-                KEY_JOURNAL,
-            )
+            listOf(BTN_TOOL_PEN, BTN_TOUCH, BTN_STYLUS, BTN_STYLUS2, KEY_JOURNAL)
         // Using the below combination of product and vendor ID allows us to remap KEY_JOURNAL to
         // STYLUS_BUTTON_TAIL. This is because STYLUS_BUTTON_TAIL is not a proper Linux input event
         // code yet and we remap the buttons for generic android stylus which is represented by the

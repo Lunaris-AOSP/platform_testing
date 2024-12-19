@@ -15,7 +15,7 @@
  */
 package android.platform.test.rule;
 
-import static android.platform.uiautomator_helpers.DeviceHelpers.assertInvisible;
+import static android.platform.uiautomatorhelpers.DeviceHelpers.assertInvisible;
 
 import android.os.RemoteException;
 

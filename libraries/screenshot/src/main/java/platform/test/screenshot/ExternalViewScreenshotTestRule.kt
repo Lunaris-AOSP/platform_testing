@@ -19,7 +19,7 @@ package platform.test.screenshot
 import android.app.Activity
 import android.graphics.Color
 import android.os.Build
-import android.platform.uiautomator_helpers.WaitUtils.waitForValueToSettle
+import android.platform.uiautomatorhelpers.WaitUtils.waitForValueToSettle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
@@ -39,7 +39,7 @@ import org.junit.runners.model.Statement
 class ExternalViewScreenshotTestRule(
     emulationSpec: DeviceEmulationSpec,
     pathManager: GoldenPathManager,
-    private val screenshotRule: ScreenshotTestRule = ScreenshotTestRule(pathManager)
+    private val screenshotRule: ScreenshotTestRule = ScreenshotTestRule(pathManager),
 ) : TestRule, BitmapDiffer by screenshotRule, ScreenshotAsserterFactory by screenshotRule {
 
     private val colorsRule = MaterialYouColorsRule()
@@ -74,10 +74,7 @@ class ExternalViewScreenshotTestRule(
      * Compare the content of the [activity] with the golden image identified by [goldenIdentifier]
      * in the context of [emulationSpec].
      */
-    fun activityScreenshotTest(
-        goldenIdentifier: String,
-        activity: Activity,
-    ) {
+    fun activityScreenshotTest(goldenIdentifier: String, activity: Activity) {
         val rootView = activity.window.decorView
 
         // Hide system bars, remove insets, focus and make sure device-specific cutouts

@@ -19,7 +19,7 @@ package platform.test.screenshot
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
-import android.platform.uiautomator_helpers.DeviceHelpers.shell
+import android.platform.uiautomatorhelpers.DeviceHelpers.shell
 import android.provider.Settings.System
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
@@ -56,7 +56,7 @@ class ScreenshotTestRuleTest {
     val rule =
         ScreenshotTestRule(
             CustomGoldenPathManager(InstrumentationRegistry.getInstrumentation().context),
-            diffEscrowStrategy = fakeDiffEscrow
+            diffEscrowStrategy = fakeDiffEscrow,
         )
 
     @Test
@@ -75,7 +75,7 @@ class ScreenshotTestRuleTest {
         val first =
             bitmapWithMaterialYouColorsSimulation(
                 loadBitmap("defaultClock_largeClock_regionSampledColor_original"),
-                /* isDarkTheme= */ true
+                /* isDarkTheme= */ true,
             )
 
         first.assertAgainstGolden(rule, goldenIdentifier, matcher = PixelPerfectMatcher())
@@ -86,14 +86,14 @@ class ScreenshotTestRuleTest {
     fun performDiff_noPixelCompared() {
         val first = loadBitmap("round_rect_gray")
         val regions = ArrayList<Rect>()
-        regions.add(Rect(/* left= */ 1, /* top= */ 1, /* right= */ 2, /* bottom=*/ 2))
+        regions.add(Rect(/* left= */ 1, /* top= */ 1, /* right= */ 2, /* bottom= */ 2))
 
         val goldenIdentifier = "round_rect_green"
         first.assertAgainstGolden(
             rule,
             goldenIdentifier,
             matcher = MSSIMMatcher(),
-            regions = regions
+            regions = regions,
         )
 
         assertThat(fakeDiffEscrow.reports).isEmpty()
@@ -141,7 +141,7 @@ class ScreenshotTestRuleTest {
                     DiffResult.Status.FAILED,
                     hasExpected = true,
                     hasDiff = true,
-                    comparisonStatistics = compStatistics
+                    comparisonStatistics = compStatistics,
                 )
             )
     }
@@ -168,7 +168,7 @@ class ScreenshotTestRuleTest {
                     DiffResult.Status.FAILED,
                     hasExpected = true,
                     hasDiff = true,
-                    comparisonStatistics = compStatistics
+                    comparisonStatistics = compStatistics,
                 )
             )
     }
@@ -185,8 +185,9 @@ class ScreenshotTestRuleTest {
                 .build()
 
         expectErrorMessage(
-            "Sizes are different! Expected: [48, 48], Actual: [720, 1184]. Force aligned "
-                + "at (0, 0). Comparison stats: '${compStatistics}'") {
+            "Sizes are different! Expected: [48, 48], Actual: [720, 1184]. Force aligned " +
+                "at (0, 0). Comparison stats: '${compStatistics}'"
+        ) {
             first.assertAgainstGolden(rule, goldenIdentifier)
         }
 
@@ -197,7 +198,7 @@ class ScreenshotTestRuleTest {
                     DiffResult.Status.FAILED,
                     hasExpected = true,
                     hasDiff = true,
-                    comparisonStatistics = compStatistics
+                    comparisonStatistics = compStatistics,
                 )
             )
     }
@@ -228,8 +229,8 @@ class ScreenshotTestRuleTest {
                     DiffResult.Status.MISSING_REFERENCE,
                     hasExpected = false,
                     hasDiff = false,
-                    comparisonStatistics = null
-                ),
+                    comparisonStatistics = null,
+                )
             )
     }
 
@@ -353,6 +354,7 @@ class ScreenshotTestRuleTest {
 
     class FakeDiffResultExport : DiffResultExportStrategy {
         val reports = mutableListOf<ReportedDiffResult>()
+
         override fun reportResult(
             testIdentifier: String,
             goldenIdentifier: String,
@@ -360,7 +362,7 @@ class ScreenshotTestRuleTest {
             status: DiffResult.Status,
             comparisonStatistics: DiffResult.ComparisonStatistics?,
             expected: Bitmap?,
-            diff: Bitmap?
+            diff: Bitmap?,
         ) {
             reports.add(
                 ReportedDiffResult(
@@ -368,11 +370,12 @@ class ScreenshotTestRuleTest {
                     status,
                     hasExpected = expected != null,
                     hasDiff = diff != null,
-                    comparisonStatistics
+                    comparisonStatistics,
                 )
             )
         }
     }
+
     private companion object {
         var prevPointerLocationSetting: Int = 0
         var prevShowTouchesSetting: Int = 0

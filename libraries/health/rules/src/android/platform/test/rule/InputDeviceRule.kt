@@ -18,7 +18,7 @@ package android.platform.test.rule
 import android.hardware.input.InputManager
 import android.os.ParcelFileDescriptor
 import android.platform.helpers.uinput.UInputDevice
-import android.platform.uiautomator_helpers.DeviceHelpers
+import android.platform.uiautomatorhelpers.DeviceHelpers
 import android.util.Log
 import android.view.InputDevice
 import androidx.core.content.getSystemService
@@ -86,7 +86,7 @@ class InputDeviceRule : TestWatcher(), UInputDevice.EventInjector {
 
         inputManager.registerInputDeviceListener(
             inputDeviceListenerDelegate,
-            DeviceHelpers.context.mainThreadHandler
+            DeviceHelpers.context.mainThreadHandler,
         )
     }
 
@@ -196,7 +196,7 @@ class InputDeviceRule : TestWatcher(), UInputDevice.EventInjector {
 
         Log.d(
             "InputDeviceRule",
-            "'$EVENT_REPLAY_COMPLETE_SYNC_TOKEN' sync token sent, waiting for it to be processed..."
+            "'$EVENT_REPLAY_COMPLETE_SYNC_TOKEN' sync token sent, waiting for it to be processed...",
         )
         var nextSyncToken: String? = null
         while (nextSyncToken != EVENT_REPLAY_COMPLETE_SYNC_TOKEN) {

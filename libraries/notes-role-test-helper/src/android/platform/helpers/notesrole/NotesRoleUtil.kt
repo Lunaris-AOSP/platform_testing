@@ -21,7 +21,7 @@ import android.app.role.RoleManager
 import android.content.Context
 import android.os.Build
 import android.os.UserHandle
-import android.platform.uiautomator_helpers.DeviceHelpers
+import android.platform.uiautomatorhelpers.DeviceHelpers
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.test.platform.app.InstrumentationRegistry
@@ -50,11 +50,11 @@ class NotesRoleUtil(private val context: Context) {
     ) {
         assumeTrue(
             "Build SDK should be at least $requiredAndroidVersion",
-            Build.VERSION.SDK_INT >= requiredAndroidVersion
+            Build.VERSION.SDK_INT >= requiredAndroidVersion,
         )
         assumeTrue(
             "Notes role should be enabled",
-            roleManager.isRoleAvailable(RoleManager.ROLE_NOTES)
+            roleManager.isRoleAvailable(RoleManager.ROLE_NOTES),
         )
         assumeTrue("$requiredPackage should be installed", isPackageInstalled(requiredPackage))
     }
@@ -85,7 +85,7 @@ class NotesRoleUtil(private val context: Context) {
                 /* flags= */ 0,
                 userHandle,
                 context.mainExecutor,
-                clearRoleHoldersFuture::complete
+                clearRoleHoldersFuture::complete,
             )
         }
 
@@ -93,7 +93,7 @@ class NotesRoleUtil(private val context: Context) {
         assert(
             clearRoleHoldersFuture.get(
                 ROLE_MANAGER_VERIFICATION_TIMEOUT_IN_SECONDS,
-                TimeUnit.SECONDS
+                TimeUnit.SECONDS,
             )
         ) {
             "Failed to clear notes role holder"
@@ -106,7 +106,7 @@ class NotesRoleUtil(private val context: Context) {
         Log.d(
             TAG,
             "Trying to set note role to $packageName. Current role holder: " +
-                "$currentRoleHolderPackageName"
+                "$currentRoleHolderPackageName",
         )
 
         // Return early if current role holder package is the same as supplied package name.

@@ -15,8 +15,8 @@
  */
 package android.platform.test.scenario.tapl_common
 
-import android.platform.uiautomator_helpers.BetterSwipe
-import android.platform.uiautomator_helpers.WaitUtils.ensureThat
+import android.platform.uiautomatorhelpers.BetterSwipe
+import android.platform.uiautomatorhelpers.WaitUtils.ensureThat
 import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiObject2
 import java.time.Duration
@@ -32,12 +32,12 @@ object Gestures {
     private fun waitForObjectCondition(
         objectName: String,
         conditionName: String,
-        condition: () -> Boolean
+        condition: () -> Boolean,
     ) {
         ensureThat(
             condition = condition,
             description = "UI object '$objectName' becomes $conditionName",
-            timeout = WAIT_TIME
+            timeout = WAIT_TIME,
         )
     }
 
@@ -72,7 +72,7 @@ object Gestures {
         } catch (e: StaleObjectException) {
             throw AssertionError(
                 "UI object '$objectName' has disappeared from the screen during the click gesture.",
-                e
+                e,
             )
         }
     }
@@ -103,7 +103,7 @@ object Gestures {
             throw AssertionError(
                 "UI object '$objectName' has disappeared from " +
                     "the screen during the long click gesture.",
-                e
+                e,
             )
         }
     }

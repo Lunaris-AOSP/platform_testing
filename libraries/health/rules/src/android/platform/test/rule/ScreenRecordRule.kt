@@ -21,11 +21,11 @@ import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import android.platform.test.rule.ScreenRecordRule.Companion.SCREEN_RECORDING_CLASS_LEVEL_OVERRIDE_KEY
 import android.platform.test.rule.ScreenRecordRule.Companion.SCREEN_RECORDING_TEST_LEVEL_OVERRIDE_KEY
 import android.platform.test.rule.ScreenRecordRule.ScreenRecord
-import android.platform.uiautomator_helpers.DeviceHelpers.shell
-import android.platform.uiautomator_helpers.FailedEnsureException
-import android.platform.uiautomator_helpers.WaitUtils.ensureThat
-import android.platform.uiautomator_helpers.WaitUtils.waitFor
-import android.platform.uiautomator_helpers.WaitUtils.waitForValueToSettle
+import android.platform.uiautomatorhelpers.DeviceHelpers.shell
+import android.platform.uiautomatorhelpers.FailedEnsureException
+import android.platform.uiautomatorhelpers.WaitUtils.ensureThat
+import android.platform.uiautomatorhelpers.WaitUtils.waitFor
+import android.platform.uiautomatorhelpers.WaitUtils.waitForValueToSettle
 import android.util.Log
 import androidx.test.InstrumentationRegistry.getInstrumentation
 import androidx.test.platform.app.InstrumentationRegistry
@@ -118,8 +118,10 @@ constructor(
 
     private fun classLevelOverrideEnabled() =
         screenRecordOverrideEnabled(SCREEN_RECORDING_CLASS_LEVEL_OVERRIDE_KEY)
+
     private fun testLevelOverrideEnabled() =
         screenRecordOverrideEnabled(SCREEN_RECORDING_TEST_LEVEL_OVERRIDE_KEY)
+
     /**
      * This is needed to enable screen recording when a parameter is passed to the instrumentation,
      * avoid having to recompile the test.
@@ -141,7 +143,7 @@ constructor(
             Log.w(
                 TAG,
                 "Multiple screen recording in progress (pids=\"$screenrecordPids\"). " +
-                    "This might cause performance issues."
+                    "This might cause performance issues.",
             )
         }
         // --bugreport adds the timestamp as overlay
@@ -193,7 +195,7 @@ constructor(
             Log.w(
                 TAG,
                 "Other screen recordings are in progress after this is done. " +
-                    "(pids=\"$screenrecordPids\")."
+                    "(pids=\"$screenrecordPids\").",
             )
         }
     }
@@ -210,7 +212,7 @@ constructor(
         try {
             waitForValueToSettle(
                 "Screen recording output size",
-                minimumSettleTime = Duration.ofSeconds(5)
+                minimumSettleTime = Duration.ofSeconds(5),
             ) {
                 length()
             }

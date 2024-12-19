@@ -16,9 +16,9 @@
 package android.platform.test.scenario.tapl_common
 
 import android.graphics.Rect
-import android.platform.uiautomator_helpers.BetterFling
-import android.platform.uiautomator_helpers.BetterScroll
-import android.platform.uiautomator_helpers.DeviceHelpers.waitForObj
+import android.platform.uiautomatorhelpers.BetterFling
+import android.platform.uiautomatorhelpers.BetterScroll
+import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiObject2
@@ -114,7 +114,7 @@ class TaplUiObject constructor(val uiObject: UiObject2, private val name: String
     fun scrollWithFling(
         scrollDirection: Direction,
         percent: Float,
-        verifyIsScrollable: Boolean = false
+        verifyIsScrollable: Boolean = false,
     ) {
         // To scroll, we fling in the opposite direction
         fling(Direction.reverse(scrollDirection), percent, verifyIsScrollable)

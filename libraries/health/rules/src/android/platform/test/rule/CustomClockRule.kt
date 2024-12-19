@@ -16,13 +16,13 @@
 
 package android.platform.test.rule
 
-import android.platform.uiautomator_helpers.DeviceHelpers.context
+import android.platform.uiautomatorhelpers.DeviceHelpers.context
 import android.provider.Settings
 
 class CustomClockRule(private val customClock: CustomClock) :
     SecureSettingRule<String>(
         Settings.Secure.LOCK_SCREEN_CUSTOM_CLOCK_FACE,
-        initialValue = """{"clockId":"${customClock.name}"}"""
+        initialValue = """{"clockId":"${customClock.name}"}""",
     ) {
 
     fun isLockscreenCustomClockSet(): Boolean {
@@ -30,7 +30,7 @@ class CustomClockRule(private val customClock: CustomClock) :
         val customClockFace =
             Settings.Secure.getString(
                 contentResolver,
-                Settings.Secure.LOCK_SCREEN_CUSTOM_CLOCK_FACE
+                Settings.Secure.LOCK_SCREEN_CUSTOM_CLOCK_FACE,
             )
         return customClockFace == """{"clockId":"${customClock.name}"}"""
     }

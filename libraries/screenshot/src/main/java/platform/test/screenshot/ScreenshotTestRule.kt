@@ -22,7 +22,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
-import android.platform.uiautomator_helpers.DeviceHelpers.shell
+import android.platform.uiautomatorhelpers.DeviceHelpers.shell
 import android.provider.Settings.System
 import androidx.annotation.VisibleForTesting
 import androidx.test.platform.app.InstrumentationRegistry
@@ -56,7 +56,7 @@ internal constructor(
     val goldenPathManager: GoldenPathManager,
     /** Strategy to report diffs to external systems. */
     private val diffEscrowStrategy: DiffResultExportStrategy,
-    private val disableIconPool: Boolean = true
+    private val disableIconPool: Boolean = true,
 ) : TestRule, BitmapDiffer, ScreenshotAsserterFactory {
 
     @JvmOverloads
@@ -66,13 +66,15 @@ internal constructor(
     ) : this(
         goldenPathManager,
         DiffResultExportStrategy.createDefaultStrategy(goldenPathManager),
-        disableIconPool
+        disableIconPool,
     )
 
     private val doesCollectScreenshotParityStats =
-        "yes".equals(
-            java.lang.System.getProperty("screenshot.collectScreenshotParityStats"),
-            ignoreCase = true)
+        "yes"
+            .equals(
+                java.lang.System.getProperty("screenshot.collectScreenshotParityStats"),
+                ignoreCase = true,
+            )
     private lateinit var testIdentifier: String
 
     companion object {
@@ -140,14 +142,14 @@ internal constructor(
     fun assertBitmapAgainstGolden(
         actual: Bitmap,
         goldenIdentifier: String,
-        matcher: BitmapMatcher
+        matcher: BitmapMatcher,
     ) {
         try {
             assertBitmapAgainstGolden(
                 actual = actual,
                 goldenIdentifier = goldenIdentifier,
                 matcher = matcher,
-                regions = emptyList<Rect>()
+                regions = emptyList<Rect>(),
             )
         } finally {
             actual.recycle()
@@ -176,7 +178,7 @@ internal constructor(
         actual: Bitmap,
         goldenIdentifier: String,
         matcher: BitmapMatcher,
-        regions: List<Rect>
+        regions: List<Rect>,
     ) {
         if (!goldenIdentifier.matches("^[A-Za-z0-9_-]+$".toRegex())) {
             throw IllegalArgumentException(
@@ -191,7 +193,7 @@ internal constructor(
                 testIdentifier = testIdentifier,
                 goldenIdentifier = goldenIdentifier,
                 status = ScreenshotResultProto.DiffResult.Status.MISSING_REFERENCE,
-                actual = actual
+                actual = actual,
             )
             throw AssertionError(
                 "Missing golden image " +
@@ -211,7 +213,8 @@ internal constructor(
                         .build()
                 parityStatsCollector.collectTestStats(
                     testIdentifier,
-                    MatchResult(matches = true, diff = null, comparisonStatistics = stats))
+                    MatchResult(matches = true, diff = null, comparisonStatistics = stats),
+                )
                 parityStatsCollector.report()
             }
             expected.recycle()
@@ -226,7 +229,7 @@ internal constructor(
                     expectedWidth = expected.width,
                     expectedHeight = expected.height,
                     actualWidth = actual.width,
-                    actualHeight = actual.height
+                    actualHeight = actual.height,
                 )
             diffEscrowStrategy.reportResult(
                 testIdentifier = testIdentifier,
@@ -235,7 +238,7 @@ internal constructor(
                 actual = actual,
                 comparisonStatistics = comparisonResult.comparisonStatistics,
                 expected = expected,
-                diff = comparisonResult.diff
+                diff = comparisonResult.diff,
             )
             if (doesCollectScreenshotParityStats) {
                 parityStatsCollector.collectTestStats(testIdentifier, comparisonResult)
@@ -260,7 +263,7 @@ internal constructor(
                 given = actual.toIntArray(),
                 width = actual.width,
                 height = actual.height,
-                regions = regions
+                regions = regions,
             )
         if (doesCollectScreenshotParityStats) {
             parityStatsCollector.collectTestStats(testIdentifier, comparisonResult)
@@ -283,7 +286,7 @@ internal constructor(
                 actual = actual,
                 comparisonStatistics = comparisonResult.comparisonStatistics,
                 expected = expectedWithHighlight,
-                diff = comparisonResult.diff
+                diff = comparisonResult.diff,
             )
 
             expectedWithHighlight.recycle()
@@ -370,6 +373,7 @@ class ScreenshotRuleAsserter private constructor(private val rule: ScreenshotTes
 
     private var prevPointerLocationSetting: Int? = null
     private var prevShowTouchesSetting: Int? = null
+
     @Suppress("DEPRECATION")
     override fun assertGoldenImage(goldenId: String) {
         runBeforeScreenshot()
@@ -416,6 +420,7 @@ class ScreenshotRuleAsserter private constructor(private val rule: ScreenshotTes
     @Deprecated("Use ScreenshotAsserterFactory instead")
     class Builder(private val rule: ScreenshotTestRule) {
         private var asserter = ScreenshotRuleAsserter(rule)
+
         fun withMatcher(matcher: BitmapMatcher): Builder = apply { asserter.matcher = matcher }
 
         /**
@@ -460,12 +465,12 @@ fun Bitmap.assertAgainstGolden(
     bitmapDiffer: BitmapDiffer,
     goldenIdentifier: String,
     matcher: BitmapMatcher = MSSIMMatcher(),
-    regions: List<Rect> = emptyList()
+    regions: List<Rect> = emptyList(),
 ) {
     bitmapDiffer.assertBitmapAgainstGolden(
         this,
         goldenIdentifier,
         matcher = matcher,
-        regions = regions
+        regions = regions,
     )
 }

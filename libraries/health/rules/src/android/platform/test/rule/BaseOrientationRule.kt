@@ -23,7 +23,7 @@ import android.platform.test.rule.Orientation.PORTRAIT
 import android.platform.test.rule.RotationUtils.clearOrientationOverride
 import android.platform.test.rule.RotationUtils.setOrientationOverride
 import android.platform.test.util.HealthTestingUtils.waitForValueToSettle
-import android.platform.uiautomator_helpers.WaitUtils.ensureThat
+import android.platform.uiautomatorhelpers.WaitUtils.ensureThat
 import android.util.Log
 import androidx.test.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -47,7 +47,7 @@ class NaturalOrientationRule : BaseOrientationRule(NATURAL)
 enum class Orientation {
     LANDSCAPE,
     PORTRAIT,
-    NATURAL
+    NATURAL,
 }
 
 /** Returns whether the device is landscape or portrait , based on display dimensions. */
@@ -78,7 +78,7 @@ private val UiDevice.stableOrientation: Orientation
             /* errorMessage= */ { "Device orientation didn't settle" },
             /* supplier */ { orientation },
             /* minimumSettleTime= */ 1_000,
-            /* timeoutMs= */ 5_000
+            /* timeoutMs= */ 5_000,
         )
 
 /** Uses launcher rect to decide which rotation to apply to match [expectedOrientation]. */
@@ -111,7 +111,7 @@ object RotationUtils {
      */
     fun setOrientationOverride(
         orientation: Orientation,
-        timeoutDuration: Duration = Duration.ofSeconds(10)
+        timeoutDuration: Duration = Duration.ofSeconds(10),
     ) {
         val expectedOrientation =
             if (orientation == NATURAL) device.naturalOrientation else orientation
@@ -125,7 +125,7 @@ object RotationUtils {
         ensureThat(
             "orientation is $expectedOrientation",
             timeout = timeoutDuration,
-            ignoreException = true
+            ignoreException = true,
         ) {
             changeOrientation()
             device.stableOrientation == expectedOrientation

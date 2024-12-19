@@ -12,12 +12,23 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-"""Android platform test annotation module."""
+"""DesktopTest decorator."""
 
-from .src.py.ApiTest import ApiTest
-from .src.py.CddTest import CddTest
-from .src.py.DesktopTest import DesktopTest
-from .src.py.GmsTest import GmsTest
-from .src.py.NonApiTest import NonApiTest
-from .src.py.ReasonType import ReasonType
-from .src.py.VsrTest import VsrTest
+from typing import List
+
+
+class DesktopTest(object):
+  """Marks the type of test with purpose of asserting Desktop requirements.
+
+  Args:
+      requirements: the list of Desktop requirements.
+
+  Example:
+      @DesktopTest(requirements=['D-0-1', 'D-0-2'])
+  """
+
+  def __init__(self, requirements: List[str] = []):
+    self._requirements = requirements
+
+  def __call__(self, func):
+    return func

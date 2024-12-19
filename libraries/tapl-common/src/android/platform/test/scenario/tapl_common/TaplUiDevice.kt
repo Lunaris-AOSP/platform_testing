@@ -15,7 +15,7 @@
  */
 package android.platform.test.scenario.tapl_common
 
-import android.platform.uiautomator_helpers.DeviceHelpers.waitForObj
+import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
 import androidx.test.uiautomator.BySelector
 
 /** Wrapper of UiDevice for finding TAPL UI objects and performing flake-free gestures. */

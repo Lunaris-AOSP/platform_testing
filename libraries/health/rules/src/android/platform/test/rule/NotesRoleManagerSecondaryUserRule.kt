@@ -24,7 +24,7 @@ import android.app.role.RoleManager
 import android.os.Build
 import android.os.UserHandle
 import android.platform.helpers.notesrole.NotesRoleUtil
-import android.platform.uiautomator_helpers.DeviceHelpers
+import android.platform.uiautomatorhelpers.DeviceHelpers
 import android.system.helpers.UserHelper
 import android.util.Log
 import androidx.core.content.getSystemService
@@ -68,7 +68,7 @@ constructor(
         // workaround to run the test on select few devices.
         notesRoleUtil.checkAndroidRolePackageAssumptions(
             requiredAndroidVersion,
-            requiredNotesRoleHolderPackage
+            requiredNotesRoleHolderPackage,
         )
 
         // Update original user's notes role holder to none. This helps with confidently verifying
@@ -138,7 +138,7 @@ constructor(
     private fun getCurrentUserId() =
         notesRoleUtil.callWithShellIdentityPermissions(
             INTERACT_ACROSS_USERS,
-            INTERACT_ACROSS_USERS_FULL
+            INTERACT_ACROSS_USERS_FULL,
         ) {
             ActivityManager.getCurrentUser()
         }

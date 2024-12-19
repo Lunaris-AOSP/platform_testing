@@ -17,7 +17,7 @@
 package android.platform.test.rule
 
 import android.media.AudioManager
-import android.platform.uiautomator_helpers.DeviceHelpers
+import android.platform.uiautomatorhelpers.DeviceHelpers
 import androidx.annotation.VisibleForTesting
 import org.junit.runner.Description
 
@@ -31,7 +31,7 @@ class SetDefaultVolumeRule(private val volumeIndex: Int) : TestWatcher() {
         mAudioManager.setStreamVolume(
             AudioManager.STREAM_MUSIC,
             volumeIndex,
-            0 // Do nothing, prevent opening UI.
+            0, // Do nothing, prevent opening UI.
         )
     }
 

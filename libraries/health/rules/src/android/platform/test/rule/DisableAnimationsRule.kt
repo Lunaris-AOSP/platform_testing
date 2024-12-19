@@ -16,11 +16,11 @@
 
 package android.platform.test.rule
 
-import android.platform.uiautomator_helpers.DeviceHelpers.shell
+import android.platform.uiautomatorhelpers.DeviceHelpers.shell
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-class DisableAnimationsRule: TestWatcher() {
+class DisableAnimationsRule : TestWatcher() {
     private var prevAnimationState: AnimationState = defaultAnimationState
     private var animationState: AnimationState
         get() =
