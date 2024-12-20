@@ -242,10 +242,7 @@ class Bouncer internal constructor(private val notification: Notification?) {
 
         /** The compose bouncer_text_entry isn't the same as pin_container, but close enough */
         private val PIN_CONTAINER_SELECTOR =
-            arrayOf(
-                sysuiResSelector("bouncer_text_entry"),
-                sysuiResSelector("pin_container"),
-            )
+            arrayOf(sysuiResSelector("bouncer_text_entry"), sysuiResSelector("pin_container"))
         /** https://hsv.googleplex.com/5225465733185536?node=54 */
         private val PIN_BOUNCER_DELETE_BUTTON = sysuiResSelector("delete_button")
         /** https://hsv.googleplex.com/5554629610831872?node=52 */
@@ -253,7 +250,7 @@ class Bouncer internal constructor(private val notification: Notification?) {
 
         // https://hsv.googleplex.com/5130837462876160?node=117
         private val PAGE_TITLE_SELECTOR_PATTERN =
-            Pattern.compile(String.format("%s:id/%s", SYSUI_PACKAGE, "keyguard_clock_container"))
+            Pattern.compile(String.format("%s:id/%s", SYSUI_PACKAGE, "keyguard_indication_area"))
 
         public val PATTERN_SELECTOR =
             if (IS_COMPOSE_BOUNCER_ENABLED) {

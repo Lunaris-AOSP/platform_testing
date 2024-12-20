@@ -29,7 +29,6 @@ import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
 import android.platform.uiautomatorhelpers.FLING_GESTURE_INTERPOLATOR
 import androidx.test.uiautomator.By
 import com.android.launcher3.tapl.Workspace
-import com.android.systemui.Flags.migrateClocksToBlueprint
 import com.android.systemui.Flags.sceneContainer
 import com.google.common.truth.Truth.assertWithMessage
 
@@ -147,13 +146,8 @@ class LockScreen internal constructor() {
             if (sceneContainer()) {
                 By.res("element:lockscreen")
             } else {
-                sysuiResSelector(
-                    if (migrateClocksToBlueprint()) {
-                        "keyguard_indication_area"
-                    } else {
-                        "keyguard_clock_container"
-                    }
-                )
+
+                sysuiResSelector("keyguard_indication_area")
             }
         private val SWIPEABLE_AREA =
             if (com.android.systemui.Flags.sceneContainer()) {

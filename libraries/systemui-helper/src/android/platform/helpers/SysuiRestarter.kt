@@ -36,14 +36,7 @@ object SysuiRestarter {
         if (Flags.sceneContainer()) {
             By.res("element:lockscreen")
         } else {
-            By.res(
-                "com.android.systemui",
-                if (Flags.migrateClocksToBlueprint()) {
-                    "keyguard_indication_area"
-                } else {
-                    "keyguard_clock_container"
-                },
-            )
+            By.res("com.android.systemui", "keyguard_indication_area")
         }
 
     /**

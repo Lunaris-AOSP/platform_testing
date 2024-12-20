@@ -18,7 +18,6 @@ package android.platform.helpers.features.common;
 
 import static android.platform.helpers.ui.UiAutomatorUtils.getUiDevice;
 
-import static com.android.systemui.Flags.migrateClocksToBlueprint;
 import static com.android.systemui.Flags.sceneContainer;
 
 import static com.google.common.truth.Truth.assertWithMessage;
@@ -57,8 +56,7 @@ public class HomeLockscreenPage implements Page {
                             : "notification_panel");
     // https://hsv.googleplex.com/5130837462876160?node=117
 
-    public static final String PAGE_TITLE_ID =
-            migrateClocksToBlueprint() ? "keyguard_indication_area" : "keyguard_clock_container";
+    public static final String PAGE_TITLE_ID = "keyguard_indication_area";
     private static final BySelector PAGE_TITLE_SELECTOR =
             sceneContainer()
                     ? By.res("element:lockscreen")
