@@ -99,6 +99,8 @@ object Components {
             ScenarioId("SNAP_RESIZE_RIGHT_WITH_DRAG"),
             ScenarioId("SNAP_RESIZE_LEFT_WITH_BUTTON"),
             ScenarioId("SNAP_RESIZE_RIGHT_WITH_BUTTON"),
+            ScenarioId("SNAP_RESIZE_LEFT_WITH_KEYBOARD"),
+            ScenarioId("SNAP_RESIZE_RIGHT_WITH_KEYBOARD"),
             ScenarioId("MAXIMIZE_APP"),
             ScenarioId("MAXIMIZE_APP_NON_RESIZABLE"),
             ScenarioId("MINIMIZE_AUTO_PIP_APP") -> {
