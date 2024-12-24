@@ -17,10 +17,12 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
-android_library {
+// This entire library should be removed now that
+// external/TestParameterInjector is usable in Android and Robolectric
+java_library {
     name: "platform-parametric-runner-lib",
-    manifest: "AndroidManifest.xml",
-    platform_apis: true,
+    host_supported: true,
+    hostdex: true,
     min_sdk_version: "Tiramisu",
     lint: {
         test: true,
@@ -28,11 +30,50 @@ android_library {
     optimize: {
         enabled: false,
     },
+    target: {
+        android: {
+            static_libs: ["platform-parametric-runner-lib-android"],
+        },
+        host: {
+            static_libs: ["platform-parametric-runner-lib-jre"],
+        },
+        windows: {
+            static_libs: ["platform-parametric-runner-lib-jre"],
+            enabled: false,
+        },
+    },
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+}
+
+android_library {
+    name: "platform-parametric-runner-lib-android",
+    srcs: [
+        "src/main/java/platform/test/runner/parameterized/AndroidParameterizedRunner.java",
+        "src/main/java/platform/test/runner/parameterized/Parameter.java",
+        "src/main/java/platform/test/runner/parameterized/ParameterizedAndroidJunit4.java",
+        "src/main/java/platform/test/runner/parameterized/ParameterizedRunnerDelegate.java",
+        "src/main/java/platform/test/runner/parameterized/Parameters.java",
+    ],
+    libs: [
+        "junit",
+        "guava",
+        "androidx.test.runner",
+    ],
+    static_libs: [],
+}
+
+java_library {
+    name: "platform-parametric-runner-lib-jre",
+    host_supported: true,
+    device_supported: false,
     srcs: [
         "src/main/java/**/*.java",
     ],
     libs: [
-        "Robolectric_all-target_upstream",
+        "Robolectric_all_upstream",
     ],
     static_libs: [],
 }

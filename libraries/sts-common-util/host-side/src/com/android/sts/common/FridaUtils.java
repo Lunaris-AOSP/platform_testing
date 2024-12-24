@@ -368,10 +368,21 @@ public class FridaUtils extends BaseTargetPreparer implements AutoCloseable {
             throws IOException, IllegalArgumentException, DeviceNotAvailableException,
                     TargetSetupError {
         // Get version from Frida binary
-        ByteArrayOutputStream output = runFrida(List.of("--version"));
+        ByteArrayOutputStream output =
+                runFrida(List.of("--version", "2>/dev/null" /* discard stderr */));
         poll(() -> output.size() > 0);
         String version = output.toString(StandardCharsets.UTF_8).trim();
-        CLog.d("Current version is: %s", version);
+        CLog.d("Output of frida version query command is: %s", version);
+
+        // Throw if unable to parse the version
+        try {
+            parseVersion(version);
+        } catch (Exception e) {
+            throw new TargetSetupError(
+                    "Unable to get the Frida version. Please run the Frida binary with '--version'"
+                        + " on the device and check for any SELinux policy errors. To disable"
+                        + " SELinux, use the command: 'adb shell setenforce 0'.");
+        }
 
         // Get version threshold
         Optional<String> minVersionFromBl = FridaUtilsBusinessLogicHandler.getFridaVersion();
@@ -425,9 +436,10 @@ public class FridaUtils extends BaseTargetPreparer implements AutoCloseable {
             throws FileNotFoundException, TargetSetupError {
         throw new TargetSetupError(
                 String.format(
-                        "Could not download Frida. Please manually download %s and"
-                                + " extract to '%s' renaming the extracted file to '%s' exactly."
-                                + " Incorrect naming will cause a setup failure.",
+                        "Could not download Frida. Please manually download %s and extract to '%s'"
+                            + " renaming the extracted file to '%s' exactly. Incorrect naming will"
+                            + " cause a setup failure. If this issue persists, please review the"
+                            + " error details below for further clarity.",
                         fridaUrl != null
                                 ? fridaUrl
                                 : String.format(
