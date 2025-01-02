@@ -310,8 +310,8 @@
       ]
     },
     "DIALER_SETTINGS_BUTTON": {
-      "TYPE": "RESOURCE_ID",
-      "VALUE": "car_ui_toolbar_menu_item_icon_container"
+      "TYPE": "DESCRIPTION",
+      "VALUE": "Settings"
     },
     "SEARCH_CONTACT": {
       "TYPE": "RESOURCE_ID",
