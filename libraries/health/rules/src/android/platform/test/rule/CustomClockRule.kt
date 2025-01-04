@@ -40,7 +40,6 @@ class CustomClockRule(private val customClock: CustomClock) :
         ANALOG_CLOCK_BIGNUM,
         DIGITAL_CLOCK_WEATHER,
         DIGITAL_CLOCK_METRO,
-        DIGITAL_CLOCK_HANDWRITTEN,
         DIGITAL_CLOCK_GROWTH,
         DIGITAL_CLOCK_NUMBEROVERLAP,
         DIGITAL_CLOCK_CALLIGRAPHY,

@@ -208,6 +208,18 @@ public class SettingUserHelperImpl extends AbstractStandardAppHelper implements 
         return profileNameText;
     }
 
+    @Override
+    public void editUserName(String name) {
+        clickbutton(AutomotiveConfigConstants.USER_SETTINGS_RENAME);
+        BySelector profileNameEditSelector =
+                getUiElementFromConfig(AutomotiveConfigConstants.USER_SETTINGS_PROFILE_NAME_EDIT);
+        UiObject2 profileNameEdit = getSpectatioUiUtil().findUiObject(profileNameEditSelector);
+        profileNameEdit.setText(name);
+        getSpectatioUiUtil().wait1Second();
+        clickbutton(AutomotiveConfigConstants.USER_SETTINGS_OK);
+        getSpectatioUiUtil().wait1Second();
+    }
+
     // add User via quick settings
     @Override
     public void addUserQuickSettings(String userFrom) {

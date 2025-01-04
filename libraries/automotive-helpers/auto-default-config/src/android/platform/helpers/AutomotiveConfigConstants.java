@@ -460,6 +460,8 @@ public class AutomotiveConfigConstants {
     public static final String USER_SETTINGS_SCROLL_ACTION = "USER_SETTINGS_SCROLL_ACTION";
     public static final String USER_SETTINGS_SCROLL_DIRECTION = "USER_SETTINGS_SCROLL_DIRECTION";
     public static final String USER_SETTINGS_ADD_PROFILE = "USER_SETTINGS_ADD_PROFILE";
+    public static final String USER_SETTINGS_RENAME = "USER_SETTINGS_RENAME";
+    public static final String USER_SETTINGS_PROFILE_NAME_EDIT = "USER_SETTINGS_PROFILE_NAME_EDIT";
     public static final String USER_SETTINGS_DELETE = "USER_SETTINGS_DELETE";
     public static final String USER_SETTINGS_OK = "USER_SETTINGS_OK";
     public static final String USER_SETTINGS_DELETE_SELF = "USER_SETTINGS_DELETE_SELF";

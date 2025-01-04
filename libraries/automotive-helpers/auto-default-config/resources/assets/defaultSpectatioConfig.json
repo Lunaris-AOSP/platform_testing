@@ -1210,6 +1210,15 @@
       "TYPE": "TEXT",
       "VALUE": "Add.*profile"
     },
+    "USER_SETTINGS_RENAME": {
+      "TYPE": "TEXT",
+      "VALUE": "Rename"
+    },
+    "USER_SETTINGS_PROFILE_NAME_EDIT": {
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "profile_name_text_edit",
+      "PACKAGE": "com.android.car.settings"
+    },
     "USER_SETTINGS_DELETE": {
       "TYPE": "TEXT",
       "VALUE": "Delete"

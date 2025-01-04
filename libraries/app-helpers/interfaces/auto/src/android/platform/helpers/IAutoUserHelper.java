@@ -83,6 +83,13 @@ public interface IAutoUserHelper extends IAppHelper {
     /**
      * Setup expectation: Profiles and Accounts setting is open.
      *
+     * <p>This method is to rename the current user.
+     */
+    void editUserName(String name);
+
+    /**
+     * Setup expectation: Profiles and Accounts setting is open.
+     *
      * <p>This method is to make an existing user admin.
      */
     void makeUserAdmin(String user);
