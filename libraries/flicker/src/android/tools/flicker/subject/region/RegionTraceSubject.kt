@@ -68,6 +68,13 @@ constructor(val trace: RegionTrace, override val reader: Reader? = null) :
     }
 
     /** {@inheritDoc} */
+    override fun isLeftEdgeToTheRight(other: Region): RegionTraceSubject = apply {
+        addAssertion("isLeftEdgeToTheRight($other, $componentsAsString)") {
+            it.isLeftEdgeToTheRight(other)
+        }
+    }
+
+    /** {@inheritDoc} */
     override fun isHigher(other: Rect): RegionTraceSubject = isHigher(Region(other))
 
     /** {@inheritDoc} */

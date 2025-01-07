@@ -71,6 +71,13 @@ interface IRegionSubject {
     fun isToTheRight(other: Region): IRegionSubject
 
     /**
+     * Asserts that the left coordinates of [other] are lower or equal to those of region.
+     *
+     * @throws AssertionError
+     */
+    fun isLeftEdgeToTheRight(other: Region): IRegionSubject
+
+    /**
      * Asserts that the top and bottom coordinates of [other] are smaller than those of region.
      *
      * Also checks that the left and right positions, as well as area, don't change

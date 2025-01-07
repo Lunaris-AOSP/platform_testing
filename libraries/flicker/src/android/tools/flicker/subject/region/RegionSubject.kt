@@ -330,6 +330,26 @@ constructor(
     }
 
     /** {@inheritDoc} */
+    override fun isLeftEdgeToTheRight(other: Region): RegionSubject = apply {
+        val horizontallyPositionedToTheRight = other.bounds.left <= region.bounds.left
+        if (!horizontallyPositionedToTheRight) {
+            val errorMsgBuilder =
+                ExceptionMessageBuilder()
+                    .forSubject(this)
+                    .forIncorrectRegion(
+                        "region. left edge of $region area should be to the right of $other"
+                    )
+                    .setExpected(other)
+                    .setActual(regionEntry.region)
+                    .addExtraDescription(
+                        "Horizontally positioned to the right",
+                        horizontallyPositionedToTheRight,
+                    )
+            throw IncorrectRegionException(errorMsgBuilder)
+        }
+    }
+
+    /** {@inheritDoc} */
     override fun regionsCenterPointInside(other: Rect): RegionSubject = apply {
         if (!other.contains(region.bounds.centerX(), region.bounds.centerY())) {
             val center = Point(region.bounds.centerX(), region.bounds.centerY())

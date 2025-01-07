@@ -22,6 +22,7 @@ import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import java.io.File
+import java.util.regex.Pattern
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -120,13 +121,8 @@ class MotionTestRuleTest {
         val metadataJson = fileContents.get("//metadata") as JSONObject
 
         assertThat(metadataJson.has("deviceLocalPath")).isTrue()
-        // should be `/data/user/0/platform.test.motion.tests/files/goldens`, but the gradle
-        // setup ends up using `platform.test.motion.test` (without the `s`), even though the
-        // testNamespace property is configured otherwise. Verifying the presence of this
-        // property manually, to ensure the test passes both on gradle and soong. The difference
-        // itself does not matter
         val deviceLocalPath = metadataJson.remove("deviceLocalPath") as String
-        assertThat(deviceLocalPath).startsWith("/data/user/0/platform.test.motion.test")
+        assertThat(deviceLocalPath).matches(DeviceLocalPathPattern)
 
         assertThat(metadataJson)
             .isEqualTo(
@@ -173,13 +169,8 @@ class MotionTestRuleTest {
         val metadataJson = fileContents.get("//metadata") as JSONObject
 
         assertThat(metadataJson.has("deviceLocalPath")).isTrue()
-        // should be `/data/user/0/platform.test.motion.tests/files/goldens`, but the gradle
-        // setup ends up using `platform.test.motion.test` (without the `s`), even though the
-        // testNamespace property is configured otherwise. Verifying the presence of this
-        // property manually, to ensure the test passes both on gradle and soong. The difference
-        // itself does not matter
         val deviceLocalPath = metadataJson.remove("deviceLocalPath") as String
-        assertThat(deviceLocalPath).startsWith("/data/user/0/platform.test.motion.test")
+        assertThat(deviceLocalPath).matches(DeviceLocalPathPattern)
 
         assertThat(metadataJson)
             .isEqualTo(
@@ -211,4 +202,16 @@ class MotionTestRuleTest {
         height: Int = 200,
         bitmapConfig: Bitmap.Config = Bitmap.Config.ARGB_8888,
     ) = Bitmap.createBitmap(width, height, bitmapConfig).also { Canvas(it).drawColor(color) }
+
+    companion object {
+        // The canonical path is `/data/user/0/platform.test.motion.tests/files/goldens`, however:
+        // - Running from gradle, the package name ends with `.test` (as opposed `.tests`)
+        // - Running from HSUM, the user might be different than 0 (10 usually)
+        val DeviceLocalPathPattern: Pattern =
+            Pattern.compile(
+                "/data/user/(?<userId>\\d+)/" +
+                    "platform\\.test\\.motion\\.test(?<gradlePackageNameFix>s?)" +
+                    "/files/goldens"
+            )
+    }
 }

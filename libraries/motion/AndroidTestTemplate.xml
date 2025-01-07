@@ -18,6 +18,7 @@
 <configuration description="Android Motion Tests {MODULE}">
     <metrics_collector class="com.android.tradefed.device.metric.FilePullerLogCollector">
         <option name="directory-keys" value="/data/user/0/{PACKAGE}/files/goldens/" />
+        <option name="directory-keys" value="/data/user/10/{PACKAGE}/files/goldens/" />
         <option name="collect-on-run-ended-only" value="true" />
     </metrics_collector>
     {EXTRA_CONFIGS}
