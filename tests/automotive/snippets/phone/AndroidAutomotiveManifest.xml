@@ -46,6 +46,7 @@
                        com.google.android.mobly.snippet.bundled.MediaSnippet,
                        com.google.android.mobly.snippet.bundled.NetworkingSnippet,
                        com.google.android.mobly.snippet.bundled.NotificationSnippet,
+                       com.google.android.mobly.snippet.bundled.HeadsUpNotificationSnippet,
                        com.google.android.mobly.snippet.bundled.PrivacySettingsSnippet,
                        com.google.android.mobly.snippet.bundled.SettingsSnippet,
                        com.google.android.mobly.snippet.bundled.SmsSnippet,

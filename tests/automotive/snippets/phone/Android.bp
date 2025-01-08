@@ -30,6 +30,7 @@ android_test {
         "automotive-status-bar-helper",
         "automotive-media-center-app-helper",
         "android-support-multidex",
+        "automotive-notifications-app-helper",
     ],
     srcs: ["src/**/*.java"],
     manifest: "AndroidAutomotiveManifest.xml",

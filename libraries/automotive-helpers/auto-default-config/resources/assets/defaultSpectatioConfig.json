@@ -906,6 +906,44 @@
       "TYPE": "TEXT",
       "VALUE": "Notifications"
     },
+    "HEADSUP_NOTIFICATION" : {
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "notification_headsup"
+    },
+    "HEADSUP_NOTIFICATION_TITLE": {
+      "TYPE": "MULTIPLE",
+      "SPECIFIERS": [
+        {
+          "TYPE": "RESOURCE_ID",
+          "VALUE": "notification_body_title"
+        },
+        {
+          "TYPE": "HAS_ANCESTOR",
+          "MAX_DEPTH": 1,
+          "ANCESTOR": {
+            "TYPE": "RESOURCE_ID",
+            "VALUE": "notification_headsup"
+          }
+        }
+      ]
+    },
+    "HEADSUP_NOTIFICATION_CONTENT": {
+      "TYPE": "MULTIPLE",
+      "SPECIFIERS": [
+        {
+          "TYPE": "RESOURCE_ID",
+          "VALUE": "notification_body_content"
+        },
+        {
+          "TYPE": "HAS_ANCESTOR",
+          "MAX_DEPTH": 1,
+          "ANCESTOR": {
+            "TYPE": "RESOURCE_ID",
+            "VALUE": "notification_headsup"
+          }
+        }
+      ]
+    },
     "ABOUT_MENU": {
       "TYPE": "TEXT",
       "VALUE": "About",
