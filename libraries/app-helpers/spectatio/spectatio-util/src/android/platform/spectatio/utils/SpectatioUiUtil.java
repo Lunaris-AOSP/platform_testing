@@ -376,6 +376,33 @@ public class SpectatioUiUtil {
     }
 
     /**
+     * Waits for a UI element to appear within a specified timeout.
+     *
+     * @param selector The BySelector used to locate the element.
+     * @param timeout  The maximum time to wait in milliseconds.
+     * @return The UiObject2 representing the found element, or null if it's not found within the timeout.
+     */
+    public UiObject2 waitForUiObject(BySelector selector, long timeout) {
+        Log.i(LOG_TAG, "Waiting for UI element: " + selector);
+        if (mDevice.wait(Until.hasObject(selector), timeout)) {
+            return findUiObject(selector);
+        } else {
+            Log.w(LOG_TAG, "UI element not found within timeout: " + selector);
+            return null;
+        }
+    }
+
+    /**
+     * Waits for a UI element to appear using the default timeout.
+     *
+     * @param selector The BySelector used to locate the element.
+     * @return The UiObject2 representing the found element, or null if it's not found within the default timeout.
+     */
+    public UiObject2 waitForUiObject(BySelector selector) {
+        return waitForUiObject(selector, EXTRA_LONG_UI_RESPONSE_WAIT_MS);
+    }
+
+    /**
      * Checks if given text is available on the Device UI. The text should be exactly same as seen
      * on the screen.
      *

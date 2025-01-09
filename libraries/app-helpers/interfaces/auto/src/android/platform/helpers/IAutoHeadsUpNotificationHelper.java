@@ -32,4 +32,27 @@ public interface IAutoHeadsUpNotificationHelper extends Scrollable, IAppHelper {
      * @param phoneNumber phone number of the sender of the SMS.
      */
     boolean isSMSHUNDisplayed(String phoneNumber);
+
+    /**
+     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     *
+     * <p>Play the SMS HUN in the car's head unit.
+     */
+    void playSMSHUN();
+
+
+    /**
+     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     *
+     * <p>Check whether SMS HUN is played in the car's head unit.
+     */
+    boolean isSMSNUNPlayed();
+
+    /**
+     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     *
+     * <p>Mute the SMS HUN in the car's head unit. If the new SMS is sent to the
+     *  paired phone from the same sender, the new SMS HUN will not be displayed.
+     */
+    void muteSMSHUN();
 }

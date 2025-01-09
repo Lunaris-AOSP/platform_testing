@@ -38,6 +38,8 @@ java_test_host {
         "objenesis",
         "sdk-common",
         "tools-common-prebuilt",
+        "tools-environment-services",
+        "tools-resource-repository",
         "trove-prebuilt",
     ],
 

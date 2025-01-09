@@ -63,28 +63,60 @@ public class AutoHeadsUpNotificationHelperImpl extends AbstractStandardAppHelper
         Log.i(LOG_TAG, "Checking if heads-up notification displayed in the car's head unit.");
 
         BySelector headsUpNotificationSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION);
-        UiObject2 headsUpNotification = getSpectatioUiUtil().findUiObject(headsUpNotificationSelector);
+        UiObject2 headsUpNotification = getSpectatioUiUtil().waitForUiObject(headsUpNotificationSelector);
         Log.i(LOG_TAG, "headsUpNotification: " + headsUpNotification);
 
-        boolean isValid = getSpectatioUiUtil().isValidUiObject(headsUpNotification);
-        Log.i(LOG_TAG, "isValid: " + isValid);
-
-        return isValid;
+        return headsUpNotification != null;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isSMSHUNDisplayed(String phoneNumber) {
-        Log.i(LOG_TAG, String.format("Checking if SMS heads-up notification from phone number %s is displayed in the car'shead unit.", phoneNumber));
+        Log.i(LOG_TAG, String.format("Checking if SMS heads-up notification from phone number %s is displayed in the car's head unit.", phoneNumber));
 
         BySelector headsUpNotificationTitleSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION_TITLE);
-        UiObject2 headsUpNotificationTitle = getSpectatioUiUtil().findUiObject(headsUpNotificationTitleSelector);
-        Log.i(LOG_TAG, "headsUpNotification title: " + headsUpNotificationTitle);
+        UiObject2 headsUpNotificationTitle = getSpectatioUiUtil().waitForUiObject(headsUpNotificationTitleSelector);
 
-        boolean isValid = getSpectatioUiUtil().isValidUiObject(headsUpNotificationTitle);
-        Log.i(LOG_TAG, "isValid: " + isValid);
+        if (headsUpNotificationTitle != null) {
+            String titleText = headsUpNotificationTitle.getText(); // Assuming title contains phone number.
+            Log.i(LOG_TAG, "Heads-up notification title text: " + titleText);
+            return titleText != null && titleText.contains(phoneNumber);
+        }
 
-        return isValid;
+        return false;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void playSMSHUN() {
+        Log.i(LOG_TAG, "Clicking on play button of SMS heads-up notification in the car's head unit.");
+        try {
+            BySelector playButtonSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION_PLAY_BUTTON);
+            UiObject2 playButton = getSpectatioUiUtil().findUiObject(playButtonSelector);
+            getSpectatioUiUtil().clickAndWait(playButton);
+        } catch (RuntimeException e) {
+            Log.e(LOG_TAG, "Failed to click on play button of SMS heads-up notification in the car's head unit.", e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isSMSNUNPlayed() {
+        Log.i(LOG_TAG, "Checking if SMS heads-up notification is played in the car's head unit.");
+        // TODO: Implement this method. Need to verify if the sound is played from special channel.
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void muteSMSHUN() {
+        Log.i(LOG_TAG, "Clicking on play button of SMS heads-up notification in the car's head unit.");
+        try {
+            BySelector muteButtonSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION_MUTE_BUTTON);
+            UiObject2 muteButton = getSpectatioUiUtil().findUiObject(muteButtonSelector);
+            getSpectatioUiUtil().clickAndWait(muteButton);
+        } catch (RuntimeException e) {
+            Log.e(LOG_TAG, "Failed to click on mute button of SMS heads-up notification in the car's head unit.", e);
+        }
+    }
 }

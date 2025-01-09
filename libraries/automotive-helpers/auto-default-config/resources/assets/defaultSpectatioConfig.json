@@ -919,7 +919,6 @@
         },
         {
           "TYPE": "HAS_ANCESTOR",
-          "MAX_DEPTH": 1,
           "ANCESTOR": {
             "TYPE": "RESOURCE_ID",
             "VALUE": "notification_headsup"
@@ -936,7 +935,38 @@
         },
         {
           "TYPE": "HAS_ANCESTOR",
-          "MAX_DEPTH": 1,
+          "ANCESTOR": {
+            "TYPE": "RESOURCE_ID",
+            "VALUE": "notification_headsup"
+          }
+        }
+      ]
+    },
+    "HEADSUP_NOTIFICATION_PLAY_BUTTON": {
+      "TYPE": "MULTIPLE",
+      "SPECIFIERS": [
+        {
+          "TYPE": "RESOURCE_ID",
+          "VALUE": "action_1"
+        },
+        {
+          "TYPE": "HAS_ANCESTOR",
+          "ANCESTOR": {
+            "TYPE": "RESOURCE_ID",
+            "VALUE": "notification_headsup"
+          }
+        }
+      ]
+    },
+    "HEADSUP_NOTIFICATION_MUTE_BUTTON": {
+      "TYPE": "MULTIPLE",
+      "SPECIFIERS": [
+        {
+          "TYPE": "RESOURCE_ID",
+          "VALUE": "action_3"
+        },
+        {
+          "TYPE": "HAS_ANCESTOR",
           "ANCESTOR": {
             "TYPE": "RESOURCE_ID",
             "VALUE": "notification_headsup"

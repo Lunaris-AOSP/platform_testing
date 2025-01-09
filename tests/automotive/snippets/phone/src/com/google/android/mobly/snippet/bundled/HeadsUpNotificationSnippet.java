@@ -40,4 +40,20 @@ public class HeadsUpNotificationSnippet implements Snippet {
     public boolean isSMSHUNDisplayed(String phoneNumber) {
         return mHeadsUpNotificationHelper.get().isSMSHUNDisplayed(phoneNumber);
     }
+
+    @Rpc(description = "Play the SMS heads-up notification in the car's head unit.")
+    public void playSMSHUN() {
+        mHeadsUpNotificationHelper.get().playSMSHUN();
+    }
+
+    @Rpc(description = "Check if the SMS is played on the car's head unit via car's speaker.")
+    public boolean isSMSNUNPlayed() {
+        return mHeadsUpNotificationHelper.get().isSMSNUNPlayed();
+    }
+
+    @Rpc(description = "Mute the SMS heads-up notification in the car's head unit.")
+    public void muteSMSHUN() {
+        mHeadsUpNotificationHelper.get().muteSMSHUN();
+    }
+
 }
