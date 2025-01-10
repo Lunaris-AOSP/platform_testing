@@ -24,7 +24,9 @@ import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiObject2;
 
+import android.util.Log;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Helper for Notifications on Automotive device openNotification() for swipeDown is removed- Not
@@ -165,6 +167,50 @@ public class AutoNotificationHelperImpl extends AbstractStandardAppHelper
         BySelector selector = By.text(title);
         UiObject2 postedNotification = findInNotificationList(selector);
         return postedNotification != null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isNotificationWithTitleExists(String text) {
+        getSpectatioUiUtil().waitNSeconds(10000);
+        open();
+
+        BySelector notificationsSelector = getUiElementFromConfig(AutomotiveConfigConstants.NOTIFICATION_BODY);
+        List<UiObject2> notifications = getSpectatioUiUtil().findUiObjects(notificationsSelector);
+        Log.i("Notifications: ", "" + notifications);
+
+        for (UiObject2 notification : notifications) {
+            UiObject2 title = notification.findObject(getUiElementFromConfig(AutomotiveConfigConstants.NOTIFICATION_TITLE));
+            String titleText = title.getText().toLowerCase();
+            Log.i("Title: ", titleText);
+            if (title != null && titleText.contains(text.toLowerCase())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isNotificationWithContentExists(String text) {
+        getSpectatioUiUtil().waitNSeconds(10000);
+        open();
+
+        BySelector notificationsSelector = getUiElementFromConfig(AutomotiveConfigConstants.NOTIFICATION_BODY);
+        List<UiObject2> notifications = getSpectatioUiUtil().findUiObjects(notificationsSelector);
+        Log.i("Notifications: ", "" + notifications);
+
+        for (UiObject2 notification : notifications) {
+            UiObject2 content = notification.findObject(getUiElementFromConfig(AutomotiveConfigConstants.NOTIFICATION_CONTENT));
+            String contentText = content.getText().toLowerCase();
+            Log.i("Content: ", contentText);
+            if (content != null && contentText.contains(text.toLowerCase())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

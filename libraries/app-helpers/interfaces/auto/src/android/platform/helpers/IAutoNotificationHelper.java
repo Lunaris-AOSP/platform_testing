@@ -36,11 +36,30 @@ public interface IAutoNotificationHelper extends Scrollable, IAppHelper {
     /**
      * Setup expectations: A notification is received.
      *
-     * <p>Swipe away a received notification.
+     * <p>Check whether notification with specific title exists in notification center.
+     *
+     * @param title text of the notification.
+     */
+    boolean isNotificationWithTitleExists(String text);
+
+    /**
+     * Setup expectations: A notification is received.
+     *
+     * <p>Check whether notification with specific content exists in notification center.
+     *
+     * @param content text of the notification.
+     */
+    boolean isNotificationWithContentExists(String text);
+
+    /**
+     * Setup expectations: A notification is received.
+     *
+     * <p>Swipe away a received notification to remove.
      *
      * @param title of the notification to be swiped.
      */
     void removeNotification(String title);
+
     /**
      * Setup expectations: Notification app is open and scrolled to the bottom.
      *

@@ -871,12 +871,17 @@
       "VALUE": "notification_body_icon",
       "PACKAGE": "com.android.systemui"
     },
+    "NOTIFICATION_BODY": {
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "notification_body",
+      "PACKAGE": "com.android.systemui"
+    },
     "NOTIFICATION_TITLE": {
       "TYPE": "RESOURCE_ID",
       "VALUE": "notification_body_title",
       "PACKAGE": "com.android.systemui"
     },
-    "NOTIFICATION_BODY": {
+    "NOTIFICATION_CONTENT": {
       "TYPE": "RESOURCE_ID",
       "VALUE": "notification_body_content",
       "PACKAGE": "com.android.systemui"
@@ -911,68 +916,20 @@
       "VALUE": "notification_headsup"
     },
     "HEADSUP_NOTIFICATION_TITLE": {
-      "TYPE": "MULTIPLE",
-      "SPECIFIERS": [
-        {
-          "TYPE": "RESOURCE_ID",
-          "VALUE": "notification_body_title"
-        },
-        {
-          "TYPE": "HAS_ANCESTOR",
-          "ANCESTOR": {
-            "TYPE": "RESOURCE_ID",
-            "VALUE": "notification_headsup"
-          }
-        }
-      ]
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "notification_body_title"
     },
     "HEADSUP_NOTIFICATION_CONTENT": {
-      "TYPE": "MULTIPLE",
-      "SPECIFIERS": [
-        {
-          "TYPE": "RESOURCE_ID",
-          "VALUE": "notification_body_content"
-        },
-        {
-          "TYPE": "HAS_ANCESTOR",
-          "ANCESTOR": {
-            "TYPE": "RESOURCE_ID",
-            "VALUE": "notification_headsup"
-          }
-        }
-      ]
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "notification_body_content"
     },
     "HEADSUP_NOTIFICATION_PLAY_BUTTON": {
-      "TYPE": "MULTIPLE",
-      "SPECIFIERS": [
-        {
-          "TYPE": "RESOURCE_ID",
-          "VALUE": "action_1"
-        },
-        {
-          "TYPE": "HAS_ANCESTOR",
-          "ANCESTOR": {
-            "TYPE": "RESOURCE_ID",
-            "VALUE": "notification_headsup"
-          }
-        }
-      ]
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "action_1"
     },
     "HEADSUP_NOTIFICATION_MUTE_BUTTON": {
-      "TYPE": "MULTIPLE",
-      "SPECIFIERS": [
-        {
-          "TYPE": "RESOURCE_ID",
-          "VALUE": "action_3"
-        },
-        {
-          "TYPE": "HAS_ANCESTOR",
-          "ANCESTOR": {
-            "TYPE": "RESOURCE_ID",
-            "VALUE": "notification_headsup"
-          }
-        }
-      ]
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "action_3"
     },
     "ABOUT_MENU": {
       "TYPE": "TEXT",
@@ -2079,6 +2036,11 @@
       "VALUE": "error_message",
       "PACKAGE": "com.android.car.messenger"
     },
+    "SMS_CONVERSATION_TITLE": {
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "title",
+      "PACKAGE": "com.android.car.messenger"
+    },
     "SMS_UNREAD_BADGE": {
       "TYPE": "RESOURCE_ID",
       "VALUE": "unread_badge",
@@ -2101,6 +2063,11 @@
     "ASSISTANT_SMS_TRANSCRIPTION_PLATE": {
       "TYPE": "RESOURCE_ID",
       "VALUE": "transcription_immersive_container"
+    },
+    "SMS_CONVERSATION_MUTE_ACTION_BUTTON": {
+      "TYPE": "RESOURCE_ID",
+      "VALUE": "mute_action_button",
+      "PACKAGE": "com.android.car.messenger"
     },
     "SMS_EMPTY_MESSAGE": {
       "TYPE": "RESOURCE_ID",

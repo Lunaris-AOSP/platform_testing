@@ -180,8 +180,9 @@ public class AutomotiveConfigConstants {
     public static final String NOTIFICATION_VIEW = "NOTIFICATION_VIEW";
     public static final String CLEAR_ALL_BUTTON = "CLEAR_ALL_BUTTON";
     public static final String APP_ICON = "APP_ICON";
-    public static final String NOTIFICATION_TITLE = "NOTIFICATION_TITLE";
     public static final String NOTIFICATION_BODY = "NOTIFICATION_BODY";
+    public static final String NOTIFICATION_TITLE = "NOTIFICATION_TITLE";
+    public static final String NOTIFICATION_CONTENT = "NOTIFICATION_CONTENT";
     public static final String NOTIFICATION_LIST_EMPTY = "NOTIFICATION_LIST_EMPTY";
     public static final String NOTIFICATION_LIST_SCROLL_FORWARD_BUTTON =
             "NOTIFICATION_LIST_SCROLL_FORWARD_BUTTON";
@@ -629,10 +630,12 @@ public class AutomotiveConfigConstants {
     public static final String SMS_PACKAGE = "SMS_PACKAGE";
     public static final String OPEN_SMS_ACTIVITY_COMMAND = "OPEN_SMS_ACTIVITY_COMMAND";
     public static final String SMS_BLUETOOTH_ERROR = "SMS_BLUETOOTH_ERROR";
+    public static final String SMS_CONVERSATION_TITLE = "SMS_CONVERSATION_TITLE";
     public static final String SMS_UNREAD_BADGE = "SMS_UNREAD_BADGE";
     public static final String SMS_PREVIEW_TEXT = "SMS_PREVIEW_TEXT";
     public static final String SMS_PREVIEW_TIMESTAMP = "SMS_PREVIEW_TIMESTAMP";
     public static final String TAP_TO_READ_ALOUD = "TAP_TO_READ_ALOUD";
+    public static final String SMS_CONVERSATION_MUTE_ACTION_BUTTON = "SMS_CONVERSATION_MUTE_ACTION_BUTTON";
     public static final String ASSISTANT_SMS_TRANSCRIPTION_PLATE =
             "ASSISTANT_SMS_TRANSCRIPTION_PLATE";
     public static final String SMS_EMPTY_MESSAGE = "SMS_EMPTY_MESSAGE";

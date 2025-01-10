@@ -20,6 +20,13 @@ package android.platform.helpers;
 public interface IAutoCarSmsMessengerHelper extends IAppHelper, Scrollable {
 
     /**
+     * Setup expectations: None
+     *
+     * <p>This method is used to close the SMS app.
+     */
+    void close();
+
+    /**
      * Setup expectations: bluetooth off
      *
      * <p>This method is used checking if the error is displayed when bluetooth is off
@@ -67,4 +74,19 @@ public interface IAutoCarSmsMessengerHelper extends IAppHelper, Scrollable {
      * <p>This method is used to verify microphone Transcription plate in status bar.
      */
     boolean isAssistantSMSTranscriptionPlateDisplayed();
+
+    /**
+     * Setup expectations: Mutes conversation in SMS app in the car's head unit.
+     *
+     * <p>This method is used to unmute the conversation with the given title.
+     */
+    void unmuteCurrentConversationWithTitle(String title);
+
+    /**
+     * Setup expectations: Mutes conversation in SMS app in the car's head unit.
+     *
+     * <p>This methods is used to unmute the conversation with the given title.
+     * Open the SMS app first. Performs unmute. Closes the SMS app.
+     */
+    void unmuteConversationWithTitle(String title);
 }

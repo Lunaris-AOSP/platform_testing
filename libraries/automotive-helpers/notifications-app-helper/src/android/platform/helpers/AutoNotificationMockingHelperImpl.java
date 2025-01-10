@@ -74,7 +74,7 @@ public class AutoNotificationMockingHelperImpl extends AbstractStandardAppHelper
         NOTIFICATION_REQUIRED_FIELDS.add(
                 getUiElementFromConfig(AutomotiveConfigConstants.NOTIFICATION_TITLE));
         NOTIFICATION_REQUIRED_FIELDS.add(
-                getUiElementFromConfig(AutomotiveConfigConstants.NOTIFICATION_BODY));
+                getUiElementFromConfig(AutomotiveConfigConstants.NOTIFICATION_CONTENT));
 
         mScrollUtility = ScrollUtility.getInstance(getSpectatioUiUtil());
         mScrollAction =

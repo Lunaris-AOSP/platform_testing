@@ -32,7 +32,7 @@ public class NotificationSnippet implements Snippet {
     }
 
     @Rpc(description = "Check whether notification is displayed in the car's notification center.")
-    public boolean isNotificationDisplayed(String title) {
-        return mNotificationHelper.get().checkNotificationExists(title);
+    public boolean isNotificationWithTitleExists(String title) {
+        return mNotificationHelper.get().isNotificationWithTitleExists(title);
     }
 }

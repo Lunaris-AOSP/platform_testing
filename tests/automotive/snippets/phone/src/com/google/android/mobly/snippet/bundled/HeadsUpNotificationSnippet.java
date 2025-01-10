@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,9 @@ public class HeadsUpNotificationSnippet implements Snippet {
         return mHeadsUpNotificationHelper.get().isHUNDisplayed();
     }
 
-    @Rpc(description = "Check whether SMS heads-up notification from the given phone number is displayed in the car's head unit.")
-    public boolean isSMSHUNDisplayed(String phoneNumber) {
-        return mHeadsUpNotificationHelper.get().isSMSHUNDisplayed(phoneNumber);
+    @Rpc(description = "Check whether SMS heads-up notification from the given title is displayed in the car's head unit.")
+    public boolean isSMSHUNWWithTitleDisplayed(String text) {
+        return mHeadsUpNotificationHelper.get().isSMSHUNWWithTitleDisplayed(text);
     }
 
     @Rpc(description = "Play the SMS heads-up notification in the car's head unit.")

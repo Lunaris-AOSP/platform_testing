@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 package android.platform.helpers;
+import android.util.Log;
 
 import android.app.Instrumentation;
 
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiObject2;
 
+import java.util.List;
+
 /** CarSmsMessengerHelperImpl class for Android Auto platform functional tests */
 public class CarSmsMessengerHelperImpl extends AbstractStandardAppHelper
         implements IAutoCarSmsMessengerHelper {
+
+    private static final String LOG_TAG = CarSmsMessengerHelperImpl.class.getSimpleName();
 
     public CarSmsMessengerHelperImpl(Instrumentation instr) {
         super(instr);
@@ -49,11 +54,19 @@ public class CarSmsMessengerHelperImpl extends AbstractStandardAppHelper
     /** {@inheritDoc} */
     @Override
     public void open() {
+        Log.i(LOG_TAG, "Opening SMS app");
         getSpectatioUiUtil().pressHome();
         getSpectatioUiUtil().wait1Second();
         getSpectatioUiUtil()
                 .executeShellCommand(
                         getCommandFromConfig(AutomotiveConfigConstants.OPEN_SMS_ACTIVITY_COMMAND));
+        getSpectatioUiUtil().wait1Second();
+    }
+
+    @Override
+    public void close() {
+        Log.i(LOG_TAG, "Closing SMS app");
+        getSpectatioUiUtil().pressHome();
         getSpectatioUiUtil().wait1Second();
     }
 
@@ -111,5 +124,37 @@ public class CarSmsMessengerHelperImpl extends AbstractStandardAppHelper
         BySelector assistantSMSPlateSelector =
                 getUiElementFromConfig(AutomotiveConfigConstants.ASSISTANT_SMS_TRANSCRIPTION_PLATE);
         return (getSpectatioUiUtil().hasUiElement(assistantSMSPlateSelector));
+    }
+
+    @Override
+    public void unmuteCurrentConversationWithTitle(String title) {
+        Log.i(LOG_TAG, "Unmute conversation with title: " + title);
+
+        BySelector smsConversationTitleSelector =
+                getUiElementFromConfig(AutomotiveConfigConstants.SMS_CONVERSATION_TITLE);
+        List<UiObject2> smsConversationsTitleObj =
+                getSpectatioUiUtil().findUiObjects(smsConversationTitleSelector);
+
+        // Unmute the conversation with the given title.
+        for (UiObject2 smsConversationTitle : smsConversationsTitleObj) {
+            String titleText = smsConversationTitle.getText().toLowerCase();
+            Log.i(LOG_TAG, "Title text: " + titleText);
+
+            if (titleText.contains(title.toLowerCase())) {
+                UiObject2 parentObject = smsConversationTitle.getParent();
+                UiObject2 muteButton = parentObject.findObject(
+                        getUiElementFromConfig(AutomotiveConfigConstants.SMS_CONVERSATION_MUTE_ACTION_BUTTON)
+                );
+                getSpectatioUiUtil().clickAndWait(muteButton);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void unmuteConversationWithTitle(String title) {
+        open();
+        unmuteCurrentConversationWithTitle(title);
+        close();
     }
 }

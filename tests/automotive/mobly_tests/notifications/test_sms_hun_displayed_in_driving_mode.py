@@ -1,4 +1,4 @@
-#  Copyright (C) 2024 The Android Open Source Project
+#  Copyright (C) 2025 The Android Open Source Project
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -32,9 +32,6 @@ from mobly.controllers import android_device
 from utilities import constants
 from utilities.common_utils import CommonUtils
 from utilities.main_utils import common_main
-
-# Number of seconds for the target to stay discoverable on Bluetooth.
-DISCOVERABLE_TIME = 60
 
 
 class NotificationsSMSHUNDisplayedInDrivingMode(
@@ -71,25 +68,25 @@ class NotificationsSMSHUNDisplayedInDrivingMode(
     THEN the SMS appears as a heads-up notification on the car's head unit,
     AND the SMS appears in the notification center on the car.
     """
-    target_phone_number = self.target.mbs.getPhoneNumber()
-    receiver_phone_number = self.phone_notpaired.mbs.getPhoneNumber()
+    receiver_phone_number = self.target.mbs.getPhoneNumber()
+    sender_phone_number = self.phone_notpaired.mbs.getPhoneNumber()
     sms_text = constants.SMS_TEXT
 
-    logging.info(f"Act: Sending SMS to {target_phone_number}")
-    self.phone_notpaired.mbs.sendSms(target_phone_number, sms_text)
+    logging.info(f"Act: Sending SMS to {receiver_phone_number}")
+    self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: SMS is displayed as a heads-up notification in the car's head unit.")
     assert self.discoverer.mbs.isHUNDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
-    # assert self.discoverer.mbs.isSMSHUNDisplayed(target_phone_number), (
-    #     "New SMS is not displayed as a heads-up notification with the correct title."
-    # )
+    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number), (
+        "New SMS is not displayed as a heads-up notification with the correct title."
+    )
 
-    # logging.info("Assert: SMS is displayed in the notification center on the car.")
-    # assert self.discoverer.mbs.isNotificationDisplayed(receiver_phone_number), (
-    #     "New SMS is not displayed in the notification center."
-    # )
+    logging.info("Assert: SMS is displayed in the notification center on the car.")
+    assert self.discoverer.mbs.isNotificationWithTitleExists(sender_phone_number), (
+        "New SMS is not displayed in the notification center."
+    )
 
   def teardown_test(self):
     self.call_utils.press_home()

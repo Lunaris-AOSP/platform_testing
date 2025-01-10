@@ -75,6 +75,11 @@ public class CarSmsMessengerSnippet implements Snippet {
         return mCarSmsMessengerHelper.get().isAssistantSMSTranscriptionPlateDisplayed();
     }
 
+    @Rpc(description = "Unmute conversation with title")
+    public void unmuteConversationWithTitle(String title) {
+        mCarSmsMessengerHelper.get().unmuteConversationWithTitle(title);
+    }
+
     @Override
     public void shutdown() {}
 }

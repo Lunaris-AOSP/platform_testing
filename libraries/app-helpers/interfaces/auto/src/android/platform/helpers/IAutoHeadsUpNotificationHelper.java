@@ -29,9 +29,9 @@ public interface IAutoHeadsUpNotificationHelper extends Scrollable, IAppHelper {
      *
      * <p>Check whether SMS HUN with the given phone number is displayed in car's head unit.
      *
-     * @param phoneNumber phone number of the sender of the SMS.
+     * @param text phone number of the sender of the SMS.
      */
-    boolean isSMSHUNDisplayed(String phoneNumber);
+    boolean isSMSHUNWWithTitleDisplayed(String text);
 
     /**
      * Setup expectations: SMS is sent to the paired phone which is connected to the car.

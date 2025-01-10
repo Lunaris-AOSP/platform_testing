@@ -1,4 +1,4 @@
-#  Copyright (C) 2024 The Android Open Source Project
+#  Copyright (C) 2025 The Android Open Source Project
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -70,16 +70,19 @@ class NotificationsSMSHUNPlayInDrivingMode(
     """
 
     logging.info("Arrange: Get the phone number of phone to send the SMS.")
-    target_phone_number = self.target.mbs.getPhoneNumber()
-    receiver_phone_number = self.phone_notpaired.mbs.getPhoneNumber()
+    receiver_phone_number = self.target.mbs.getPhoneNumber()
+    sender_phone_number = self.phone_notpaired.mbs.getPhoneNumber()
     sms_text = constants.SMS_TEXT
 
-    logging.info(f"Act: Sending new SMS to {target_phone_number}")
-    self.phone_notpaired.mbs.sendSms(target_phone_number, sms_text)
+    logging.info(f"Act: Sending new SMS to {receiver_phone_number}")
+    self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: New SMS is displayed as a heads-up notification.")
     assert self.discoverer.mbs.isHUNDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
+    )
+    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number), (
+        "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
     logging.info("Act: Playing the SMS in the car's head unit.")
