@@ -58,7 +58,7 @@ class NotificationsSMSHUNPlayInDrivingMode(
     self.target.reboot()
     self.call_utils.wait_with_log(constants.DEVICE_CONNECT_WAIT_TIME)
     self.target.load_snippet('mbs', android_device.MBS_PACKAGE)
-    # super().enable_recording()
+    super().enable_recording()
 
   def test_sms_hun_displayed(self):
     """
@@ -81,7 +81,7 @@ class NotificationsSMSHUNPlayInDrivingMode(
     assert self.discoverer.mbs.isHUNDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
-    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number), (
+    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
@@ -106,5 +106,5 @@ class NotificationsSMSHUNPlayInDrivingMode(
       logging.info("Failed to teardown test: %s", e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
   common_main()

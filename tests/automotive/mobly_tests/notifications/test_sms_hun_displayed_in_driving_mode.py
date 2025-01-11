@@ -25,7 +25,6 @@
 #  limitations under the License.
 
 import logging
-from typing import assert_never
 
 from bluetooth_sms_test import bluetooth_sms_base_test
 from mobly.controllers import android_device
@@ -59,7 +58,7 @@ class NotificationsSMSHUNDisplayedInDrivingMode(
     self.target.reboot()
     self.call_utils.wait_with_log(constants.DEVICE_CONNECT_WAIT_TIME)
     self.target.load_snippet('mbs', android_device.MBS_PACKAGE)
-    # super().enable_recording()
+    super().enable_recording()
 
   def test_sms_hun_displayed(self):
     """
@@ -79,12 +78,12 @@ class NotificationsSMSHUNDisplayedInDrivingMode(
     assert self.discoverer.mbs.isHUNDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
-    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number), (
+    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
     logging.info("Assert: SMS is displayed in the notification center on the car.")
-    assert self.discoverer.mbs.isNotificationWithTitleExists(sender_phone_number), (
+    assert self.discoverer.mbs.isNotificationWithTitleExists(sender_phone_number) is True, (
         "New SMS is not displayed in the notification center."
     )
 
@@ -101,5 +100,5 @@ class NotificationsSMSHUNDisplayedInDrivingMode(
       logging.info("Failed to teardown test: %s", e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
   common_main()

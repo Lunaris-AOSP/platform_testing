@@ -33,7 +33,7 @@ from utilities.common_utils import CommonUtils
 from utilities.main_utils import common_main
 
 
-class NotificationsSMSHUNUnmute(
+class NotificationsSMSHUNSwipe(
     bluetooth_sms_base_test.BluetoothSMSBaseTest
 ):
 
@@ -60,15 +60,11 @@ class NotificationsSMSHUNUnmute(
     self.target.load_snippet('mbs', android_device.MBS_PACKAGE)
     super().enable_recording()
 
-  def test_sms_unmute(self):
+  def test_sms_swipe(self):
     """
     GIVEN a SMS HUN is displayed in the car's head unit,
-    WHEN the SMS HUN is muted,
-    THEN the new SMS HUN should not be displayed in the car's head unit for this conversation,
-    AND the SMS HUN should be be displayed in notification center in the car's head unit.
-    WHEN the SMS HUN is unmuted in SMS app in the car's head unit,
-    THEN the new SMS HUN should be displayed in the car's head unit for this conversation.
-    AND the SMS HUN should be be displayed in notification center in the car's head unit.
+    WHEN the SMS HUN is swiped,
+    THEN the notification should dismiss.
     """
     logging.info("Arrange: Get the phone number of phone to send the SMS.")
     receiver_phone_number = self.target.mbs.getPhoneNumber()
@@ -78,33 +74,20 @@ class NotificationsSMSHUNUnmute(
     logging.info(f"Act: Sending new SMS to {receiver_phone_number}")
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
-    logging.info("Act: Mute the SMS in the car's head unit.")
-    self.discoverer.mbs.muteSMSHUN()
-
-    logging.info("Assert: SMS HUN is dismissed.")
-    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is False, (
-        "SMS HUN is not dismissed after mute."
-    )
-
-    logging.info("Assert: SMS is not displayed in notification center.")
-    assert self.discoverer.mbs.isNotificationWithTitleExists(sender_phone_number) is False, (
-        "SMS is still displayed in the notification center after mute."
-    )
-
-    logging.info(f"Act: Unmute the conversation from the SMS app in the car's head unit with title {sender_phone_number}.")
-    self.discoverer.mbs.unmuteConversationWithTitle(sender_phone_number)
-
-    logging.info(f"Act: Sending new SMS to {receiver_phone_number}")
-    self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text + "2")
-
     logging.info("Assert: New SMS is displayed as a heads-up notification.")
     assert self.discoverer.mbs.isHUNDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
+    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is True, (
+        "New SMS is not displayed as a heads-up notification with the correct title."
+    )
 
-    logging.info("Assert: New SMS is displayed in notification center.")
-    assert self.discoverer.mbs.isNotificationWithTitleExists(sender_phone_number) is True, (
-        "New SMS is not displayed in the notification center."
+    logging.info("Act: Swipe the SMS in the car's head unit.")
+    self.discoverer.mbs.swipeSMSHUN()
+
+    logging.info("Assert: SMS HUN is dismissed.")
+    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is False, (
+        "SMS HUN is not dismissed after swipe."
     )
 
   def teardown_test(self):

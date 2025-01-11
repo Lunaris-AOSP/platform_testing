@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ public interface IAutoHeadsUpNotificationHelper extends Scrollable, IAppHelper {
      */
     void playSMSHUN();
 
-
     /**
      * Setup expectations: SMS is sent to the paired phone which is connected to the car.
      *
@@ -55,4 +54,11 @@ public interface IAutoHeadsUpNotificationHelper extends Scrollable, IAppHelper {
      *  paired phone from the same sender, the new SMS HUN will not be displayed.
      */
     void muteSMSHUN();
+
+    /**
+     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     *
+     * <p>Swipe the SMS HUN in the car's head unit.
+     */
+    void swipeSMSHUN();
 }
