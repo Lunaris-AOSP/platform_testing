@@ -79,6 +79,7 @@ open class PerfettoTraceMonitor(val config: TraceConfig) : TraceMonitor() {
 
         private val dataSourceConfigs = mutableSetOf<DataSourceConfig>()
         private var incrementalTimeoutMs: Int? = null
+        private var uniqueSessionName: String? = null
 
         fun enableImeTrace(): Builder = apply { enableCustomTrace(createImeDataSourceConfig()) }
 
@@ -189,6 +190,8 @@ open class PerfettoTraceMonitor(val config: TraceConfig) : TraceMonitor() {
 
         fun setIncrementalTimeout(timeoutMs: Int) = apply { incrementalTimeoutMs = timeoutMs }
 
+        fun setUniqueSessionName(name: String): Builder = apply { uniqueSessionName = name }
+
         fun build(): PerfettoTraceMonitor {
             val configBuilder =
                 TraceConfig.newBuilder()
@@ -198,6 +201,10 @@ open class PerfettoTraceMonitor(val config: TraceConfig) : TraceMonitor() {
                             .setSizeKb(TRACE_BUFFER_SIZE_KB)
                             .build()
                     )
+
+            if (uniqueSessionName != null) {
+                configBuilder.setUniqueSessionName(uniqueSessionName)
+            }
 
             for (dataSourceConfig in dataSourceConfigs) {
                 configBuilder.addDataSources(createDataSourceWithConfig(dataSourceConfig))
@@ -353,7 +360,7 @@ open class PerfettoTraceMonitor(val config: TraceConfig) : TraceMonitor() {
         }
 
         private fun isPerfettoProcessUp(pid: Int): Boolean {
-            val out = String(executeShellCommand("ps -p $pid -o CMD"))
+            val out = String(executeShellCommand("ps -p $pid -o NAME"))
             return out.contains("perfetto")
         }
     }

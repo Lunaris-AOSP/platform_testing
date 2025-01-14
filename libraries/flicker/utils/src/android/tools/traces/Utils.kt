@@ -198,20 +198,43 @@ fun busyWaitForDataSourceRegistration(
     busyWaitIntervalMs: Long = 100,
     timeoutMs: Long = 10000,
 ) {
-    var elapsedMs = 0L
-
-    while (!isDataSourceAvailable(dataSourceName)) {
-        SystemClock.sleep(busyWaitIntervalMs)
-        elapsedMs += busyWaitIntervalMs
-        if (elapsedMs >= timeoutMs) {
-            throw java.lang.RuntimeException(
-                "Data source didn't become available. Waited for: $timeoutMs ms"
-            )
-        }
-    }
+    busyWait(
+        busyWaitIntervalMs,
+        timeoutMs,
+        { isDataSourceAvailable(dataSourceName) },
+        { "Data source disn't  become available" },
+    )
 }
 
-fun isDataSourceAvailable(dataSourceName: String): Boolean {
+@JvmOverloads
+fun busyWaitTracingSessionExists(
+    uniqueSessionName: String,
+    busyWaitIntervalMs: Long = 100,
+    timeoutMs: Long = 10000,
+) {
+    busyWait(
+        busyWaitIntervalMs,
+        timeoutMs,
+        { sessionExists(uniqueSessionName) },
+        { "Tracing session doesn't exist" },
+    )
+}
+
+@JvmOverloads
+fun busyWaitTracingSessionDoesntExist(
+    uniqueSessionName: String,
+    busyWaitIntervalMs: Long = 100,
+    timeoutMs: Long = 10000,
+) {
+    busyWait(
+        busyWaitIntervalMs,
+        timeoutMs,
+        { !sessionExists(uniqueSessionName) },
+        { "Tracing session still exists" },
+    )
+}
+
+private fun isDataSourceAvailable(dataSourceName: String): Boolean {
     val proto = executeShellCommand("perfetto --query-raw")
 
     try {
@@ -240,4 +263,39 @@ fun isDataSourceAvailable(dataSourceName: String): Boolean {
     }
 
     return false
+}
+
+private fun sessionExists(uniqueSessionName: String): Boolean {
+    val proto = executeShellCommand("perfetto --query-raw")
+
+    try {
+        val state = TracingServiceState.parseFrom(proto)
+
+        for (session in state.tracingSessionsList) {
+            if (session.uniqueSessionName.equals(uniqueSessionName)) {
+                return true
+            }
+        }
+    } catch (e: InvalidProtocolBufferException) {
+        throw RuntimeException(e)
+    }
+
+    return false
+}
+
+private fun busyWait(
+    busyWaitIntervalMs: Long,
+    timeoutMs: Long,
+    predicate: () -> Boolean,
+    errorMessage: () -> String,
+) {
+    var elapsedMs = 0L
+
+    while (!predicate()) {
+        SystemClock.sleep(busyWaitIntervalMs)
+        elapsedMs += busyWaitIntervalMs
+        if (elapsedMs >= timeoutMs) {
+            throw java.lang.RuntimeException(errorMessage())
+        }
+    }
 }
