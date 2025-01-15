@@ -553,6 +553,7 @@ public class DialHelperImpl extends AbstractStandardAppHelper implements IAutoDi
     /** {@inheritDoc} */
     public String getFirstContactFromContactList() {
         openContacts();
+        scrollToTopOfContactList();
         BySelector contactNameSelector =
                 getUiElementFromConfig(AutomotiveConfigConstants.CONTACT_NAME);
         UiObject2 firstContact = getSpectatioUiUtil().findUiObject(contactNameSelector);

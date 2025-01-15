@@ -54,6 +54,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.rules.RuleChain
+import platform.test.motion.Defaults
 import platform.test.motion.MotionTestRule
 import platform.test.motion.RecordedMotion
 import platform.test.motion.RecordedMotion.Companion.create
@@ -158,20 +159,30 @@ interface MotionControlScope : SemanticsNodeInteractionsProvider {
  *   flipping the `play` parameter of the [recordMotion]'s content composable)
  * @param recordAfter Records the frame after the recording has ended (runs after awaiting idleness,
  *   after all animations have finished and no more recomposition is pending).
+ * @param captureScreenshots Whether to record screenshots on each frame. Must be `true` for
+ *   [filmstripMatchesGolden] to work. If `true`, the debug screenrecording will be created.
  * @param timeSeriesCapture produces the time-series, invoked on each animation frame.
  */
 data class ComposeRecordingSpec(
     val motionControl: MotionControl,
     val recordBefore: Boolean = true,
     val recordAfter: Boolean = true,
+    val captureScreenshots: Boolean = Defaults.captureScreenshots(),
     val timeSeriesCapture: TimeSeriesCaptureScope<SemanticsNodeInteractionsProvider>.() -> Unit,
 ) {
     constructor(
         recording: MotionControlFn,
         recordBefore: Boolean = true,
         recordAfter: Boolean = true,
+        captureScreenshots: Boolean = Defaults.captureScreenshots(),
         timeSeriesCapture: TimeSeriesCaptureScope<SemanticsNodeInteractionsProvider>.() -> Unit,
-    ) : this(MotionControl(recording = recording), recordBefore, recordAfter, timeSeriesCapture)
+    ) : this(
+        MotionControl(recording = recording),
+        recordBefore,
+        recordAfter,
+        captureScreenshots,
+        timeSeriesCapture,
+    )
 
     companion object {
         /** Record a time-series until [checkDone] returns true. */
@@ -179,12 +190,14 @@ data class ComposeRecordingSpec(
             checkDone: SemanticsNodeInteractionsProvider.() -> Boolean,
             recordBefore: Boolean = true,
             recordAfter: Boolean = true,
+            captureScreenshots: Boolean = Defaults.captureScreenshots(),
             timeSeriesCapture: TimeSeriesCaptureScope<SemanticsNodeInteractionsProvider>.() -> Unit,
         ): ComposeRecordingSpec {
             return ComposeRecordingSpec(
                 motionControl = MotionControl { awaitCondition { checkDone() } },
                 recordBefore,
                 recordAfter,
+                captureScreenshots,
                 timeSeriesCapture,
             )
         }
@@ -202,6 +215,8 @@ fun MotionTestRule<ComposeToolkit>.recordMotion(
     recordingSpec: ComposeRecordingSpec,
 ): RecordedMotion {
     with(toolkit.composeContentTestRule) {
+        val captureScreenshots = recordingSpec.captureScreenshots
+        Log.i(TAG, "recordMotion(captureScreenshots=$captureScreenshots)")
         val frameIdCollector = mutableListOf<FrameId>()
         val propertyCollector = mutableMapOf<String, MutableList<DataPoint<*>>>()
         val screenshotCollector = mutableListOf<ImageBitmap>()
@@ -211,9 +226,11 @@ fun MotionTestRule<ComposeToolkit>.recordMotion(
             frameIdCollector.add(frameId)
             recordingSpec.timeSeriesCapture.invoke(TimeSeriesCaptureScope(this, propertyCollector))
 
-            val view = (onRoot().fetchSemanticsNode().root as ViewRootForTest).view
-            val bitmap = view.captureToBitmapAsync().get(10, TimeUnit.SECONDS)
-            screenshotCollector.add(bitmap.asImageBitmap())
+            if (recordingSpec.captureScreenshots) {
+                val view = (onRoot().fetchSemanticsNode().root as ViewRootForTest).view
+                val bitmap = view.captureToBitmapAsync().get(10, TimeUnit.SECONDS)
+                screenshotCollector.add(bitmap.asImageBitmap())
+            }
         }
 
         var playbackStarted by mutableStateOf(false)
@@ -272,7 +289,12 @@ fun MotionTestRule<ComposeToolkit>.recordMotion(
                 propertyCollector.entries.map { entry -> Feature(entry.key, entry.value) },
             )
 
-        return create(timeSeries, screenshotCollector.map { it.asAndroidBitmap() })
+        return create(
+            timeSeries,
+            screenshotCollector
+                .takeIf { recordingSpec.captureScreenshots }
+                ?.map { it.asAndroidBitmap() },
+        )
     }
 }
 
@@ -304,6 +326,7 @@ private class MotionControlImpl(
             when (state) {
                 MotionControlState.Start,
                 MotionControlState.WaitingToPlay -> false
+
                 else -> true
             }
 
@@ -312,6 +335,7 @@ private class MotionControlImpl(
             when (state) {
                 MotionControlState.Recording,
                 MotionControlState.Ended -> true
+
                 else -> false
             }
 
@@ -331,23 +355,27 @@ private class MotionControlImpl(
                 delayReadyToPlayJob = motionControl.delayReadyToPlay.launch()
                 state = MotionControlState.WaitingToPlay
             }
+
             MotionControlState.WaitingToPlay -> {
                 if (delayReadyToPlayJob.isCompleted) {
                     delayRecordingJob = motionControl.delayRecording.launch()
                     state = MotionControlState.WaitingToRecord
                 }
             }
+
             MotionControlState.WaitingToRecord -> {
                 if (delayRecordingJob.isCompleted) {
                     recordingJob = motionControl.recording.launch()
                     state = MotionControlState.Recording
                 }
             }
+
             MotionControlState.Recording -> {
                 if (recordingJob.isCompleted) {
                     state = MotionControlState.Ended
                 }
             }
+
             MotionControlState.Ended -> {}
         }
 
@@ -394,12 +422,16 @@ private class MotionControlImpl(
             when (entry) {
                 is TouchEventRecorderEntry.AdvanceTime ->
                     awaitDelay(entry.durationMillis.milliseconds)
+
                 is TouchEventRecorderEntry.Cancel ->
                     onNode.performTouchInput { cancel(delayMillis = 0) }
+
                 is TouchEventRecorderEntry.Down ->
                     onNode.performTouchInput { down(entry.pointerId, entry.position) }
+
                 is TouchEventRecorderEntry.Move ->
                     onNode.performTouchInput { move(delayMillis = 0) }
+
                 is TouchEventRecorderEntry.Up -> onNode.performTouchInput { up(entry.pointerId) }
                 is TouchEventRecorderEntry.UpdatePointerTo ->
                     onNode.performTouchInput { updatePointerTo(entry.pointerId, entry.position) }

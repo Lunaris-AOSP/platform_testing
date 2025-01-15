@@ -132,6 +132,11 @@ public class BootTimeTest extends BaseHostJUnit4Test {
                             + "and not needed for the second run especially in local testing.")
     private boolean mSkipPinSetup = false;
 
+    @Option(
+            name = "enable-perfetto-trace",
+            description = "Enable perfetto trace collection during the reboot. True by default.")
+    private boolean mEnablePerfettoTrace = true;
+
     private LogcatReceiver mRebootLogcatReceiver = null;
     private IRemoteAndroidTestRunner mPostBootTestRunner = null;
 
@@ -193,7 +198,9 @@ public class BootTimeTest extends BaseHostJUnit4Test {
         CLog.v("Successive boot iteration %d", iteration);
         getDevice().enableAdbRoot();
         // Property used for collecting the perfetto trace file on boot.
-        getDevice().executeShellCommand("setprop persist.debug.perfetto.boottrace 1");
+        String setPerfettoPropValue = mEnablePerfettoTrace ? "1" : "\"\"";
+        String perfettoPropCmd = String.format("setprop persist.debug.perfetto.boottrace %s", setPerfettoPropValue);
+        getDevice().executeShellCommand(perfettoPropCmd);
         if (mForceF2FsShutdown) {
             forseF2FsShutdown();
         }

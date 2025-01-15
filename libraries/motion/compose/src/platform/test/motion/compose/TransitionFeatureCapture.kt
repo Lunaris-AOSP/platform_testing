@@ -108,7 +108,7 @@ fun <T> ComposeRecordingSpec.Companion.duringTransition(
             },
         recordBefore,
         recordAfter,
-        timeSeriesCapture,
+        timeSeriesCapture = timeSeriesCapture,
     )
 }
 

@@ -222,7 +222,7 @@ class MotionTestValuesTest {
             recording = { awaitFrames(1) },
             recordBefore = false,
             recordAfter = false,
-            timeSeriesCapture,
+            timeSeriesCapture = timeSeriesCapture,
         )
     }
 

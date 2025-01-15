@@ -52,12 +52,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.unit.dp
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.IterableSubject
 import com.google.common.truth.Truth.assertThat
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.launch
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import platform.test.motion.MotionTestRule
 import platform.test.motion.compose.DataPointTypes.offset
 import platform.test.motion.compose.values.MotionTestValueKey
@@ -68,6 +70,7 @@ import platform.test.motion.golden.NotFoundDataPoint
 import platform.test.motion.golden.ValueDataPoint
 import platform.test.motion.testing.createGoldenPathManager
 
+@RunWith(AndroidJUnit4::class)
 class ComposeToolkitTest {
     private val pathManager =
         createGoldenPathManager("platform_testing/libraries/motion/compose/tests/goldens")
