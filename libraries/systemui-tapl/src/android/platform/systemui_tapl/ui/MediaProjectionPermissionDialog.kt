@@ -111,8 +111,7 @@ class MediaProjectionPermissionDialog internal constructor() {
         private val POP_UP = By.clazz("android.widget.ListView")
         private val SINGLE_APP_SELECTOR = By.text("Share one app")
         private val ENTIRE_SCREEN_SELECTOR = By.text("Share entire screen")
-        private val ENTIRE_SCREEN_RECORD_SECONDARY_SELECTOR =
-            By.text("Record entire screen: Overlay #1")
+        private val ENTIRE_SCREEN_RECORD_SECONDARY_SELECTOR = By.text("Record Overlay #1")
         private val SINGLE_APP_START_SELECTOR = By.text("Next")
         private val CANCEL_SELECTOR = By.text("Cancel")
         private val SINGLE_APP_DISABLED_SELECTOR = By.textEndsWith("has disabled this option")
