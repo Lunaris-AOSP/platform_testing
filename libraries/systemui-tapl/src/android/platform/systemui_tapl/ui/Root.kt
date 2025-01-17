@@ -274,6 +274,10 @@ class Root private constructor() {
     val bubbleBar: BubbleBar
         get() = BubbleBar()
 
+    /** Gets the bubble bar flyout in launcher. */
+    val bubbleBarFlyout: BubbleBarFlyout
+        get() = BubbleBarFlyout()
+
     /** Verifies that the bubble bar is hidden. */
     fun verifyBubbleBarIsHidden() {
         BubbleBar.BUBBLE_BAR_VIEW.assertInvisible(LONG_WAIT)
