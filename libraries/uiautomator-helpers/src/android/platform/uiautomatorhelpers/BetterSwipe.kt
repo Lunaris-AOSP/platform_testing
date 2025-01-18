@@ -35,6 +35,7 @@ import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.google.common.truth.Truth.assertThat
 import java.time.Duration
 import java.time.temporal.ChronoUnit.MILLIS
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicInteger
 
 private val DEFAULT_DURATION: Duration = Duration.of(500, MILLIS)
@@ -59,8 +60,26 @@ private val PAUSE_DURATION: Duration = Duration.of(250, MILLIS)
  * ```
  */
 object BetterSwipe {
+    val TAG = "BetterSwipe"
 
+    /** The swipes that have currently not been released, with most recent first. */
+    private val currentSwipes = CopyOnWriteArrayList<Swipe>()
+    // TODO(b/388022364): can this be replaced by currentSwipes?
     private val lastPointerId = AtomicInteger(0)
+
+    /**
+     * Release all currently-held swipes, starting with the most recently initiated swipes. (due to
+     * issues like b/383365751, we may sometimes "leak" swipes, and this can be called to state that
+     * all fingers should be up)
+     */
+    @JvmStatic
+    fun releaseAll() {
+        while (currentSwipes.isNotEmpty()) {
+            Log.e(TAG, "releasing, ${currentSwipes.size} current swipes remaining")
+            // Should remove this swipe from the list
+            currentSwipes[0].release()
+        }
+    }
 
     /** Starts a swipe from [start] at the current time. */
     @JvmStatic fun from(start: PointF) = Swipe(start)
@@ -77,6 +96,7 @@ object BetterSwipe {
         private var released = false
 
         init {
+            currentSwipes.add(0, this)
             log("Touch $pointerId started at $start")
             sendPointer(currentTime = downTime, action = MotionEvent.ACTION_DOWN, point = start)
         }
@@ -92,7 +112,7 @@ object BetterSwipe {
         fun to(
             end: PointF,
             duration: Duration = DEFAULT_DURATION,
-            interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR
+            interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR,
         ): Swipe {
             throwIfReleased()
             val stepTime = calculateStepTime()
@@ -118,7 +138,7 @@ object BetterSwipe {
         fun to(
             end: Point,
             duration: Duration = DEFAULT_DURATION,
-            interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR
+            interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR,
         ): Swipe {
             return to(PointF(end.x.toFloat(), end.y.toFloat()), duration, interpolator)
         }
@@ -131,13 +151,14 @@ object BetterSwipe {
         /** Moves the pointer up, finishing the swipe. Further calls will result in an exception. */
         @JvmOverloads
         fun release(sync: Boolean = true) {
+            currentSwipes.remove(this)
             throwIfReleased()
             log("Touch $pointerId released at $lastPoint")
             sendPointer(
                 currentTime = lastTime,
                 action = MotionEvent.ACTION_UP,
                 point = lastPoint,
-                sync = sync
+                sync = sync,
             )
             lastPointerId.decrementAndGet()
             released = true
@@ -159,7 +180,7 @@ object BetterSwipe {
             currentTime: Long,
             action: Int,
             point: PointF,
-            sync: Boolean = true
+            sync: Boolean = true,
         ) {
             val event = getMotionEvent(downTime, currentTime, action, point, pointerId)
 
@@ -172,22 +193,22 @@ object BetterSwipe {
 
         private fun trySendMotionEvent(event: MotionEvent, sync: Boolean) {
             ensureThat(
-                    "Injecting motion event",
-                    /* timeout= */ Duration.ofMillis(INJECT_EVENT_TIMEOUT_MILLIS),
-                    /* errorProvider= */ {
-                        "Injecting motion event $event failed after retrying for 10 seconds, " +
-                            "see logcat for the error"
-                    }
-                )
-                /* condition= */ {
-                    try {
-                        return@ensureThat getInstrumentation()
-                            .uiAutomation
-                            .injectInputEvent(event, sync, /* waitForAnimations= */ false)
-                    } catch (t: Throwable) {
-                        throw RuntimeException(t)
-                    }
+                "Injecting motion event",
+                /* timeout= */ Duration.ofMillis(INJECT_EVENT_TIMEOUT_MILLIS),
+                /* errorProvider= */ {
+                    "Injecting motion event $event failed after retrying for 10 seconds, " +
+                        "see logcat for the error"
+                },
+            )
+            /* condition= */ {
+                try {
+                    return@ensureThat getInstrumentation()
+                        .uiAutomation
+                        .injectInputEvent(event, sync, /* waitForAnimations= */ false)
+                } catch (t: Throwable) {
+                    throw RuntimeException(t)
                 }
+            }
         }
 
         /** Returns the time when movement finished. */
@@ -196,7 +217,7 @@ object BetterSwipe {
             from: PointF,
             to: PointF,
             interpolator: TimeInterpolator,
-            stepTime: Duration
+            stepTime: Duration,
         ): Long {
             val stepTimeMs = stepTime.toMillis()
             val durationMs = duration.toMillis()
@@ -294,7 +315,7 @@ private fun getMotionEvent(
         /* deviceId= */ 0,
         /* edgeFlags= */ 0,
         /* source= */ InputDevice.SOURCE_TOUCHSCREEN,
-        /* flags= */ 0
+        /* flags= */ 0,
     )
 }
 
