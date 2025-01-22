@@ -60,7 +60,7 @@ class TransitionsTraceParser :
                 }
 
             transitionRowsGrouped.values.forEach { transitionRows ->
-                transitions.add(buildTransition(transitionRows, handlerMapping))
+                transitions.add(buildTransition(input, transitionRows, handlerMapping))
             }
         }
 
@@ -86,6 +86,7 @@ class TransitionsTraceParser :
                 .trimIndent()
 
         private fun buildTransition(
+            input: TraceProcessorSession,
             transitionRows: List<Row>,
             handlerMapping: Map<Int, String>,
         ): Transition {
@@ -94,15 +95,16 @@ class TransitionsTraceParser :
                 id = args.getChild("id")?.getInt() ?: error("Missing transition id"),
                 wmData =
                     WmTransitionData(
-                        createTime = args.getChild("create_time_ns")?.getLong()?.toTimestamp(),
-                        sendTime = args.getChild("send_time_ns")?.getLong()?.toTimestamp(),
-                        abortTime = args.getChild("wm_abort_time_ns")?.getLong()?.toTimestamp(),
-                        finishTime = args.getChild("finish_time_ns")?.getLong()?.toTimestamp(),
+                        createTime = args.getChild("create_time_ns")?.getLong()?.toTimestamp(input),
+                        sendTime = args.getChild("send_time_ns")?.getLong()?.toTimestamp(input),
+                        abortTime =
+                            args.getChild("wm_abort_time_ns")?.getLong()?.toTimestamp(input),
+                        finishTime = args.getChild("finish_time_ns")?.getLong()?.toTimestamp(input),
                         startingWindowRemoveTime =
                             args
                                 .getChild("starting_window_remove_time_ns")
                                 ?.getLong()
-                                ?.toTimestamp(),
+                                ?.toTimestamp(input),
                         startTransactionId = args.getChild("start_transaction_id")?.getLong(),
                         finishTransactionId = args.getChild("finish_transaction_id")?.getLong(),
                         type = args.getChild("type")?.getInt()?.toTransitionType(),
@@ -125,23 +127,36 @@ class TransitionsTraceParser :
                     ),
                 shellData =
                     ShellTransitionData(
-                        dispatchTime = args.getChild("dispatch_time_ns")?.getLong()?.toTimestamp(),
+                        dispatchTime =
+                            args.getChild("dispatch_time_ns")?.getLong()?.toTimestamp(input),
                         mergeRequestTime =
-                            args.getChild("merge_request_time_ns")?.getLong()?.toTimestamp(),
-                        mergeTime = args.getChild("merge_time_ns")?.getLong()?.toTimestamp(),
-                        abortTime = args.getChild("shell_abort_time_ns")?.getLong()?.toTimestamp(),
+                            args.getChild("merge_request_time_ns")?.getLong()?.toTimestamp(input),
+                        mergeTime = args.getChild("merge_time_ns")?.getLong()?.toTimestamp(input),
+                        abortTime =
+                            args.getChild("shell_abort_time_ns")?.getLong()?.toTimestamp(input),
                         handler = args.getChild("handler")?.getInt()?.let { handlerMapping[it] },
                         mergeTarget = args.getChild("merge_target")?.getInt(),
                     ),
             )
         }
 
-        private fun Long.toTimestamp() =
+        private fun Long.toTimestamp(input: TraceProcessorSession): Timestamp? {
             if (this == 0L) {
-                null
-            } else {
-                Timestamps.from(elapsedNanos = this)
+                return null
             }
+
+            val ts = this
+            return input.query(
+                "SELECT TO_REALTIME($ts) as real_ts, TO_MONOTONIC($ts) as monotonic_ts"
+            ) {
+                require(it.size == 1)
+                Timestamps.from(
+                    unixNanos = it[0]["real_ts"] as Long,
+                    systemUptimeNanos = it[0]["monotonic_ts"] as Long,
+                    elapsedNanos = this,
+                )
+            }
+        }
 
         private fun Int.toTransitionType() = TransitionType.fromInt(this)
     }

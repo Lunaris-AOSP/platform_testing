@@ -17,6 +17,7 @@
 package android.platform.test.annotations;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -42,9 +43,12 @@ import java.lang.annotation.Target;
  * <p>Both {@code SetFlagsRule} and {@code CheckFlagsRule} will fail the test if a particular flag
  * is both set (with {@code EnableFlags} or {@code DisableFlags}) and required (with {@code
  * RequiresFlagsEnabled} or {@code RequiresFlagsDisabled}).
+ *
+ * <p>{@link Inherited} so that subclasses will inherit superclass value, especially for benchmarks.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
+@Inherited
 public @interface RequiresFlagsDisabled {
     /**
      * The list of the feature flags that require to be disabled. Each item is the full flag name

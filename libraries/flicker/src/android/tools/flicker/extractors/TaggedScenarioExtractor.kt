@@ -74,6 +74,12 @@ class TaggedScenarioExtractor(
                 cujEntry.startTimestamp.hasAllTimestamps && cujEntry.endTimestamp.hasAllTimestamps
             )
 
+            Log.d(
+                LOG_TAG,
+                "Estimating start timestamp for $cujEntry " +
+                    "with associated transition: $associatedTransition",
+            )
+
             val startTimestamp =
                 estimateScenarioStartTimestamp(cujEntry, associatedTransition, reader)
             val endTimestamp = estimateScenarioEndTimestamp(cujEntry, associatedTransition, reader)

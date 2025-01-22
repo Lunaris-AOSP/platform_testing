@@ -22,9 +22,12 @@ import android.tools.io.Reader
 import android.tools.traces.surfaceflinger.Display
 import android.tools.traces.surfaceflinger.LayerTraceEntry
 import android.tools.traces.wm.Transition
+import android.util.Log
 import kotlin.math.abs
 
 object Utils {
+    const val LOG_TAG = "FlickerExtractorUtils"
+
     fun interpolateStartTimestampFromTransition(transition: Transition, reader: Reader): Timestamp {
         val wmTrace = reader.readWmTrace() ?: error("Missing WM trace")
         val layersTrace = reader.readLayersTrace() ?: error("Missing layers trace")
@@ -40,6 +43,12 @@ object Utils {
                 layersTrace.getEntryForTransaction(it).timestamp
             }
 
+        if (startTransactionAppliedTimestamp != null) {
+            require(startTransactionAppliedTimestamp.systemUptimeNanos != 0L) {
+                "Start transaction applied timestamp is missing system uptime"
+            }
+        }
+
         // If we don't have a startTransactionAppliedTimestamp it's likely because the start
         // transaction was merged into another transaction so we can't match the id, so we need to
         // fallback on the send time reported on the WM side.
@@ -47,7 +56,17 @@ object Utils {
             startTransactionAppliedTimestamp?.systemUptimeNanos
                 ?: transition.createTime.systemUptimeNanos
 
-        // This fallback doesn't really work because then systemUptimeNanos is 0...
+        require(systemUptimeNanos != 0L) {
+            "Both startTransactionAppliedTimestamp and transition's create time are missing " +
+                "system uptime: $startTransactionAppliedTimestamp and $transition"
+        }
+
+        Log.d(
+            LOG_TAG,
+            "Interpolated start timestamp for $transition to: " +
+                "elapsed $elapsedNanos, uptime $systemUptimeNanos, unix $unixNanos",
+        )
+
         return Timestamps.from(elapsedNanos, systemUptimeNanos, unixNanos)
     }
 
@@ -119,6 +138,11 @@ object Utils {
                 layersTrace.getEntryAt(finishTransactionAppliedTimestamp).timestamp.unixNanos
         }
 
+        Log.d(
+            LOG_TAG,
+            "Interpolated finish timestamp for $transition to: " +
+                "elapsed $elapsedNanos, uptime $systemUptimeNanos, unix $unixNanos",
+        )
         return Timestamps.from(elapsedNanos, systemUptimeNanos, unixNanos)
     }
 

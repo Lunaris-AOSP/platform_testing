@@ -96,9 +96,24 @@ class FlickerServiceDecorator(
                                     "Running transition",
                                     instrumentation,
                                 )
-                                writer.setTransitionStartTime(now())
+
+                                val traceStartTime = now()
+                                Utils.notifyRunnerProgress(
+                                    testClassName,
+                                    "Setting trace start time to :: $traceStartTime",
+                                    instrumentation,
+                                )
+
+                                writer.setTransitionStartTime(traceStartTime)
                                 method.invokeExplosively(test)
-                                writer.setTransitionEndTime(now())
+
+                                val traceEndTime = now()
+                                Utils.notifyRunnerProgress(
+                                    testClassName,
+                                    "Setting trace start time to :: $traceEndTime",
+                                    instrumentation,
+                                )
+                                writer.setTransitionEndTime(traceEndTime)
 
                                 Utils.notifyRunnerProgress(
                                     testClassName,

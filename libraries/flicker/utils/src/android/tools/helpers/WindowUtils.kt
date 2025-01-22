@@ -59,6 +59,14 @@ object WindowUtils {
             return currState.wmState.getRotation(PlatformConsts.DEFAULT_DISPLAY)
         }
 
+    /** Gets the default display ID. */
+    val defaultDisplayId: Int
+        get() =
+            getCurrentStateDump(clearCacheAfterParsing = false)
+                .wmState
+                .getDefaultDisplay()
+                ?.displayId ?: error("Missing physical display")
+
     /**
      * Get the display bounds when the device is at a specific rotation
      *
