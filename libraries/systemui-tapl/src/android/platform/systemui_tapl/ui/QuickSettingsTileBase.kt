@@ -144,12 +144,9 @@ sealed class QuickSettingsTileBase {
 
     /** Long-clicks the tile and verifies that Settings app appears, unless otherwise specified */
     fun longClick(expectedSettingsPackage: String? = null) {
-        val longClick = Gestures.longClickDown(tile, "Quick settings tile")
-        try {
+        Gestures.longClickDownUp(tile, "Quick settings tile") {
             val packageName = expectedSettingsPackage ?: SETTINGS_PACKAGE
             By.pkg(packageName).assertVisible { "$packageName didn't appear" }
-        } finally {
-            longClick.up()
         }
     }
 

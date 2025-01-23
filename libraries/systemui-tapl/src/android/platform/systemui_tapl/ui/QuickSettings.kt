@@ -27,12 +27,10 @@ import android.platform.uiautomatorhelpers.DeviceHelpers.assertVisible
 import android.platform.uiautomatorhelpers.DeviceHelpers.uiDevice
 import android.platform.uiautomatorhelpers.DeviceHelpers.waitForFirstObj
 import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
-import android.platform.uiautomatorhelpers.FLING_GESTURE_INTERPOLATOR
 import android.platform.uiautomatorhelpers.scrollUntilFound
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiSelector
-import java.time.Duration
 import java.util.regex.Pattern
 
 /** System UI test automation object representing quick settings in the notification shade. */
@@ -122,13 +120,10 @@ class QuickSettings internal constructor() {
     private fun swipeUp() {
         val displayWidth = uiDevice.displayWidth
         val displayHeight = uiDevice.displayHeight
-        BetterSwipe.from(PointF((displayWidth / 2).toFloat(), displayHeight.toFloat() - 1f))
-            .to(
-                PointF((displayWidth / 2).toFloat(), 0f),
-                Duration.ofMillis(500),
-                FLING_GESTURE_INTERPOLATOR,
-            )
-            .release()
+        BetterSwipe.swipe(
+            PointF((displayWidth / 2).toFloat(), displayHeight.toFloat() - 1f),
+            PointF((displayWidth / 2).toFloat(), 0f),
+        )
     }
 
     private companion object {

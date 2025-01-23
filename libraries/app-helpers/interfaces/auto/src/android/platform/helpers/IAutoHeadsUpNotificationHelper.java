@@ -21,31 +21,38 @@ public interface IAutoHeadsUpNotificationHelper extends Scrollable, IAppHelper {
      * Setup expectations: A heads-up notification (HUN) is posted.
      *
      * <p>Check whether HUN is displayed in the device.
+     *
+     * @return True if the HUN is displayed, false otherwise.
      */
-    boolean isHUNDisplayed();
+    boolean isHunDisplayed();
 
     /**
      * Setup expectations: SMS is sent to the paired phone.
      *
-     * <p>Check whether SMS HUN with the given phone number is displayed in car's head unit.
+     * <p>Check whether SMS HUN with the given tile is displayed in car's head unit.
+     * <p>Swipe's the system notification bar to dismiss the HUN.
      *
-     * @param text phone number of the sender of the SMS.
+     * @param text title (phone number in most cases) of the sender of the SMS.
+     *
+     * @return True if the SMS HUN is displayed with the given title, false otherwise.
      */
-    boolean isSMSHUNWWithTitleDisplayed(String text);
+    boolean isSmsHunDisplayedWithTitle(String text);
 
     /**
      * Setup expectations: SMS is sent to the paired phone which is connected to the car.
      *
      * <p>Play the SMS HUN in the car's head unit.
      */
-    void playSMSHUN();
+    void playSmsHun();
 
     /**
      * Setup expectations: SMS is sent to the paired phone which is connected to the car.
      *
      * <p>Check whether SMS HUN is played in the car's head unit.
+     *
+     * @return True if the SMS HUN is played in the car's head unit, false otherwise.
      */
-    boolean isSMSNUNPlayed();
+    boolean isSmsHunPlayedViaCarSpeaker();
 
     /**
      * Setup expectations: SMS is sent to the paired phone which is connected to the car.
@@ -53,12 +60,12 @@ public interface IAutoHeadsUpNotificationHelper extends Scrollable, IAppHelper {
      * <p>Mute the SMS HUN in the car's head unit. If the new SMS is sent to the
      *  paired phone from the same sender, the new SMS HUN will not be displayed.
      */
-    void muteSMSHUN();
+    void muteSmsHun();
 
     /**
-     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     * Setup expectations: Heads-up notification is posted.
      *
-     * <p>Swipe the SMS HUN in the car's head unit.
+     * <p>Swipe top (first) heads-up notification in the car's head unit.
      */
-    void swipeSMSHUN();
+    void swipeHun();
 }

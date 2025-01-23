@@ -319,6 +319,8 @@ public class AutomotiveConfigConstants {
     public static final String ALBUM_TITLE = "ALBUM_TITLE";
     public static final String CURRENT_SONG_TIME = "CURRENT_SONG_TIME";
     public static final String MAX_SONG_TIME = "MAX_SONG_TIME";
+    public static final String RADIO_APP_TITLE = "RADIO_APP_TITLE";
+
     // NEXT_BUTTON from Account Settings
     public static final String PREVIOUS_BUTTON = "PREVIOUS_BUTTON";
     public static final String SHUFFLE_BUTTON = "SHUFFLE_BUTTON";

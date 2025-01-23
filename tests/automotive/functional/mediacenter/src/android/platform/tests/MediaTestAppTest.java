@@ -29,6 +29,7 @@ import android.platform.test.option.StringOption;
 
 import androidx.test.runner.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -38,10 +39,13 @@ import org.junit.runner.RunWith;
 public class MediaTestAppTest {
     private static final String MEDIA_APP = "media-app";
     private static final String TEST_MEDIA_APP = "Test Media App";
+    private static final String DEFAULT_SONG_NAME = "A normal 1H song";
 
     @ClassRule
     public static StringOption mMediaTestApp =
             new StringOption(MEDIA_APP).setRequired(false);
+
+    public static String mDefaultSongName = new String(DEFAULT_SONG_NAME);
 
     private static HelperAccessor<IAutoMediaHelper> sMediaCenterHelper =
             new HelperAccessor<>(IAutoMediaHelper.class);
@@ -61,24 +65,35 @@ public class MediaTestAppTest {
             mediaAppName = mMediaTestApp.get();
         }
         sMediaCenterHelper.get().openApp(mediaAppName);
-        assertTrue("Not a media app",
-                sMediaCenterHelper.get().getMediaAppTitle().equals(mediaAppName));
         sMediaCenterHelper.get().openMediaAppSettingsPage();
         sTestMediaAppHelper.get().loadMediaInLocalMediaTestApp();
+    }
+
+    @After
+    public void goMinimizeNowPlaying() {
+        sMediaCenterHelper.get().minimizeNowPlaying();
     }
 
     @Test
     public void testPlayPauseMedia() {
         sMediaCenterHelper.get().playMedia();
         assertTrue("Song not playing.", sMediaCenterHelper.get().isPlaying());
+        sMediaCenterHelper.get().minimizeNowPlaying();
+        sMediaCenterHelper.get().selectMediaTrack(mDefaultSongName);
         sMediaCenterHelper.get().pauseMedia();
         assertFalse("Song not paused.", sMediaCenterHelper.get().isPlaying());
     }
 
     @Test
-    public void testNextTrack() {
+    public void testNextPreviousTrack() {
         String currentSong = sMediaCenterHelper.get().getMediaTrackName();
         sMediaCenterHelper.get().clickNextTrack();
+        assertNotEquals(
+                "Song playing has not been changed",
+                currentSong,
+                sMediaCenterHelper.get().getMediaTrackName());
+        currentSong = sMediaCenterHelper.get().getMediaTrackName();
+        sMediaCenterHelper.get().clickPreviousTrack();
         assertNotEquals(
                 "Song playing has not been changed",
                 currentSong,

@@ -24,7 +24,7 @@ import android.platform.helpers.LockscreenUtils
 import android.platform.helpers.LockscreenUtils.LockscreenType
 import android.platform.systemui_tapl.utils.DeviceUtils.sysuiResSelector
 import android.platform.systemui_tapl.utils.SYSUI_PACKAGE
-import android.platform.uiautomatorhelpers.BetterSwipe.from
+import android.platform.uiautomatorhelpers.BetterSwipe
 import android.platform.uiautomatorhelpers.DeviceHelpers.assertInvisible
 import android.platform.uiautomatorhelpers.DeviceHelpers.assertVisibility
 import android.platform.uiautomatorhelpers.DeviceHelpers.assertVisible
@@ -85,9 +85,7 @@ class Bouncer internal constructor(private val notification: Notification?) {
                 }.toPoint()
             )
         }
-        val swipe = from(centerPoint)
-        points.forEach { swipe.to(it) }
-        swipe.release()
+        BetterSwipe.swipe(centerPoint) { points.forEach { to(it) } }
     }
 
     private fun Pair<Int, Int>.toPoint() = Point(first, second)

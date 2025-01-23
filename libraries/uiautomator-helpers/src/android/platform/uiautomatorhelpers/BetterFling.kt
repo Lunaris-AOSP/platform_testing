@@ -59,9 +59,9 @@ object BetterFling {
 
         trace("Fling $start -> $stop") {
             uiDevice.performActionAndWait(
-                { BetterSwipe.from(start).to(stop, duration).release() },
+                { BetterSwipe.swipe(start, stop, duration) },
                 Until.scrollFinished(Direction.reverse(direction)),
-                DEFAULT_WAIT_TIMEOUT.toMillis()
+                DEFAULT_WAIT_TIMEOUT.toMillis(),
             )
         }
     }

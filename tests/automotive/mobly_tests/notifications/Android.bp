@@ -17,7 +17,7 @@ package {
 }
 
 python_test_host {
-    name: "NotificationsSMSHUNDisplayedInDrivingMode",
+    name: "NotificationsSmsHunDisplayedInDrivingMode",
     main: "test_sms_hun_displayed_in_driving_mode.py",
     srcs: ["test_sms_hun_displayed_in_driving_mode.py"],
     libs: [
@@ -45,7 +45,7 @@ python_test_host {
 }
 
 python_test_host {
-    name: "NotificationsSMSHUNPlayInDrivingMode",
+    name: "NotificationsSmsHunPlayInDrivingMode",
     main: "test_sms_hun_play_in_driving_mode.py",
     srcs: ["test_sms_hun_play_in_driving_mode.py"],
     libs: [
@@ -73,7 +73,7 @@ python_test_host {
 }
 
 python_test_host {
-    name: "NotificationsSMSHUNMute",
+    name: "NotificationsSmsHunMute",
     main: "test_sms_hun_mute.py",
     srcs: ["test_sms_hun_mute.py"],
     libs: [
@@ -101,7 +101,7 @@ python_test_host {
 }
 
 python_test_host {
-    name: "NotificationsSMSHUNMutedNotDisplayed",
+    name: "NotificationsSmsHunMutedNotDisplayed",
     main: "test_sms_hun_muted_not_displayed.py",
     srcs: ["test_sms_hun_muted_not_displayed.py"],
     libs: [
@@ -129,7 +129,7 @@ python_test_host {
 }
 
 python_test_host {
-    name: "NotificationsSMSHUNUnmute",
+    name: "NotificationsSmsHunUnmute",
     main: "test_sms_hun_unmute.py",
     srcs: ["test_sms_hun_unmute.py"],
     libs: [
@@ -157,7 +157,7 @@ python_test_host {
 }
 
 python_test_host {
-    name: "NotificationsSMSHUNSwipe",
+    name: "NotificationsSmsHunSwipe",
     main: "test_sms_hun_swipe.py",
     srcs: ["test_sms_hun_swipe.py"],
     libs: [

@@ -120,9 +120,7 @@ class LockScreen internal constructor() {
         //   this can be removed if b/229696938 gets resolved to allow for swiping on the icon
         val bounds = swipeableArea.visibleBounds
         val swipeX = bounds.left + bounds.width() / 4f
-        BetterSwipe.from(PointF(swipeX, bounds.bottom - 1f))
-            .to(PointF(swipeX, bounds.top.toFloat()), interpolator = FLING_GESTURE_INTERPOLATOR)
-            .release()
+        BetterSwipe.swipe(PointF(swipeX, bounds.bottom - 1f), PointF(swipeX, bounds.top.toFloat()))
     }
 
     private fun swipeLeft() {
@@ -130,12 +128,10 @@ class LockScreen internal constructor() {
         val swipeableArea = waitForObj(SWIPEABLE_AREA) { "Swipeable area not found" }
         val bounds = swipeableArea.visibleBounds
         val swipeY = bounds.top + bounds.height() / 2f
-        BetterSwipe.from(PointF(bounds.right - 1f, swipeY))
-            .to(
-                PointF(bounds.left + bounds.width() / 2f, swipeY),
-                interpolator = FLING_GESTURE_INTERPOLATOR,
-            )
-            .release()
+        BetterSwipe.swipe(
+            PointF(bounds.right - 1f, swipeY),
+            PointF(bounds.left + bounds.width() / 2f, swipeY),
+        )
     }
 
     companion object {

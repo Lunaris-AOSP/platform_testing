@@ -58,71 +58,48 @@ public class AutoHeadsUpNotificationHelperImpl extends AbstractStandardAppHelper
         // Nothing to dismiss
     }
 
-    private UiObject2 findHeadsUpNotification() {
-        Log.i(LOG_TAG, "Checking for heads-up notification in the car's head unit.");
-        BySelector headsUpNotificationSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION);
-
-        try {
-            return getSpectatioUiUtil().waitForUiObject(headsUpNotificationSelector);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Heads-up notification not found in the car's head unit.", e);
-        }
-    }
-
     /** {@inheritDoc} */
     @Override
-    public boolean isHUNDisplayed() {
-        UiObject2 headsUpNotification = findHeadsUpNotification();
+    public boolean isHunDisplayed() {
+        UiObject2 headsUpNotification = findHun();
         return headsUpNotification != null;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isSMSHUNWWithTitleDisplayed(String text) {
+    public boolean isSmsHunDisplayedWithTitle(String text) {
         Log.i(LOG_TAG, String.format("Checking if SMS heads-up notification with title  %s is displayed in the car's head unit.", text));
-        UiObject2 headsUpNotification = findHeadsUpNotification();
-        UiObject2 headsUpNotificationTitle = null;
 
-        if (headsUpNotification == null) {
-            return false;
+        UiObject2 headsUpNotification = findHun();
+        Log.i(LOG_TAG, "Heads-up notification object: " + headsUpNotification);
+
+        while (headsUpNotification != null) {
+            if (isHunTitleMatched(headsUpNotification, text)) {
+                Log.i(LOG_TAG, "SMS heads-up notification displayed.");
+                return true;
+            }
+            dismissHun(headsUpNotification);
+            headsUpNotification = findHun();
         }
 
-        try {
-            headsUpNotificationTitle = headsUpNotification.findObject(
-                getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION_TITLE)
-            );
-        } catch (RuntimeException e) {
-            Log.w(LOG_TAG, "Cannot to find heads-up notification title in the car's head unit.", e);
-            return false;
-        }
-
-        if (headsUpNotificationTitle == null) {
-            return false;
-        }
-
-        String titleText = headsUpNotificationTitle.getText().toLowerCase();
-        return titleText != null && titleText.contains(text.toLowerCase());
+        Log.i(LOG_TAG, String.format("Cannot find SMS heads-up notification with title %s.", text));
+        return false;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void playSMSHUN() {
+    public void playSmsHun() {
         Log.i(LOG_TAG, "Clicking on play button of SMS heads-up notification in the car's head unit.");
-        UiObject2 headsUpNotification = findHeadsUpNotification();
+        UiObject2 headsUpNotification = findHun();
         UiObject2 playButton = headsUpNotification.findObject(
             getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION_PLAY_BUTTON)
         );
-
-        try {
-            getSpectatioUiUtil().clickAndWait(playButton);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Failed to click on play button of SMS heads-up notification in the car's head unit.", e);
-        }
+        getSpectatioUiUtil().clickAndWait(playButton);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isSMSNUNPlayed() {
+    public boolean isSmsHunPlayedViaCarSpeaker() {
         Log.i(LOG_TAG, "Checking if SMS heads-up notification is played in the car's head unit.");
         // TODO: Implement this method. Need to verify if the sound is played from special channel.
         return true;
@@ -130,30 +107,70 @@ public class AutoHeadsUpNotificationHelperImpl extends AbstractStandardAppHelper
 
     /** {@inheritDoc} */
     @Override
-    public void muteSMSHUN() {
-        Log.i(LOG_TAG, "Clicking on play button of SMS heads-up notification in the car's head unit.");
-        UiObject2 headsUpNotification = findHeadsUpNotification();
+    public void muteSmsHun() {
+        Log.i(LOG_TAG, "Clicking on mute button of SMS heads-up notification in the car's head unit.");
+        UiObject2 headsUpNotification = findHun();
+        Log.i(LOG_TAG, "Muting notification object: " + headsUpNotification);
         UiObject2 muteButton = headsUpNotification.findObject(
             getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION_MUTE_BUTTON)
         );
-
-        try {
-            getSpectatioUiUtil().clickAndWait(muteButton);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Failed to click on mute button of SMS heads-up notification in the car's head unit.", e);
-        }
+        getSpectatioUiUtil().clickAndWait(muteButton, 2000);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void swipeSMSHUN() {
+    public void swipeHun() {
         Log.i(LOG_TAG, "Swiping the SMS heads-up notification in the car's head unit.");
-        UiObject2 headsUpNotification = findHeadsUpNotification();
-
-        try {
-            getSpectatioUiUtil().swipeLeft(headsUpNotification);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Failed to swipe the SMS heads-up notification in the car's head unit.", e);
-        }
+        UiObject2 headsUpNotification = findHun();
+        dismissHun(headsUpNotification);
     }
+
+    /**
+     * Find the heads-up notification in the car's head unit.
+     *
+     * @return The UiObject2 representing the heads-up notification, or null if it's not found.
+     */
+    private UiObject2 findHun() {
+        Log.i(LOG_TAG, "Checking for heads-up notification in the car's head unit.");
+        BySelector headsUpNotificationSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION);
+        UiObject2 notification = getSpectatioUiUtil().waitForUiObject(headsUpNotificationSelector);
+
+        if (notification == null) {
+            Log.w(LOG_TAG, "Cannot to find heads-up notification in the car's head unit.");
+        }
+
+        return notification;
+    }
+
+    /**
+     * Check if the heads-up notification title is matched with the given text.
+     *
+     * @param text The text to match with the heads-up notification title.
+     * @return True if the heads-up notification title is matched with the given text, false
+     * otherwise.
+     */
+    private boolean isHunTitleMatched(UiObject2 headsUpNotification, String text) {
+        UiObject2 headsUpNotificationTitle = headsUpNotification.findObject(
+            getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION_TITLE)
+        );
+        if (headsUpNotificationTitle == null) {
+            Log.w(LOG_TAG, "Cannot to find heads-up notification title in the car's head unit.");
+            return false;
+        }
+        String titleText = headsUpNotificationTitle.getText().toLowerCase();
+        return titleText != null && titleText.contains(text.toLowerCase());
+    }
+
+    /**
+     * Dismiss via swipe any heads-up notification in the car's head unit.
+     *
+     * @param headsUpNotification The UiObject2 representing the heads-up notification.
+     */
+    private void dismissHun(UiObject2 headsUpNotification) {
+        Log.i(LOG_TAG, "Dismissing the heads-up notification in the car's head unit.");
+        getSpectatioUiUtil().swipeRight(headsUpNotification);
+        // Wait for the notification to dismiss, if it takes more than 1 second to dismiss, it is a performance issue.
+        getSpectatioUiUtil().waitNSeconds(2000);
+    }
+
 }

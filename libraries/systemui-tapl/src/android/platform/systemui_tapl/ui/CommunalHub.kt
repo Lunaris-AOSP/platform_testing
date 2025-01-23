@@ -21,7 +21,6 @@ import android.platform.uiautomatorhelpers.BetterSwipe
 import android.platform.uiautomatorhelpers.DeviceHelpers.assertInvisible
 import android.platform.uiautomatorhelpers.DeviceHelpers.assertVisible
 import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
-import android.platform.uiautomatorhelpers.FLING_GESTURE_INTERPOLATOR
 import androidx.test.uiautomator.By
 
 /** System UI test automation object representing the communal hub. */
@@ -40,12 +39,10 @@ class CommunalHub internal constructor() {
     private fun swipeRight() {
         val bounds = waitForObj(COMMUNAL_SELECTOR).visibleBounds
         val swipeY = bounds.top + bounds.height() / 2f
-        BetterSwipe.from(PointF(bounds.left + 1f, swipeY))
-            .to(
-                PointF(bounds.left + bounds.width() / 2f, swipeY),
-                interpolator = FLING_GESTURE_INTERPOLATOR,
-            )
-            .release()
+        BetterSwipe.swipe(
+            PointF(bounds.left + 1f, swipeY),
+            PointF(bounds.left + bounds.width() / 2f, swipeY),
+        )
     }
 
     companion object {

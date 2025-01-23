@@ -16,7 +16,6 @@
 package android.platform.systemui_tapl.ui
 
 import android.graphics.Point
-import android.graphics.PointF
 import android.platform.systemui_tapl.utils.DeviceUtils.sysuiResSelector
 import android.platform.systemui_tapl.volume.panel.ui.VolumePanel
 import android.platform.uiautomatorhelpers.BetterSwipe
@@ -96,9 +95,11 @@ class VolumeDialog internal constructor() {
         private fun dragAndChangeVolume(volume: Int) {
             val coordinates = getDragCoordinates(volume)
             assertVolumeDialogVisible()
-            BetterSwipe.from(waitForObj(SLIDER).visibleCenter)
-                .to(PointF(coordinates), interpolator = PRECISE_GESTURE_INTERPOLATOR)
-                .release()
+            BetterSwipe.swipe(
+                waitForObj(SLIDER).visibleCenter,
+                coordinates,
+                interpolator = PRECISE_GESTURE_INTERPOLATOR,
+            )
         }
 
         /** Asserts that the volume dialog is visible. */

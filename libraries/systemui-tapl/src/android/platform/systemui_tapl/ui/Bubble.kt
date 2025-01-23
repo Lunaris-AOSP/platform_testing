@@ -16,7 +16,7 @@
 
 package android.platform.systemui_tapl.ui
 
-import android.graphics.PointF
+import android.graphics.Point
 import android.os.SystemClock
 import android.platform.helpers.CommonUtils
 import android.platform.systemui_tapl.utils.DeviceUtils.launcherResSelector
@@ -99,17 +99,13 @@ class Bubble internal constructor(private val bubbleView: UiObject2) {
                     WindowInsets.Type.displayCutout()
             )
         val destination =
-            PointF(
-                windowMetrics.bounds.width() / 2f,
-                (windowMetrics.bounds.height() - insets.bottom).toFloat(),
-            )
-        BetterSwipe.from(bubbleView.visibleCenter)
-            .to(
-                destination,
-                duration = Duration.of(700, ChronoUnit.MILLIS),
-                interpolator = PRECISE_GESTURE_INTERPOLATOR,
-            )
-            .release()
+            Point(windowMetrics.bounds.width() / 2, (windowMetrics.bounds.height() - insets.bottom))
+        BetterSwipe.swipe(
+            bubbleView.visibleCenter,
+            destination,
+            duration = Duration.of(700, ChronoUnit.MILLIS),
+            interpolator = PRECISE_GESTURE_INTERPOLATOR,
+        )
     }
 
     companion object {

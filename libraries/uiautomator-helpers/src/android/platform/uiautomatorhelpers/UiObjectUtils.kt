@@ -136,13 +136,13 @@ private const val MAX_FIND_ELEMENT_ATTEMPT = 15
 fun UiObject2.scrollUntilFound(
     selector: BySelector,
     direction: Direction = Direction.DOWN,
-    condition: (UiObject2) -> Boolean = { true }
+    condition: (UiObject2) -> Boolean = { true },
 ): UiObject2? {
     val (from, to) = getPointsToScroll(direction)
     (0 until MAX_FIND_ELEMENT_ATTEMPT).forEach { _ ->
         val f = findObject(selector)
         if (f?.let { condition(it) } == true) return f
-        BetterSwipe.from(from).to(to, interpolator = FLING_GESTURE_INTERPOLATOR).release()
+        BetterSwipe.swipe(from, to)
     }
     return null
 }
@@ -154,25 +154,25 @@ private fun UiObject2.getPointsToScroll(direction: Direction): Vector2F {
         Direction.DOWN -> {
             Vector2F(
                 PointF(visibleBounds.exactCenterX(), visibleBounds.bottom.toFloat() - 1f),
-                PointF(visibleBounds.exactCenterX(), visibleBounds.top.toFloat() + 1f)
+                PointF(visibleBounds.exactCenterX(), visibleBounds.top.toFloat() + 1f),
             )
         }
         Direction.UP -> {
             Vector2F(
                 PointF(visibleBounds.exactCenterX(), visibleBounds.top.toFloat() + 1f),
-                PointF(visibleBounds.exactCenterX(), visibleBounds.bottom.toFloat() - 1f)
+                PointF(visibleBounds.exactCenterX(), visibleBounds.bottom.toFloat() - 1f),
             )
         }
         Direction.LEFT -> {
             Vector2F(
                 PointF(visibleBounds.left.toFloat() + 1f, visibleBounds.exactCenterY()),
-                PointF(visibleBounds.right.toFloat() - 1f, visibleBounds.exactCenterY())
+                PointF(visibleBounds.right.toFloat() - 1f, visibleBounds.exactCenterY()),
             )
         }
         Direction.RIGHT -> {
             Vector2F(
                 PointF(visibleBounds.right.toFloat() - 1f, visibleBounds.exactCenterY()),
-                PointF(visibleBounds.left.toFloat() + 1f, visibleBounds.exactCenterY())
+                PointF(visibleBounds.left.toFloat() + 1f, visibleBounds.exactCenterY()),
             )
         }
     }

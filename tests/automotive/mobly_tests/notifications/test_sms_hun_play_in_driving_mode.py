@@ -33,7 +33,7 @@ from utilities.common_utils import CommonUtils
 from utilities.main_utils import common_main
 
 
-class NotificationsSMSHUNPlayInDrivingMode(
+class NotificationsSmsHunPlayInDrivingMode(
     bluetooth_sms_base_test.BluetoothSMSBaseTest
 ):
 
@@ -60,7 +60,7 @@ class NotificationsSMSHUNPlayInDrivingMode(
     self.target.load_snippet('mbs', android_device.MBS_PACKAGE)
     super().enable_recording()
 
-  def test_sms_hun_displayed(self):
+  def test_sms_hun_play(self):
     """
     GIVEN the phone which is paired to the car,
     WHEN the SMS is sent to paired phone,
@@ -78,23 +78,24 @@ class NotificationsSMSHUNPlayInDrivingMode(
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: New SMS is displayed as a heads-up notification.")
-    assert self.discoverer.mbs.isHUNDisplayed() is True, (
+    assert self.discoverer.mbs.isHunDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
-    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is True, (
+    assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
     logging.info("Act: Playing the SMS in the car's head unit.")
-    self.discoverer.mbs.playSMSHUN()
+    self.discoverer.mbs.playSmsHun()
 
     logging.info("Assert: SMS is played on the car's head unit via car's speaker.")
-    assert self.discoverer.mbs.isSMSNUNPlayed() is True, (
+    assert self.discoverer.mbs.isSmsHunPlayedViaCarSpeaker() is True, (
         "SMS is not played on the car's head unit via car's speaker."
     )
 
   def teardown_test(self):
     self.call_utils.press_home()
+
     try:
       self.call_utils.disable_driving_mode()
     except Exception as e:  # pylint: disable=broad-except

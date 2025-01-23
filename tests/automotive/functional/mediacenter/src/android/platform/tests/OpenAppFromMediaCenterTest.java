@@ -26,6 +26,7 @@ import android.platform.test.option.StringOption;
 
 import androidx.test.runner.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,9 +58,19 @@ public class OpenAppFromMediaCenterTest {
         mAutoAppGridHelper = new HelperAccessor<>(IAutoAppGridHelper.class);
     }
 
+    @After
+    public void goBackToHomeScreen() {
+        mMediaCenterHelper.get().exit();
+    }
 
     @Test
     public void testOpenMediaAppFromMediaWidget() {
+        mAutoHomeHelper.get().openMediaWidget();
+        assertTrue("Radio app not launched", mMediaCenterHelper.get().isRadioAppLaunched());
+    }
+
+    @Test
+    public void testOpenMediaAppFromMediaAppAppgrid() {
         // Use preinstalled "Bluetooth Audio" app
         mAutoAppGridHelper.get().open();
         assertTrue("AppGrid is not open", mAutoAppGridHelper.get().isAppInForeground());

@@ -41,18 +41,14 @@ object BetterScroll {
      */
     @JvmStatic
     @JvmOverloads
-    fun scroll(
-        rect: Rect,
-        direction: Direction,
-        percentage: Float = DEFAULT_PERCENTAGE,
-    ) {
+    fun scroll(rect: Rect, direction: Direction, percentage: Float = DEFAULT_PERCENTAGE) {
         val (start, stop) = calculateStartEndPoint(rect, direction, percentage)
 
         trace("Scrolling $start -> $stop") {
             uiDevice.performActionAndWait(
-                { BetterSwipe.from(start).to(stop).pause().release() },
+                { BetterSwipe.swipe(start, stop) { pause() } },
                 Until.scrollFinished(Direction.reverse(direction)),
-                DEFAULT_WAIT_TIMEOUT.toMillis()
+                DEFAULT_WAIT_TIMEOUT.toMillis(),
             )
         }
     }

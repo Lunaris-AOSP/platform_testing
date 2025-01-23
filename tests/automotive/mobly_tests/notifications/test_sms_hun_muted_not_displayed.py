@@ -33,7 +33,7 @@ from utilities.common_utils import CommonUtils
 from utilities.main_utils import common_main
 
 
-class NotificationsSMSHUNMutedNotDisplayed(
+class NotificationsSmsHunMutedNotDisplayed(
     bluetooth_sms_base_test.BluetoothSMSBaseTest
 ):
 
@@ -50,9 +50,6 @@ class NotificationsSMSHUNMutedNotDisplayed(
     logging.info("Clearing the sms from the phone.")
     self.call_utils.clear_sms_app(self.target)
 
-    logging.info("Enabling driving mode.")
-    self.call_utils.enable_driving_mode()
-
     logging.info("Removing mbs snippet and rebooting the phone.")
     self.target.unload_snippet('mbs')
     self.target.reboot()
@@ -60,7 +57,7 @@ class NotificationsSMSHUNMutedNotDisplayed(
     self.target.load_snippet('mbs', android_device.MBS_PACKAGE)
     super().enable_recording()
 
-  def test_sms_mute_not_displayed(self):
+  def test_sms_muted_not_displayed(self):
     """
     GIVEN a SMS HUN is displayed in the car's head unit,
     WHEN the SMS HUN is muted,
@@ -75,30 +72,26 @@ class NotificationsSMSHUNMutedNotDisplayed(
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: New SMS is displayed as a heads-up notification.")
-    assert self.discoverer.mbs.isHUNDisplayed() is True, (
+    assert self.discoverer.mbs.isHunDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
-    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is True, (
+    assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
     logging.info("Act: Mute the SMS in the car's head unit.")
-    self.discoverer.mbs.muteSMSHUN()
+    self.discoverer.mbs.muteSmsHun()
 
     logging.info("Act: Sending new SMS to {receiver_phone_number}")
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: New SMS is not displayed as a heads-up notification.")
-    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is False, (
+    assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is False, (
         "New SMS is displayed as a heads-up notification even after mute."
     )
 
   def teardown_test(self):
     self.call_utils.press_home()
-    try:
-      self.call_utils.disable_driving_mode()
-    except Exception as e:  # pylint: disable=broad-except
-      logging.info("Failed to disable driving mode: %s", e)
 
     try:
       super().teardown_no_video_recording()

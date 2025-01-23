@@ -132,6 +132,12 @@ public interface IAutoMediaHelper extends IAppHelper, Scrollable {
     boolean isPlaying();
 
     /**
+     * This method is used to check if media is currently Paused Returns true if media is paused
+     * else returns false
+     */
+    boolean isPaused();
+
+    /**
      * Setup expectations: Media app is open.
      *
      * @return Media App Title
@@ -316,4 +322,10 @@ public interface IAutoMediaHelper extends IAppHelper, Scrollable {
      */
     void grantRestrictedPermissionsForBTMedia(String permission);
 
+    /**
+     * Setup expectations: Radio is open
+     *
+     * <p>This method verifies if the Radio app is Open
+     */
+    boolean isRadioAppLaunched();
 }

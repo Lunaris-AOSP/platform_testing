@@ -75,9 +75,10 @@ class BubbleBar {
         // we want to swipe to the point that is twice as far from the bottom of the screen as the
         // bubble bar center Y coordinate
         val destinationY = 2 * bubbleBarCenter.y - windowHeight
-        BetterSwipe.from(Point(bubbleBarCenter.x, windowHeight))
-            .to(Point(bubbleBarCenter.x, destinationY))
-            .release()
+        BetterSwipe.swipe(
+            Point(bubbleBarCenter.x, windowHeight),
+            Point(bubbleBarCenter.x, destinationY),
+        )
         return ExpandedBubbleBar(selectedBubble)
     }
 
@@ -86,14 +87,14 @@ class BubbleBar {
      * gone.
      */
     fun dragToDismiss() {
-        BetterSwipe.from(waitForObj(BUBBLE_BAR_VIEW).visibleCenter)
-            .pause()
-            .to(
+        BetterSwipe.swipe(waitForObj(BUBBLE_BAR_VIEW).visibleCenter) {
+            pause()
+            to(
                 waitForObj(DISMISS_VIEW).visibleCenter,
                 Duration.of(500, ChronoUnit.MILLIS),
                 PRECISE_GESTURE_INTERPOLATOR,
             )
-            .release()
+        }
 
         BUBBLE_BAR_VIEW.assertInvisible {
             "Failed while waiting for bubble bar to become invisible"

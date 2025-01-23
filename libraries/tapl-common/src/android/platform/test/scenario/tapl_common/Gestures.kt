@@ -15,8 +15,12 @@
  */
 package android.platform.test.scenario.tapl_common
 
+import android.os.SystemClock.sleep
 import android.platform.uiautomatorhelpers.BetterSwipe
+import android.platform.uiautomatorhelpers.BetterSwipe.Swipe
 import android.platform.uiautomatorhelpers.WaitUtils.ensureThat
+import android.provider.Settings
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiObject2
 import java.time.Duration
@@ -77,28 +81,31 @@ object Gestures {
         }
     }
 
-    /** The result of [longClickDown]. The caller has to call the [up] method. */
-    class LongClick internal constructor(swipe: BetterSwipe.Swipe) {
-        private val mSwipe: BetterSwipe.Swipe = swipe
-
-        fun up() {
-            mSwipe.release()
-        }
-    }
-
     /**
      * Waits for the object to become long-clickable and enabled, then presses the object down.
      *
      * @param [uiObject] The object to click
      * @param [objectName] Name of the object for diags
-     * @return the object with [LongClick.up] method that needs to be called.
+     * @param [whileHoldingFn] lambda to call between press and release.
      */
     @JvmStatic
-    fun longClickDown(uiObject: UiObject2, objectName: String): LongClick {
+    fun longClickDownUp(
+        uiObject: UiObject2,
+        objectName: String,
+        whileHoldingFn: (Swipe.() -> Unit),
+    ) {
         try {
             waitForObjectEnabled(uiObject, objectName)
             waitForObjectLongClickable(uiObject, objectName)
-            return LongClick(BetterSwipe.from(uiObject.visibleCenter))
+            val context = InstrumentationRegistry.getInstrumentation().targetContext
+            BetterSwipe.swipe(uiObject.visibleCenter) {
+
+                // press for twice the long press timeout, just to make sure.
+                val longPressMsec =
+                    Settings.Secure.getInt(context.contentResolver, "long_press_timeout")
+                sleep(longPressMsec.toLong() * 2)
+                whileHoldingFn()
+            }
         } catch (e: StaleObjectException) {
             throw AssertionError(
                 "UI object '$objectName' has disappeared from " +
@@ -116,6 +123,6 @@ object Gestures {
      * attempted.
      */
     private fun clickNow(uiObject: UiObject2) {
-        BetterSwipe.from(uiObject.visibleCenter).release()
+        BetterSwipe.swipe(uiObject.visibleCenter)
     }
 }

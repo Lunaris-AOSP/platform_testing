@@ -153,7 +153,7 @@ abstract class ComposeQuickSettingsTile private constructor() {
         }
 
         fun UiObject2.assertIsTile() {
-            assertWithMessage("Tile has id ${resourceName} which is not a tile id")
+            assertWithMessage("Tile has id $resourceName which is not a tile id")
                 .that(
                     resourceName?.endsWith(SMALL_TILE_TAG) ?: false ||
                         resourceName?.endsWith(LARGE_TILE_TAG) ?: false
@@ -239,12 +239,9 @@ private class LongPressableImpl(private val tile: UiObject2) : LongPressable {
     }
 
     override fun longPress(expectedSettingsPackage: String?) {
-        val longClick = Gestures.longClickDown(tile, "Quick settings tile")
-        try {
+        Gestures.longClickDownUp(tile, "Quick settings tile") {
             val packageName = expectedSettingsPackage ?: SETTINGS_PACKAGE
             By.pkg(packageName).assertVisible { "$packageName didn't appear" }
-        } finally {
-            longClick.up()
         }
     }
 }

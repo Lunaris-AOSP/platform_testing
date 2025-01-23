@@ -109,7 +109,7 @@ public class TestMediaAppHelperImpl extends AbstractStandardAppHelper
 
         getSpectatioUiUtil()
                 .validateUiObject(
-                        mediaTestAppField, String.format("Test Media App field: %s " + fieldName));
+                        mediaTestAppField, String.format("Test Media App field: %s", fieldName));
         getSpectatioUiUtil().clickAndWait(mediaTestAppField);
         getSpectatioUiUtil().wait1Second();
     }

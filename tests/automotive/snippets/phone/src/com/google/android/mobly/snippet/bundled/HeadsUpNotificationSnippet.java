@@ -31,33 +31,33 @@ public class HeadsUpNotificationSnippet implements Snippet {
         mHeadsUpNotificationHelper = new HelperAccessor<>(IAutoHeadsUpNotificationHelper.class);
     }
 
-    @Rpc(description = "Check whether heads-up notification is displayed in the car's head unit.")
-    public boolean isHUNDisplayed() {
-        return mHeadsUpNotificationHelper.get().isHUNDisplayed();
+    @Rpc(description = "Check if heads-up notification is displayed in the car's head unit.")
+    public boolean isHunDisplayed() {
+        return mHeadsUpNotificationHelper.get().isHunDisplayed();
     }
 
-    @Rpc(description = "Check whether SMS heads-up notification from the given title is displayed in the car's head unit.")
-    public boolean isSMSHUNWWithTitleDisplayed(String text) {
-        return mHeadsUpNotificationHelper.get().isSMSHUNWWithTitleDisplayed(text);
+    @Rpc(description = "Check if SMS heads-up notification from the given title is displayed in the car's head unit.")
+    public boolean isSmsHunDisplayedWithTitle(String text) {
+        return mHeadsUpNotificationHelper.get().isSmsHunDisplayedWithTitle(text);
     }
 
     @Rpc(description = "Play the SMS heads-up notification in the car's head unit.")
-    public void playSMSHUN() {
-        mHeadsUpNotificationHelper.get().playSMSHUN();
+    public void playSmsHun() {
+        mHeadsUpNotificationHelper.get().playSmsHun();
     }
 
     @Rpc(description = "Check if the SMS is played on the car's head unit via car's speaker.")
-    public boolean isSMSNUNPlayed() {
-        return mHeadsUpNotificationHelper.get().isSMSNUNPlayed();
+    public boolean isSmsHunPlayedViaCarSpeaker() {
+        return mHeadsUpNotificationHelper.get().isSmsHunPlayedViaCarSpeaker();
     }
 
     @Rpc(description = "Mute the SMS heads-up notification in the car's head unit.")
-    public void muteSMSHUN() {
-        mHeadsUpNotificationHelper.get().muteSMSHUN();
+    public void muteSmsHun() {
+        mHeadsUpNotificationHelper.get().muteSmsHun();
     }
 
     @Rpc(description = "Swipe the SMS heads-up notification in the car's head unit.")
-    public void swipeSMSHUN() {
-        mHeadsUpNotificationHelper.get().swipeSMSHUN();
+    public void swipeHun() {
+        mHeadsUpNotificationHelper.get().swipeHun();
     }
 }

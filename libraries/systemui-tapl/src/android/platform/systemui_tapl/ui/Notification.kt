@@ -274,15 +274,19 @@ internal constructor(
 
     /** Long press on notification to show its hidden menu (a.k.a. guts) */
     fun showGuts(): NotificationGuts {
-        val longClick = Gestures.longClickDown(notification, "Notification")
-        val guts = notification.waitForObj(GUTS_SELECTOR, UI_RESPONSE_TIMEOUT)
-        guts.assertVisibility(By.text(APP_NAME), true)
-        guts.assertVisibility(By.text(NOTIFICATION_CHANNEL_NAME), true)
+        Gestures.longClickDownUp(
+            notification,
+            "Notification",
+            whileHoldingFn = {
+                val guts = notification.waitForObj(GUTS_SELECTOR, UI_RESPONSE_TIMEOUT)
+                guts.assertVisibility(By.text(APP_NAME), true)
+                guts.assertVisibility(By.text(NOTIFICATION_CHANNEL_NAME), true)
 
-        // Confirmation/Settings buttons
-        guts.assertVisibility(GUTS_SETTINGS_SELECTOR, true)
-        guts.assertVisibility(GUTS_CLOSE_SELECTOR, true)
-        longClick.up()
+                // Confirmation/Settings buttons
+                guts.assertVisibility(GUTS_SETTINGS_SELECTOR, true)
+                guts.assertVisibility(GUTS_CLOSE_SELECTOR, true)
+            },
+        )
         return NotificationGuts(notification)
     }
 
@@ -305,7 +309,7 @@ internal constructor(
         check(
             uiDevice.wait(Until.hasObject(By.pkg(pkg!!).depth(0)), LAUNCH_APP_TIMEOUT.toMillis())
         ) {
-            "Did not find application, ${pkg}, in foreground"
+            "Did not find application, $pkg, in foreground"
         }
     }
 
@@ -447,9 +451,10 @@ internal constructor(
     private fun swipeRightOnNotification() {
         val bounds = notification.visibleBounds
         val centerY = (bounds.top + bounds.bottom) / 2f
-        BetterSwipe.from(PointF(bounds.left.toFloat(), centerY))
-            .to(PointF(bounds.right.toFloat(), centerY), interpolator = FLING_GESTURE_INTERPOLATOR)
-            .release()
+        BetterSwipe.swipe(
+            PointF(bounds.left.toFloat(), centerY),
+            PointF(bounds.right.toFloat(), centerY),
+        )
     }
 
     companion object {

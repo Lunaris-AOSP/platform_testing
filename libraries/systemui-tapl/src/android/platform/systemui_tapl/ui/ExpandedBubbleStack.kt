@@ -67,9 +67,12 @@ class ExpandedBubbleStack internal constructor() {
         // To middle of screen
         val to = PointF(x, startY / 2)
         // Use a custom duration for bubble swipe to reduce flakiness on slow device.
-        BetterSwipe.from(from)
-            .to(to, duration = Duration.of(700, MILLIS), interpolator = FLING_GESTURE_INTERPOLATOR)
-            .release()
+        BetterSwipe.swipe(
+            from,
+            to,
+            duration = Duration.of(700, MILLIS),
+            interpolator = FLING_GESTURE_INTERPOLATOR,
+        )
         Root.get().verifyNoExpandedBubbleStackIsVisible()
     }
 

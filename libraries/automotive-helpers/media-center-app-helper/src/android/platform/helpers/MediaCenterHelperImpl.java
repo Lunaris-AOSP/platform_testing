@@ -25,6 +25,7 @@ import android.media.session.PlaybackState;
 import android.platform.helpers.ScrollUtility.ScrollActions;
 import android.platform.helpers.ScrollUtility.ScrollDirection;
 import android.platform.helpers.exceptions.UnknownUiException;
+import android.util.Log;
 
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
@@ -169,6 +170,9 @@ public class MediaCenterHelperImpl extends AbstractStandardAppHelper implements 
      * {@inheritDoc}
      */
     public void pauseMedia() {
+        if (!isPlaying()) {
+            playMedia();
+        }
         BySelector pauseButtonSelector =
                 getUiElementFromConfig(AutomotiveConfigConstants.PLAY_PAUSE_BUTTON);
         UiObject2 pauseButton = getSpectatioUiUtil().findUiObject(pauseButtonSelector);
@@ -178,9 +182,7 @@ public class MediaCenterHelperImpl extends AbstractStandardAppHelper implements 
         getSpectatioUiUtil().wait5Seconds();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public void clickNextTrack() {
         BySelector nextTrackButtonSelector =
                 getUiElementFromConfig(AutomotiveConfigConstants.NEXT_BUTTON);
@@ -363,9 +365,12 @@ public class MediaCenterHelperImpl extends AbstractStandardAppHelper implements 
      */
     @Override
     public void minimizeNowPlaying() {
+        Log.d("media_test", "Trying to minimize now");
+        getSpectatioUiUtil().wait5Seconds();
         BySelector trackNameSelector = getUiElementFromConfig(AutomotiveConfigConstants.TRACK_NAME);
         UiObject2 trackNameText = getSpectatioUiUtil().findUiObject(trackNameSelector);
         if (trackNameText != null) {
+            Log.d("media_test", "Trying to swipe now ");
             trackNameText.swipe(Direction.DOWN, 1.0f, 500);
         }
     }
@@ -413,6 +418,16 @@ public class MediaCenterHelperImpl extends AbstractStandardAppHelper implements 
         return state.getState() == PlaybackState.STATE_PLAYING;
     }
 
+    @Override
+    public boolean isPaused() {
+        List<MediaController> controllers = mMediaSessionManager.getActiveSessions(null);
+        if (controllers.size() == 0) {
+            throw new RuntimeException("Unable to find Media Controller");
+        }
+        PlaybackState state = controllers.get(0).getPlaybackState();
+        return state.getState() == PlaybackState.STATE_PAUSED;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -424,6 +439,13 @@ public class MediaCenterHelperImpl extends AbstractStandardAppHelper implements 
         getSpectatioUiUtil()
                 .validateUiObject(mediaAppTitle, AutomotiveConfigConstants.MEDIA_APP_TITLE);
         return mediaAppTitle.getText();
+    }
+
+    @Override
+    public boolean isRadioAppLaunched() {
+        BySelector radioAppSelector =
+                getUiElementFromConfig(AutomotiveConfigConstants.RADIO_APP_TITLE);
+        return getSpectatioUiUtil().hasUiElement(radioAppSelector);
     }
 
     /**

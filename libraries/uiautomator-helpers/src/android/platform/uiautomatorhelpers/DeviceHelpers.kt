@@ -94,12 +94,10 @@ object DeviceHelpers {
         errorProvider: () -> String = { "No object found for any $selectors" },
     ): Pair<UiObject2, BySelector> {
         return waitFor("$selectors objects", timeout, errorProvider) {
-                selectors.firstNotNullOfOrNull { selector ->
-                    uiDevice.findObject(selector)?.let {
-                        it to selector
-                    }
-                }
+            selectors.firstNotNullOfOrNull { selector ->
+                uiDevice.findObject(selector)?.let { it to selector }
             }
+        }
     }
 
     /**
@@ -126,9 +124,7 @@ object DeviceHelpers {
     ): Pair<UiObject2, BySelector> {
         return waitFor("$selectors objects", timeout, errorProvider) {
             selectors.firstNotNullOfOrNull { selector ->
-                findObject(selector)?.let {
-                    it to selector
-                }
+                findObject(selector)?.let { it to selector }
             }
         }
     }
@@ -375,9 +371,11 @@ object DeviceHelpers {
         interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR,
     ) {
         trace("Swiping ($startX,$startY) -> ($endX,$endY)") {
-            BetterSwipe.from(PointF(startX.toFloat(), startY.toFloat()))
-                .to(PointF(endX.toFloat(), endY.toFloat()), interpolator = interpolator)
-                .release()
+            BetterSwipe.swipe(
+                PointF(startX.toFloat(), startY.toFloat()),
+                PointF(endX.toFloat(), endY.toFloat()),
+                interpolator = interpolator,
+            )
         }
     }
 

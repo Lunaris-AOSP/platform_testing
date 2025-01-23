@@ -32,8 +32,6 @@ import android.platform.uiautomatorhelpers.DeviceHelpers.assertInvisible
 import android.platform.uiautomatorhelpers.DeviceHelpers.assertVisible
 import android.platform.uiautomatorhelpers.DeviceHelpers.betterSwipe
 import android.platform.uiautomatorhelpers.DeviceHelpers.uiDevice
-import android.platform.uiautomatorhelpers.FLING_GESTURE_INTERPOLATOR
-import android.platform.uiautomatorhelpers.TracingUtils.trace
 import android.view.InputDevice
 import android.view.InputEvent
 import android.view.KeyCharacterMap
@@ -45,6 +43,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import com.android.app.tracing.traceSection
 import com.android.launcher3.tapl.LauncherInstrumentation
 import com.android.launcher3.tapl.Workspace
 import com.google.common.truth.Truth.assertThat
@@ -70,7 +69,7 @@ class Root private constructor() {
 
     /** Opens the notification shade via AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS. */
     fun openNotificationShadeViaGlobalAction(): NotificationShade {
-        trace("Opening notification shade via global action") {
+        traceSection("Opening notification shade via global action") {
             uiDevice.openNotification()
             waitForShadeToOpen()
             return NotificationShade()
@@ -100,13 +99,15 @@ class Root private constructor() {
         swipeDuration: Duration = Duration.ofMillis(500),
         heightFraction: Float = 0.1F,
     ): NotificationShade {
-        trace("Opening notification shade via swipe") {
+        traceSection("Opening notification shade via swipe") {
             val device = uiDevice
             val width = device.displayWidth.toFloat()
             val height = device.displayHeight.toFloat()
-            BetterSwipe.from(PointF(width / 2, height * heightFraction))
-                .to(PointF(width / 2, height), swipeDuration, FLING_GESTURE_INTERPOLATOR)
-                .release()
+            BetterSwipe.swipe(
+                PointF(width / 2, height * heightFraction),
+                PointF(width / 2, height),
+                swipeDuration,
+            )
             waitForShadeToOpen()
             return NotificationShade()
         }
@@ -121,13 +122,7 @@ class Root private constructor() {
         // Swipe in first quarter to avoid desktop windowing app handle interactions.
         val swipeXCoordinate = (device.displayWidth / 4).toFloat()
         val height = device.displayHeight.toFloat()
-        BetterSwipe.from(PointF(swipeXCoordinate, 0f))
-            .to(
-                PointF(swipeXCoordinate, height),
-                Duration.ofMillis(500),
-                FLING_GESTURE_INTERPOLATOR,
-            )
-            .release()
+        BetterSwipe.swipe(PointF(swipeXCoordinate, 0f), PointF(swipeXCoordinate, height))
         waitForShadeToOpen()
         return NotificationShade()
     }
@@ -489,7 +484,7 @@ class Root private constructor() {
 
         private fun waitForShadeToOpen() {
             // Note that this duplicates the tracing done by assertVisible, but with a better name.
-            trace("waitForShadeToOpen") {
+            traceSection("waitForShadeToOpen") {
                 QS_HEADER_SELECTOR.assertVisible(
                     timeout = NOTIFICATION_SHADE_OPEN_TIMEOUT,
                     errorProvider = { "Notification shade didn't open" },

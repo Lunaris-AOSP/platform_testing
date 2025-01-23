@@ -44,12 +44,11 @@ class ExpandedBubbleBarBubble internal constructor() {
             DeviceHelpers.context.getSystemService(WindowManager::class.java)!!.currentWindowMetrics
         val displayCenter = Point(windowMetrics.bounds.centerX(), windowMetrics.bounds.centerY())
 
-        BetterSwipe.from(waitForObj(HANDLE_VIEW).visibleCenter)
+        BetterSwipe.swipe(waitForObj(HANDLE_VIEW).visibleCenter) {
             // First drag to the center of the display, dismiss view only shows up after drag starts
-            .to(displayCenter, interpolator = PRECISE_GESTURE_INTERPOLATOR)
-            .to(waitForObj(DISMISS_VIEW).visibleCenter, interpolator = PRECISE_GESTURE_INTERPOLATOR)
-            .release()
-
+            to(displayCenter, interpolator = PRECISE_GESTURE_INTERPOLATOR)
+            to(waitForObj(DISMISS_VIEW).visibleCenter, interpolator = PRECISE_GESTURE_INTERPOLATOR)
+        }
         BUBBLE_EXPANDED_VIEW.assertInvisible {
             "Failed while waiting for expanded bubble to become invisible"
         }

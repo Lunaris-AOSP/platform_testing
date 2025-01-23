@@ -23,7 +23,6 @@ import android.os.SystemClock
 import android.os.SystemClock.sleep
 import android.platform.uiautomatorhelpers.DeviceHelpers.context
 import android.platform.uiautomatorhelpers.TracingUtils.trace
-import android.platform.uiautomatorhelpers.WaitUtils.ensureThat
 import android.util.Log
 import android.view.Display.DEFAULT_DISPLAY
 import android.view.InputDevice
@@ -82,14 +81,84 @@ object BetterSwipe {
     }
 
     /** Starts a swipe from [start] at the current time. */
-    @JvmStatic fun from(start: PointF) = Swipe(start)
+    // @JvmStatic fun from(start: PointF) = Swipe(start)
+    /**
+     * Swipe from [start] to [end] in time [duration] using [interpolator] and calling [swipeFn]
+     * before the swipe is released. The try/finally forces the release() call, so InputDispatcher
+     * doesn't get confused. (b/377512109).
+     *
+     * @param [start] starting point of swipe.
+     * @param [end] end of swipe
+     * @param [duration] duration of swipe
+     * @param [interpolator] to use (fling or scroll, usually.
+     * @param [swipeFn] lambda on Swipe to send from()/to(), pause(), before release() is called.
+     */
+    @JvmStatic
+    fun swipe(
+        start: PointF,
+        end: PointF,
+        duration: Duration = DEFAULT_DURATION,
+        interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR,
+        swipeFn: (Swipe.() -> Unit) = {},
+    ) {
+        var swipe: Swipe? = null
+        try {
+            swipe = Swipe(start)
+            swipe.from()
+            swipe.swipeFn()
+            swipe.to(end, duration, interpolator)
+        } finally {
+            swipe?.release()
+        }
+    }
 
-    /** Starts a swipe from [start] at the current time. */
-    @JvmStatic fun from(start: Point) = Swipe(PointF(start.x.toFloat(), start.y.toFloat()))
+    /** Variant which takes integer points. */
+    @JvmStatic
+    fun swipe(
+        start: Point,
+        end: Point,
+        duration: Duration = DEFAULT_DURATION,
+        interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR,
+        swipeFn: (Swipe.() -> Unit) = {},
+    ) {
+        swipe(
+            PointF(start.x.toFloat(), start.y.toFloat()),
+            PointF(end.x.toFloat(), end.y.toFloat()),
+            duration,
+            interpolator,
+            swipeFn,
+        )
+    }
 
-    class Swipe internal constructor(start: PointF) {
+    /**
+     * This variant of swipe only specifies the from point, and delegates the actual swipe to inside
+     * the lambda, for special cases such as BrightnessSlider, which asserts after the first touch,
+     * but before the actual swipe/slide happens.
+     *
+     * @param [start] starting point.
+     * @param [swipeFn] lambda to call after touch down, but before swipe.
+     */
+    @JvmStatic
+    fun swipe(start: PointF, swipeFn: (Swipe.() -> Unit)) {
+        var swipe: Swipe? = null
+        try {
+            swipe = Swipe(start)
+            swipe.from()
+            swipe.swipeFn()
+        } finally {
+            swipe?.release()
+        }
+    }
 
-        private val downTime = SystemClock.uptimeMillis()
+    /** Variant which takes an integer point. */
+    @JvmStatic
+    fun swipe(start: Point, swipeFn: (Swipe.() -> Unit) = {}) {
+        swipe(PointF(start.x.toFloat(), start.y.toFloat()), swipeFn)
+    }
+
+    class Swipe internal constructor(val start: PointF) {
+
+        private var downTime = -1L
         private val pointerId = lastPointerId.incrementAndGet()
         private var lastPoint: PointF = start
         private var lastTime: Long = downTime
@@ -98,7 +167,13 @@ object BetterSwipe {
         init {
             currentSwipes.add(0, this)
             log("Touch $pointerId started at $start")
+        }
+
+        internal fun from(): Swipe {
+            throwIfReleased()
+            downTime = SystemClock.uptimeMillis()
             sendPointer(currentTime = downTime, action = MotionEvent.ACTION_DOWN, point = start)
+            return this
         }
 
         /**
@@ -114,6 +189,7 @@ object BetterSwipe {
             duration: Duration = DEFAULT_DURATION,
             interpolator: TimeInterpolator = FLING_GESTURE_INTERPOLATOR,
         ): Swipe {
+            throwIfNotDown()
             throwIfReleased()
             val stepTime = calculateStepTime()
             log(
@@ -150,7 +226,11 @@ object BetterSwipe {
 
         /** Moves the pointer up, finishing the swipe. Further calls will result in an exception. */
         @JvmOverloads
+        /*
         fun release(sync: Boolean = true) {
+            currentSwipes.remove(this)
+        */
+        internal fun release(sync: Boolean = true) {
             currentSwipes.remove(this)
             throwIfReleased()
             log("Touch $pointerId released at $lastPoint")
@@ -176,6 +256,12 @@ object BetterSwipe {
             check(!released) { "Trying to perform a swipe operation after pointer released" }
         }
 
+        private fun throwIfNotDown() {
+            check(downTime != -1L) {
+                "Trying to perform a swipe operation with pointer not down $downTime"
+            }
+        }
+
         private fun sendPointer(
             currentTime: Long,
             action: Int,
@@ -192,22 +278,18 @@ object BetterSwipe {
         }
 
         private fun trySendMotionEvent(event: MotionEvent, sync: Boolean) {
-            ensureThat(
-                "Injecting motion event",
-                /* timeout= */ Duration.ofMillis(INJECT_EVENT_TIMEOUT_MILLIS),
-                /* errorProvider= */ {
-                    "Injecting motion event $event failed after retrying for 10 seconds, " +
-                        "see logcat for the error"
-                },
-            )
-            /* condition= */ {
-                try {
-                    return@ensureThat getInstrumentation()
-                        .uiAutomation
-                        .injectInputEvent(event, sync, /* waitForAnimations= */ false)
-                } catch (t: Throwable) {
-                    throw RuntimeException(t)
-                }
+
+            // Do not re-attempt to send ACTION_DOWN and ACTION_UP events
+            // because the InputDispatcher retains state between test runs and
+            // expects an ACTION_UP after each ACTION_DOWN, even if it rejects
+            // the event.
+
+            try {
+                getInstrumentation()
+                    .uiAutomation
+                    .injectInputEvent(event, sync, /* waitForAnimations= */ false)
+            } catch (t: Throwable) {
+                throw RuntimeException(t)
             }
         }
 

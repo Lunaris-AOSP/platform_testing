@@ -110,7 +110,7 @@ class FlickerServiceDecorator(
                                 val traceEndTime = now()
                                 Utils.notifyRunnerProgress(
                                     testClassName,
-                                    "Setting trace start time to :: $traceEndTime",
+                                    "Setting trace end time to :: $traceEndTime",
                                     instrumentation,
                                 )
                                 writer.setTransitionEndTime(traceEndTime)

@@ -16,9 +16,10 @@
 package android.platform.systemui_tapl.ui
 
 import android.graphics.PointF
+import android.graphics.Rect
 import android.platform.systemui_tapl.utils.DeviceUtils.LONG_WAIT
 import android.platform.systemui_tapl.utils.DeviceUtils.sysuiResSelector
-import android.platform.uiautomatorhelpers.BetterSwipe.from
+import android.platform.uiautomatorhelpers.BetterSwipe
 import android.platform.uiautomatorhelpers.DeviceHelpers.assertVisibility
 import android.platform.uiautomatorhelpers.DeviceHelpers.waitForObj
 import android.platform.uiautomatorhelpers.PRECISE_GESTURE_INTERPOLATOR
@@ -56,22 +57,25 @@ class BrightnessSlider internal constructor() {
                 (sliderBounds.centerX() + sliderBounds.width() / 3).toFloat(),
                 sliderBounds.centerY().toFloat(),
             )
-
-        val swipe =
-            from(pointFrom).to(pointTo, swipeDuration, PRECISE_GESTURE_INTERPOLATOR)
+        // NOTE: This control logic is less than clean.
         if (Flags.qsUiRefactorComposeFragment()) {
-            // In this case, the slider is moved to an overlay, then we verify:
-            // The notification shade is not visible, but
-            assertVisibility(sysuiResSelector(UI_NOTIFICATION_SHADE_ID), visible = false)
-            // The actual slider is visible, and
-            assertVisibility(sysuiResSelector(UI_BRIGHTNESS_SLIDER_ID), visible = true)
-            // The bounds haven't changed.
-            assertThat(slider.visibleBounds).isEqualTo(sliderBounds)
-            swipe.release()
+            BetterSwipe.swipe(pointFrom, pointTo, swipeDuration, PRECISE_GESTURE_INTERPOLATOR)
+            if (Flags.qsUiRefactorComposeFragment()) {
+                // In this case, the slider is moved to an overlay, then we verify:
+                // The notification shade is not visible, but
+                assertVisibility(sysuiResSelector(UI_NOTIFICATION_SHADE_ID), visible = false)
+                // The actual slider is visible, and
+                assertVisibility(sysuiResSelector(UI_BRIGHTNESS_SLIDER_ID), visible = true)
+                // The bounds haven't changed.
+                assertThat(slider.visibleBounds).isEqualTo(sliderBounds)
+            }
         } else {
-            val mirrorBounds = brightnessSliderMirror.visibleBounds
-            assertThat(sliderBounds).isEqualTo(mirrorBounds)
-            swipe.release()
+            var mirrorBounds: Rect? = null
+            BetterSwipe.swipe(pointFrom) {
+                to(pointTo, swipeDuration, PRECISE_GESTURE_INTERPOLATOR)
+                mirrorBounds = brightnessSliderMirror.visibleBounds
+                assertThat(sliderBounds).isEqualTo(mirrorBounds)
+            }
             assertThat(mirrorBounds).isEqualTo(slider.visibleBounds)
         }
     }

@@ -33,7 +33,7 @@ from utilities.common_utils import CommonUtils
 from utilities.main_utils import common_main
 
 
-class NotificationsSMSHUNDisplayedInDrivingMode(
+class NotificationsSmsHunDisplayedInDrivingMode(
     bluetooth_sms_base_test.BluetoothSMSBaseTest
 ):
 
@@ -75,10 +75,10 @@ class NotificationsSMSHUNDisplayedInDrivingMode(
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: SMS is displayed as a heads-up notification in the car's head unit.")
-    assert self.discoverer.mbs.isHUNDisplayed() is True, (
+    assert self.discoverer.mbs.isHunDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
-    assert self.discoverer.mbs.isSMSHUNWWithTitleDisplayed(sender_phone_number) is True, (
+    assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
@@ -89,6 +89,7 @@ class NotificationsSMSHUNDisplayedInDrivingMode(
 
   def teardown_test(self):
     self.call_utils.press_home()
+
     try:
       self.call_utils.disable_driving_mode()
     except Exception as e:  # pylint: disable=broad-except
