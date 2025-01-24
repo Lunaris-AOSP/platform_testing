@@ -16,6 +16,7 @@
 
 package android.platform.systemui_tapl.controller;
 
+import static android.app.Flags.FLAG_API_RICH_ONGOING;
 import static android.app.Notification.CATEGORY_SYSTEM;
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
@@ -30,6 +31,7 @@ import static android.platform.uiautomatorhelpers.DeviceHelpers.getUiDevice;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import android.R;
+import android.annotation.FlaggedApi;
 import android.app.Notification;
 import android.app.Notification.Builder;
 import android.app.Notification.MessagingStyle;
@@ -374,6 +376,60 @@ public class NotificationController {
                 getBuilder(pkg)
                         .setStyle(new android.app.Notification.BigPictureStyle().bigPicture(bitmap))
                         .setContentText(NOTIFICATION_CONTENT_TEXT));
+        return new NotificationIdentity(
+                /* type= */ NotificationIdentity.Type.BIG_PICTURE,
+                /* title= */ null,
+                /* text= */ NOTIFICATION_TITLE_TEXT,
+                /* summary= */ null,
+                /* textWhenExpanded= */ null,
+                /* contentIsVisibleInCollapsedState= */ true,
+                /* pkg= */ null);
+    }
+
+    /**
+     * Posts a notification using {@link android.app.Notification.ProgressStyle}.
+     *
+     * @param pkg App to launch, when clicking on notification.
+     */
+    @NonNull
+    @FlaggedApi(FLAG_API_RICH_ONGOING)
+    public NotificationIdentity postProgressStyleNotification(@Nullable String pkg) {
+        final Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+        new Canvas(bitmap).drawColor(Color.BLUE);
+        postNotificationSync(
+                getNextNotificationId(),
+                getBuilder(pkg)
+                        .setStyle(
+                                new Notification.ProgressStyle()
+                                        .setProgress(50)
+                                        .setProgressStartIcon(
+                                                Icon.createWithResource("", R.drawable.btn_star))
+                                        .setProgressEndIcon(
+                                                Icon.createWithResource("", R.drawable.btn_minus))
+                                        .addProgressPoint(
+                                                new Notification.ProgressStyle.Point(10)
+                                                        .setColor(Color.RED))
+                                        .addProgressPoint(
+                                                new Notification.ProgressStyle.Point(50)
+                                                        .setColor(Color.BLUE))
+                                        .addProgressPoint(
+                                                new Notification.ProgressStyle.Point(90)
+                                                        .setColor(Color.GREEN))
+                                        .addProgressSegment(
+                                                new Notification.ProgressStyle.Segment(20)
+                                                        .setColor(Color.RED))
+                                        .addProgressSegment(
+                                                new Notification.ProgressStyle.Segment(30)
+                                                        .setColor(Color.YELLOW))
+                                        .addProgressSegment(
+                                                new Notification.ProgressStyle.Segment(50)
+                                                        .setColor(Color.BLUE))
+                                        .setProgressTrackerIcon(
+                                                Icon.createWithResource(
+                                                        "", R.drawable.ic_menu_send)))
+                        .setContentText(NOTIFICATION_CONTENT_TEXT)
+                        .setLargeIcon(bitmap));
+
         return new NotificationIdentity(
                 /* type= */ NotificationIdentity.Type.BIG_PICTURE,
                 /* title= */ null,

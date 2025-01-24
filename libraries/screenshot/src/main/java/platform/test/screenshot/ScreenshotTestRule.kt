@@ -401,6 +401,9 @@ class ScreenshotRuleAsserter private constructor(private val rule: ScreenshotTes
     }
 
     private fun runBeforeScreenshot() {
+        // Disable Sensitive Content Redaction
+        shell("settings put secure disable_secure_windows 1")
+
         prevPointerLocationSetting = pointerLocationSetting
         prevShowTouchesSetting = showTouchesSetting
 
@@ -411,6 +414,8 @@ class ScreenshotRuleAsserter private constructor(private val rule: ScreenshotTes
     }
 
     private fun runAfterScreenshot() {
+        // Enable Sensitive Content Redaction
+        shell("settings put secure disable_secure_windows 0")
         afterScreenshot?.run()
 
         prevPointerLocationSetting?.let { pointerLocationSetting = it }
