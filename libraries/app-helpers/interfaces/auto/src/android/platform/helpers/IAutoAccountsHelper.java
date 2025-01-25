@@ -32,11 +32,10 @@ public interface IAutoAccountsHelper extends IAppHelper {
      */
     void removeAccount(String email);
 
-
     /**
      * Setup expectation: Accounts setting is open.
      *
-     * check if an email exists.
+     * <p>check if an email exists.
      */
-    boolean doesEmailExist(String email);
+    boolean isEmailExist(String email);
 }

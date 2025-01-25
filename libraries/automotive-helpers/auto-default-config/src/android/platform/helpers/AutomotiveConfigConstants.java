@@ -197,8 +197,10 @@ public class AutomotiveConfigConstants {
     public static final String HEADSUP_NOTIFICATION = "HEADSUP_NOTIFICATION";
     public static final String HEADSUP_NOTIFICATION_TITLE = "HEADSUP_NOTIFICATION_TITLE";
     public static final String HEADSUP_NOTIFICATION_CONTENT = "HEADSUP_NOTIFICATION_CONTENT";
-    public static final String HEADSUP_NOTIFICATION_PLAY_BUTTON = "HEADSUP_NOTIFICATION_PLAY_BUTTON";
-    public static final String HEADSUP_NOTIFICATION_MUTE_BUTTON = "HEADSUP_NOTIFICATION_MUTE_BUTTON";
+    public static final String HEADSUP_NOTIFICATION_PLAY_BUTTON =
+            "HEADSUP_NOTIFICATION_PLAY_BUTTON";
+    public static final String HEADSUP_NOTIFICATION_MUTE_BUTTON =
+            "HEADSUP_NOTIFICATION_MUTE_BUTTON";
 
     // System Settings Constants
     public static final String SETTINGS_PACKAGE = "SETTINGS_PACKAGE";
@@ -330,6 +332,7 @@ public class AutomotiveConfigConstants {
     public static final String BACK_BUTTON = "BACK_BUTTON";
     public static final String ACCOUNT_SETTINGS_TRY_ANOTHER_WAY =
             "ACCOUNT_SETTINGS_TRY_ANOTHER_WAY";
+    public static final String GOOGLE_ACCOUNT_BUTTON = "GOOGLE_ACCOUNT_BUTTON";
     // Media Center On Home Screen
     public static final String PLAY_PAUSE_BUTTON_HOME_SCREEN = "PLAY_PAUSE_BUTTON_HOME_SCREEN";
     public static final String PREVIOUS_BUTTON_HOME_SCREEN = "PREVIOUS_BUTTON_HOME_SCREEN";
@@ -637,7 +640,8 @@ public class AutomotiveConfigConstants {
     public static final String SMS_PREVIEW_TEXT = "SMS_PREVIEW_TEXT";
     public static final String SMS_PREVIEW_TIMESTAMP = "SMS_PREVIEW_TIMESTAMP";
     public static final String TAP_TO_READ_ALOUD = "TAP_TO_READ_ALOUD";
-    public static final String SMS_CONVERSATION_MUTE_ACTION_BUTTON = "SMS_CONVERSATION_MUTE_ACTION_BUTTON";
+    public static final String SMS_CONVERSATION_MUTE_ACTION_BUTTON =
+            "SMS_CONVERSATION_MUTE_ACTION_BUTTON";
     public static final String ASSISTANT_SMS_TRANSCRIPTION_PLATE =
             "ASSISTANT_SMS_TRANSCRIPTION_PLATE";
     public static final String SMS_EMPTY_MESSAGE = "SMS_EMPTY_MESSAGE";

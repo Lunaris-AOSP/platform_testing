@@ -2125,6 +2125,23 @@
         }
       ]
     },
+    "GOOGLE_ACCOUNT_BUTTON": {
+      "TYPE": "MULTIPLE",
+      "SPECIFIERS": [
+        {
+          "TYPE": "HAS_DESCENDANT",
+          "MAX_DEPTH": 2,
+          "DESCENDANT": {
+            "TYPE": "TEXT",
+            "VALUE": "Google"
+          }
+        },
+        {
+          "TYPE": "CLASS",
+          "VALUE": "android.widget.RelativeLayout"
+        }
+      ]
+    },
     "DISABLED_PHONE_PROFILE": {
       "TYPE": "MULTIPLE",
       "SPECIFIERS": [
