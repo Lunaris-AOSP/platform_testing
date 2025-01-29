@@ -64,12 +64,12 @@ public class UxRestrictionTest {
     @Test
     public void testRestrictedSoundSettings() {
         mSettingHelper.get().openSetting(SettingsConstants.SOUND_SETTINGS);
-        String currentTitle = mSettingHelper.get().getPageTitleText();
+        String currentTitle = mSettingHelper.get().getSettingsPageTitleText();
         assertTrue(
                 "Sound setting did not open",
                 mSettingHelper.get().checkMenuExists("In-call volume"));
         mSettingHelper.get().openMenuWith("In-call Volume");
-        String newTitle = mSettingHelper.get().getPageTitleText();
+        String newTitle = mSettingHelper.get().getSettingsPageTitleText();
         assertTrue("Phone ringtone setting is not disabled", currentTitle.equals(newTitle));
     }
 
@@ -92,55 +92,55 @@ public class UxRestrictionTest {
         assertTrue(
                 "Bluetooth Setting did not open",
                 mSettingHelper.get().checkMenuExists("Pair new device"));
-        String currentTitle = mSettingHelper.get().getPageTitleText();
+        String currentTitle = mSettingHelper.get().getSettingsPageTitleText();
         mSettingHelper.get().openMenuWith("Pair new device");
-        String newTitle = mSettingHelper.get().getPageTitleText();
+        String newTitle = mSettingHelper.get().getSettingsPageTitleText();
         assertTrue("Bluetooth setting is not disabled", currentTitle.equals(newTitle));
     }
 
     @Test
     public void testRestrictedAppSettings() {
         mSettingHelper.get().openFullSettings();
-        String currentTitle = mSettingHelper.get().getPageTitleText();
+        String currentTitle = mSettingHelper.get().getSettingsPageTitleText();
         mSettingHelper.get().openSetting(SettingsConstants.APPS_SETTINGS);
         assertFalse("Apps is not disabled", mSettingHelper.get().checkMenuExists("View all"));
-        String newTitle = mSettingHelper.get().getPageTitleText();
+        String newTitle = mSettingHelper.get().getSettingsPageTitleText();
         assertTrue("Apps & notification settings is not disabled", currentTitle.equals(newTitle));
     }
 
     @Test
     public void testRestrictedProfilesAndAccountsSettings() {
         mSettingHelper.get().openFullSettings();
-        String currentTitle = mSettingHelper.get().getPageTitleText();
+        String currentTitle = mSettingHelper.get().getSettingsPageTitleText();
         mSettingHelper.get().openSetting(SettingsConstants.PROFILE_ACCOUNT_SETTINGS);
         assertFalse(
                 "Profiles and accounts settings is not disabled",
                 mSettingHelper.get().checkMenuExists("Add a profile"));
-        String newTitle = mSettingHelper.get().getPageTitleText();
+        String newTitle = mSettingHelper.get().getSettingsPageTitleText();
         assertTrue("Profiles and accounts settings is not disabled", currentTitle.equals(newTitle));
     }
 
     @Test
     public void testRestrictedSecuritySettings() {
         mSettingHelper.get().openFullSettings();
-        String currentTitle = mSettingHelper.get().getPageTitleText();
+        String currentTitle = mSettingHelper.get().getSettingsPageTitleText();
         mSettingHelper.get().openSetting(SettingsConstants.SECURITY_SETTINGS);
         assertFalse(
                 "Security settings is not disabled",
                 mSettingHelper.get().checkMenuExists("Profile lock"));
-        String newTitle = mSettingHelper.get().getPageTitleText();
+        String newTitle = mSettingHelper.get().getSettingsPageTitleText();
         assertTrue("Security settings is not disabled", currentTitle.equals(newTitle));
     }
 
     @Test
     public void testRestrictedSystemSettings() {
         mSettingHelper.get().openFullSettings();
-        String currentTitle = mSettingHelper.get().getPageTitleText();
+        String currentTitle = mSettingHelper.get().getSettingsPageTitleText();
         mSettingHelper.get().openSetting(SettingsConstants.SYSTEM_SETTINGS);
         assertFalse(
                 "System settings is not disabled",
                 mSettingHelper.get().checkMenuExists("Languages & input"));
-        String newTitle = mSettingHelper.get().getPageTitleText();
+        String newTitle = mSettingHelper.get().getSettingsPageTitleText();
         assertTrue("System settings is not disabled", currentTitle.equals(newTitle));
     }
 }

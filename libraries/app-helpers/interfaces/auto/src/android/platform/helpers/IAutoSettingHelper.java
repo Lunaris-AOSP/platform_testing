@@ -217,6 +217,13 @@ public interface IAutoSettingHelper extends IAppHelper {
     /**
      * Setup expectations: Setting is open.
      *
+     * <p>Get the current page title text.
+     */
+    String getSettingsPageTitleText();
+
+    /**
+     * Setup expectations: Setting is open.
+     *
      * <p>check whether a setting menu in Settings is displayed or not.
      */
     boolean checkMenuExists(String setting);

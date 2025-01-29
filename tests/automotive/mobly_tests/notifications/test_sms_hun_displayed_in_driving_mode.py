@@ -75,11 +75,16 @@ class NotificationsSmsHunDisplayedInDrivingMode(
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: SMS is displayed as a heads-up notification in the car's head unit.")
-    assert self.discoverer.mbs.isHunDisplayed() is True, (
+    assert self.discoverer.mbs.isSmsHunDisplayed() is True, (
         "New SMS is not displayed as a heads-up notification."
     )
     assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
+    )
+
+    logging.info("Assert: Verify the content is not displayed in HUN.")
+    assert self.discoverer.mbs.getSmsHunContent(sender_phone_number) == "New message", (
+        "New SMS is displayed as a heads-up notification with the correct content."
     )
 
     logging.info("Assert: SMS is displayed in the notification center on the car.")
@@ -96,7 +101,7 @@ class NotificationsSmsHunDisplayedInDrivingMode(
       logging.info("Failed to disable driving mode: %s", e)
 
     try:
-      super().teardown_no_video_recording()
+      super().teardown_test()
     except Exception as e:  # pylint: disable=broad-except
       logging.info("Failed to teardown test: %s", e)
 

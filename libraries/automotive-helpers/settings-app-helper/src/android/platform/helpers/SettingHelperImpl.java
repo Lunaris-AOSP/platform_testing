@@ -31,6 +31,7 @@ import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiObject2;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -318,6 +319,19 @@ public class SettingHelperImpl extends AbstractStandardAppHelper implements IAut
             }
         }
         throw new RuntimeException("Unable to find page title");
+    }
+
+    @Override
+    public String getSettingsPageTitleText() {
+        getSpectatioUiUtil().wait5Seconds();
+        BySelector selector = getUiElementFromConfig(AutomotiveConfigConstants.PAGE_TITLE);
+        List<UiObject2> pageTitles = getSpectatioUiUtil().findUiObjects(selector);
+        List<String> pageTitlesText = new ArrayList<String>();
+        for (UiObject2 pageTitle : pageTitles) {
+            pageTitlesText.add(pageTitle.getText());
+        }
+        pageTitlesText.remove("Settings");
+        return pageTitlesText.get(0);
     }
 
     /** {@inheritDoc} */

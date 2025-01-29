@@ -16,56 +16,156 @@
 
 package android.platform.helpers;
 
+import androidx.test.uiautomator.UiObject2;
+
 public interface IAutoHeadsUpNotificationHelper extends Scrollable, IAppHelper {
     /**
      * Setup expectations: A heads-up notification (HUN) is posted.
+     * Find the heads-up notification in the car's head unit.
+     * Returns the first heads-up notification found.
      *
-     * <p>Check whether HUN is displayed in the device.
+     * @return UiObject2 representing the heads-up notification, or null if it's not found.
+     */
+    UiObject2 findHun();
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
+     *
+     * Return the heads-up notification object.
+     * Imlemented in case other notification pops up in the car's head unit while performing swipe, mute, etc.
+     *
+     * @param notification The UiObject2 representing the heads-up notification.
+     * @return UiObject2 representing the heads-up notification, or null if it's not found.
+     */
+    UiObject2 findHun(UiObject2 notification);
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
+     *
+     * Find the heads-up notification in the car's head unit with the given title.
+     * Returns the first heads-up notification found with the given title.
+     * Swipes all heads-up notifications in the car's head unit if there are
+     * multiple to find the one with the given title.
+     *
+     * @param text The text to match with the heads-up notification title.
+     * @return UiObject2 representing the heads-up notification, or null if it's not found.
+     */
+    UiObject2 findHunWithTitle(String text);
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
+     *
+     * Check if HUN is displayed in the car's head unit.
      *
      * @return True if the HUN is displayed, false otherwise.
      */
     boolean isHunDisplayed();
 
     /**
-     * Setup expectations: SMS is sent to the paired phone.
+     * Setup expectations: A heads-up notification (HUN) is posted.
      *
-     * <p>Check whether SMS HUN with the given tile is displayed in car's head unit.
-     * <p>Swipe's the system notification bar to dismiss the HUN.
+     * Check if HUN is displayed in the car's head unit with the given title.
      *
-     * @param text title (phone number in most cases) of the sender of the SMS.
+     * @param text The text to match with the heads-up notification title.
+     * @return True if the HUN is displayed with the given title, false otherwise.
+     */
+    boolean isHunDisplayedWithTitle(String text);
+
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
      *
+     * Swipe the heads-up notification in the car's head unit.
+     *
+     * @param notification The UiObject2 representing the heads-up notification.
+     */
+    void swipeHun(UiObject2 notification);
+
+    /**
+     * Setup expectations: Heads-up notification is posted.
+     *
+     * Swipe HUN with the given title in the car's head unit.
+     *
+     * @param text The text to match with the heads-up notification title.
+     */
+    void swipeHun(String text);
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
+     *
+     * Find the SMS heads-up notification in the car's head unit.
+     * Returns the first SMS heads-up notification found.
+     *
+     * @return UiObject2 representing the SMS heads-up notification, or null if it's not found.
+     */
+    UiObject2 findSmsHun();
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
+     *
+     * Find the SMS heads-up notification in the car's head unit with the given title.
+     * Returns the first SMS heads-up notification found with the given title.
+     * Swipes all heads-up notifications in the car's head unit if there are
+     * multiple to find the one with the given title.
+     *
+     * @param text The text to match with the heads-up notification title.
+     * @return UiObject2 representing the SMS heads-up notification, or null if it's not found.
+     */
+    UiObject2 findSmsHunWithTitle(String text);
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
+     *
+     * Check if SMS HUN is displayed in the car's head unit.
+     *
+     * @return True if the SMS HUN is displayed, false otherwise.
+     */
+    boolean isSmsHunDisplayed();
+
+    /**
+     * Setup expectations: A heads-up notification (HUN) is posted.
+     *
+     * Check if SMS HUN is displayed in the car's head unit with the given title.
+     *
+     * @param text The text to match with the heads-up notification title.
      * @return True if the SMS HUN is displayed with the given title, false otherwise.
      */
     boolean isSmsHunDisplayedWithTitle(String text);
 
     /**
-     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     * Setup expectations: A heads-up notification (HUN) is posted.
      *
-     * <p>Play the SMS HUN in the car's head unit.
+     * Get the content of the SMS heads-up notification in the car's head unit.
+     *
+     * @param text UiObject2 representing the SMS heads-up notification.
+     * @return The content of the SMS heads-up notification, or null if it's not found.
      */
-    void playSmsHun();
+    String getSmsHunContent(String text);
 
     /**
      * Setup expectations: SMS is sent to the paired phone which is connected to the car.
      *
-     * <p>Check whether SMS HUN is played in the car's head unit.
+     * Mute the SMS HUN with the given title in the car's head unit.
+     *
+     * @param text The text to match with the heads-up notification title.
+     */
+    void muteSmsHun(String text);
+
+    /**
+     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     *
+     * Play the SMS HUN with the given title in the car's head unit.
+     *
+     * @param text The text to match with the heads-up notification title.
+     */
+    void playSmsHun(String text);
+
+    /**
+     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
+     *
+     * Check whether SMS HUN is played in the car's head unit.
      *
      * @return True if the SMS HUN is played in the car's head unit, false otherwise.
      */
     boolean isSmsHunPlayedViaCarSpeaker();
-
-    /**
-     * Setup expectations: SMS is sent to the paired phone which is connected to the car.
-     *
-     * <p>Mute the SMS HUN in the car's head unit. If the new SMS is sent to the
-     *  paired phone from the same sender, the new SMS HUN will not be displayed.
-     */
-    void muteSmsHun();
-
-    /**
-     * Setup expectations: Heads-up notification is posted.
-     *
-     * <p>Swipe top (first) heads-up notification in the car's head unit.
-     */
-    void swipeHun();
 }

@@ -78,15 +78,12 @@ class NotificationsSmsHunPlayInDrivingMode(
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: New SMS is displayed as a heads-up notification.")
-    assert self.discoverer.mbs.isHunDisplayed() is True, (
-        "New SMS is not displayed as a heads-up notification."
-    )
     assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
     logging.info("Act: Playing the SMS in the car's head unit.")
-    self.discoverer.mbs.playSmsHun()
+    self.discoverer.mbs.playSmsHun(sender_phone_number)
 
     logging.info("Assert: SMS is played on the car's head unit via car's speaker.")
     assert self.discoverer.mbs.isSmsHunPlayedViaCarSpeaker() is True, (
@@ -102,7 +99,7 @@ class NotificationsSmsHunPlayInDrivingMode(
       logging.info("Failed to disable driving mode: %s", e)
 
     try:
-      super().teardown_no_video_recording()
+      super().teardown_test()
     except Exception as e:  # pylint: disable=broad-except
       logging.info("Failed to teardown test: %s", e)
 

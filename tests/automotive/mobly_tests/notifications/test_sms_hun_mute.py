@@ -72,15 +72,12 @@ class NotificationsSmsHunMute(
     self.phone_notpaired.mbs.sendSms(receiver_phone_number, sms_text)
 
     logging.info("Assert: New SMS is displayed as a heads-up notification.")
-    assert self.discoverer.mbs.isHunDisplayed() is True, (
-        "New SMS is not displayed as a heads-up notification."
-    )
     assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is True, (
         "New SMS is not displayed as a heads-up notification with the correct title."
     )
 
     logging.info("Act: Mute the SMS in the car's head unit.")
-    self.discoverer.mbs.muteSmsHun()
+    self.discoverer.mbs.muteSmsHun(sender_phone_number)
 
     logging.info("Assert: SMS HUN is dismissed.")
     assert self.discoverer.mbs.isSmsHunDisplayedWithTitle(sender_phone_number) is False, (
@@ -91,7 +88,7 @@ class NotificationsSmsHunMute(
     self.call_utils.press_home()
 
     try:
-      super().teardown_no_video_recording()
+      super().teardown_test()
     except Exception as e:  # pylint: disable=broad-except
       logging.info("Failed to teardown test: %s", e)
 
