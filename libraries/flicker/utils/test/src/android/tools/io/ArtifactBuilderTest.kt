@@ -87,7 +87,9 @@ class ArtifactBuilderTest {
         Truth.assertWithMessage("Different files")
             .that(artifact2.file.name)
             .isNotEqualTo(artifact1.file.name)
-        Truth.assertWithMessage("Artifact 2 name").that(artifact2.file.name).endsWith("_1.zip")
+        Truth.assertWithMessage("Artifact 2 name")
+            .that(artifact2.file.name)
+            .endsWith("_1.winscope.zip")
     }
 
     @Test

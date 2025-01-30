@@ -67,6 +67,7 @@ data_sources: {
       mode: MODE_ACTIVE
       trace_flags: TRACE_FLAG_INPUT
       trace_flags: TRACE_FLAG_BUFFERS
+      trace_flags: TRACE_FLAG_VIRTUAL_DISPLAYS
     }
   }
 }

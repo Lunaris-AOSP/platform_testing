@@ -266,7 +266,7 @@ fun assertExceptionMessage(error: Throwable?, expectedValue: String) {
 }
 
 fun outputFileName(status: RunStatus) =
-    File("/sdcard/flicker/${status.prefix}__test_ROTATION_0_GESTURAL_NAV.zip")
+    File("/sdcard/flicker/${status.prefix}__test_ROTATION_0_GESTURAL_NAV.winscope.zip")
 
 fun createDefaultArtifactBuilder(
     status: RunStatus,

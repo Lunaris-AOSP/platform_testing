@@ -108,6 +108,14 @@ class Bubble internal constructor(private val bubbleView: UiObject2) {
         )
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Bubble) return false
+        // Bubbles are equal if the backing bubbleView is the same.
+        // This ensures that Bubble objects can be used as targets for waitForValueToSettle.
+        return this.bubbleView == other.bubbleView
+    }
+
     companion object {
         val FIND_OBJECT_TIMEOUT = Duration.ofSeconds(20)
         val BUBBLE_VIEW = sysuiResSelector("bubble_view")

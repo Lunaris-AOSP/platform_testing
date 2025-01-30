@@ -35,6 +35,7 @@ enum class RunStatus(val prefix: String, val isFailure: Boolean) {
             append("_")
             append(counter)
         }
+        append(".winscope")
         append(".zip")
     }
 
