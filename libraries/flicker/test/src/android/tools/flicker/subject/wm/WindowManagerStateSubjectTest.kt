@@ -126,14 +126,14 @@ class WindowManagerStateSubjectTest {
         val subject =
             WindowManagerTraceSubject(trace, reader)
                 .getEntryByElapsedTimestamp(traceFirstFrameTimestamp)
-        assertFail("SkRegion((1440,0,1441,171))") {
+        assertFail("SkRegion((1440,0,1443,171))") {
             subject
                 .visibleRegion(ComponentNameMatcher.STATUS_BAR)
-                .coversAtLeast(Region(0, 0, 1441, 171))
+                .coversAtLeast(Region(0, 0, 1443, 171))
         }
 
-        assertFail("SkRegion((0,2960,1440,2961))") {
-            subject.visibleRegion(TestComponents.LAUNCHER).coversAtLeast(Region(0, 0, 1440, 2961))
+        assertFail("SkRegion((0,2960,1440,2963))") {
+            subject.visibleRegion(TestComponents.LAUNCHER).coversAtLeast(Region(0, 0, 1440, 2963))
         }
     }
 
@@ -168,14 +168,14 @@ class WindowManagerStateSubjectTest {
         val subject =
             WindowManagerTraceSubject(trace, reader)
                 .getEntryByElapsedTimestamp(traceFirstFrameTimestamp)
-        assertFail("Uncovered region: SkRegion((1440,0,1441,171))") {
+        assertFail("Uncovered region: SkRegion((1440,0,1443,171))") {
             subject
                 .visibleRegion(ComponentNameMatcher.STATUS_BAR)
-                .coversAtLeast(Region(0, 0, 1441, 171))
+                .coversAtLeast(Region(0, 0, 1443, 171))
         }
 
-        assertFail("Uncovered region: SkRegion((0,2960,1440,2961))") {
-            subject.visibleRegion(TestComponents.LAUNCHER).coversAtLeast(Region(0, 0, 1440, 2961))
+        assertFail("Uncovered region: SkRegion((0,2960,1440,2963))") {
+            subject.visibleRegion(TestComponents.LAUNCHER).coversAtLeast(Region(0, 0, 1440, 2963))
         }
     }
 

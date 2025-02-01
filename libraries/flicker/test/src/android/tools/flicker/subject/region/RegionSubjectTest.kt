@@ -98,10 +98,10 @@ class RegionSubjectTest {
     @Test
     fun detectCoversAtLeast() {
         val rectA = Rect(/* left */ 1, /* top */ 1, /* right */ 2, /* bottom */ 2)
-        val rectB = Rect(/* left */ 0, /* top */ 0, /* right */ 2, /* bottom */ 2)
+        val rectB = Rect(/* left */ 0, /* top */ 0, /* right */ 5, /* bottom */ 5)
         RegionSubject(rectA, timestamp = Timestamps.empty()).coversAtLeast(rectA)
         RegionSubject(rectB, timestamp = Timestamps.empty()).coversAtLeast(rectA)
-        assertFail("SkRegion((0,0,2,1)(0,1,1,2))") {
+        assertFail("SkRegion((0,0,5,1)(0,1,1,2)(2,1,5,2)(0,2,5,5))") {
             RegionSubject(rectA, timestamp = Timestamps.empty()).coversAtLeast(rectB)
         }
     }

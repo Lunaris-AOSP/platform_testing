@@ -26,6 +26,7 @@ import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiObject2;
 
 import java.util.List;
+import java.util.concurrent.*;
 import java.lang.Exception;
 
 /**
@@ -35,6 +36,7 @@ public class AutoHeadsUpNotificationHelperImpl extends AbstractStandardAppHelper
     implements IAutoHeadsUpNotificationHelper {
 
     private static final String LOG_TAG = AutoHeadsUpNotificationHelperImpl.class.getSimpleName();
+    private static final int TIMEOUT_SECONDS = 10;
 
     public AutoHeadsUpNotificationHelperImpl(Instrumentation instr) {
         super(instr);
@@ -65,45 +67,51 @@ public class AutoHeadsUpNotificationHelperImpl extends AbstractStandardAppHelper
     /** {@inheritDoc} */
     @Override
     public UiObject2 findHun() {
-        Log.i(LOG_TAG, "Checking for heads-up notification in the car's head unit.");
-        BySelector notificationSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION);
-        UiObject2 notification = getSpectatioUiUtil().waitForUiObject(notificationSelector);
-        if (notification == null) {
-            Log.w(LOG_TAG, "Cannot to find heads-up notification in the car's head unit.");
-        }
-        return notification;
+        return runWithTimeout(() -> {
+            Log.i(LOG_TAG, "Checking for heads-up notification in the car's head unit.");
+            BySelector notificationSelector = getUiElementFromConfig(AutomotiveConfigConstants.HEADSUP_NOTIFICATION);
+            UiObject2 notification = getSpectatioUiUtil().waitForUiObject(notificationSelector);
+            if (notification == null) {
+                Log.w(LOG_TAG, "Cannot to find heads-up notification in the car's head unit.");
+            }
+            return notification;
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public UiObject2 findHun(UiObject2 notification) {
-        Log.i(LOG_TAG, "Checking for heads-up notification in the car's head unit.");
-        UiObject2 currentNotification = findHun();
-        while (currentNotification != null && !currentNotification.equals(notification)) {
-            swipeHun(currentNotification);
-            currentNotification = findHun();
-        }
-        if (currentNotification == null) {
-            Log.w(LOG_TAG, "The HUN object is not found.");
-        }
-        return currentNotification;
+        return runWithTimeout(() -> {
+            Log.i(LOG_TAG, "Checking for heads-up notification in the car's head unit.");
+            UiObject2 currentNotification = findHun();
+            while (currentNotification != null && !currentNotification.equals(notification)) {
+                swipeHun(currentNotification);
+                currentNotification = findHun();
+            }
+            if (currentNotification == null) {
+                Log.w(LOG_TAG, "The HUN object is not found.");
+            }
+            return currentNotification;
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public UiObject2 findHunWithTitle(String text) {
-        Log.i(LOG_TAG, String.format("Checking for heads-up notification with title %s in the car's head unit.", text));
-        UiObject2 notification = findHun();
-        while (notification != null) {
-            if (isHunTitleMatched(notification, text)) {
-                Log.i(LOG_TAG, "Heads-up notification displayed.");
-                return notification;
+        return runWithTimeout(() -> {
+            Log.i(LOG_TAG, String.format("Checking for heads-up notification with title %s in the car's head unit.", text));
+            UiObject2 notification = findHun();
+            while (notification != null) {
+                if (isHunTitleMatched(notification, text)) {
+                    Log.i(LOG_TAG, "Heads-up notification displayed.");
+                    return notification;
+                }
+                swipeHun(notification);
+                notification = findHun();
             }
-            swipeHun(notification);
-            notification = findHun();
-        }
-        Log.i(LOG_TAG, String.format("Cannot find heads-up notification with title %s.", text));
-        return null;
+            Log.i(LOG_TAG, String.format("Cannot find heads-up notification with title %s.", text));
+            return null;
+        });
     }
 
     /** {@inheritDoc} */
@@ -144,35 +152,39 @@ public class AutoHeadsUpNotificationHelperImpl extends AbstractStandardAppHelper
     /** {@inheritDoc} */
     @Override
     public UiObject2 findSmsHun() {
-        Log.i(LOG_TAG, "Checking for SMS HUN in the car's head unit.");
-        UiObject2 notification = findHun();
-        while (notification != null) {
-            if (isSmsHun(notification)) {
-                Log.i(LOG_TAG, "SMS HUN displayed.");
-                return notification;
+        return runWithTimeout(() -> {
+            Log.i(LOG_TAG, "Checking for SMS HUN in the car's head unit.");
+            UiObject2 notification = findHun();
+            while (notification != null) {
+                if (isSmsHun(notification)) {
+                    Log.i(LOG_TAG, "SMS HUN displayed.");
+                    return notification;
+                }
+                swipeHun(notification);
+                notification = findHun();
             }
-            swipeHun(notification);
-            notification = findHun();
-        }
-        Log.w(LOG_TAG, "Cannot to find SMS HUN in the car's head unit.");
-        return null;
+            Log.w(LOG_TAG, "Cannot to find SMS HUN in the car's head unit.");
+            return null;
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public UiObject2 findSmsHunWithTitle(String text) {
-        Log.i(LOG_TAG, String.format("Checking for SMS HUN with title %s in the car's head unit.", text));
-        UiObject2 notification = findSmsHun();
-        while (notification != null) {
-            if (isHunTitleMatched(notification, text)) {
-                Log.i(LOG_TAG, String.format("SMS HUN displayed with title %s.", text));
-                return notification;
+        return runWithTimeout(() -> {
+            Log.i(LOG_TAG, String.format("Checking for SMS HUN with title %s in the car's head unit.", text));
+            UiObject2 notification = findSmsHun();
+            while (notification != null) {
+                if (isHunTitleMatched(notification, text)) {
+                    Log.i(LOG_TAG, String.format("SMS HUN displayed with title %s.", text));
+                    return notification;
+                }
+                swipeHun(notification);
+                notification = findSmsHun();
             }
-            swipeHun(notification);
-            notification = findSmsHun();
-        }
-        Log.i(LOG_TAG, String.format("Cannot find SMS HUN with title %s.", text));
-        return null;
+            Log.i(LOG_TAG, String.format("Cannot find SMS HUN with title %s.", text));
+            return null;
+        });
     }
 
     /** {@inheritDoc} */
@@ -272,5 +284,39 @@ public class AutoHeadsUpNotificationHelperImpl extends AbstractStandardAppHelper
             return true;
         }
         return false;
+    }
+
+    /**
+     * Run the given task with a default timeout.
+     *
+     * @param task The task to run.
+     * @return The result of the task, or null if the task times out.
+     */
+    private static <T> T runWithTimeout(Callable<T> task) {
+        return runWithTimeout(task, TIMEOUT_SECONDS);
+    }
+
+    /**
+     * Run the given task with the given timeout.
+     *
+     * @param task The task to run.
+     * @param timeoutSeconds The timeout in seconds.
+     * @return The result of the task, or null if the task times out.
+     */
+    private static <T> T runWithTimeout(Callable<T> task, int timeoutSeconds) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<T> future = executor.submit(task);
+        try {
+            return future.get(timeoutSeconds, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.i(LOG_TAG, "Function execution exceeded time limit.");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            future.cancel(true);
+            executor.shutdown();
+        }
     }
 }

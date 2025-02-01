@@ -20,14 +20,21 @@ import android.tools.flicker.ScenarioInstance
 import android.tools.flicker.assertions.FlickerTest
 import android.tools.flicker.assertors.ComponentTemplate
 
-/** Checks that the visible region of [component] always increases during the animation */
-class AppLayerIncreasesInSize(private val component: ComponentTemplate) :
+/**
+ * Checks that the visible region of the [component]'s resize veil always increases during the
+ * animation
+ */
+class ResizeVeilKeepsIncreasingInSize(private val component: ComponentTemplate) :
     AssertionTemplateWithComponent(component) {
     /** {@inheritDoc} */
     override fun doEvaluate(scenarioInstance: ScenarioInstance, flicker: FlickerTest) {
         val layerMatcher = component.get(scenarioInstance)
         flicker.assertLayers {
-            val layerList = layers { layerMatcher.layerMatchesAnyOf(it) && it.isVisible }
+            val layerList = layers {
+                layerMatcher.layerMatchesAnyOf(it) &&
+                    it.isVisible &&
+                    it.name.contains("Resize veil")
+            }
             layerList.zipWithNext { previous, current ->
                 current.visibleRegion.coversAtLeast(previous.visibleRegion.region)
             }

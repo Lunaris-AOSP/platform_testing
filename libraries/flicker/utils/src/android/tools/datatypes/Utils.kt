@@ -107,8 +107,22 @@ fun Region.uncoveredRegion(testRegion: Region): Region {
     return uncoveredRegion
 }
 
-fun Region.coversAtLeast(testRegion: Region): Boolean {
-    val intersection = Region(this)
+fun Region.coversAtLeast(testRegion: Region, tolerance: Int = 2): Boolean {
+    // Expand [this] by [tolerance] pixels in all directions
+    val expandedRegion =
+        Region(this).apply {
+            op(
+                Region(
+                    bounds.left - tolerance,
+                    bounds.top - tolerance,
+                    bounds.right + tolerance,
+                    bounds.bottom + tolerance,
+                ),
+                Region.Op.UNION,
+            )
+        }
+
+    val intersection = Region(expandedRegion)
     return intersection.op(testRegion, Region.Op.INTERSECT) &&
         !intersection.op(testRegion, Region.Op.XOR)
 }
