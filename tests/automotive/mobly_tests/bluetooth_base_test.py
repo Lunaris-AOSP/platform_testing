@@ -10,10 +10,11 @@ import logging
 
 from mobly import base_test
 from mobly.controllers import android_device
+from mobly.controllers.android_device_lib.snippet_client_v2 import Config
 
 from utilities import spectatio_utils
 from utilities import bt_utils
-from utilities.main_utils import common_main
+from utilities.main_utils import common_main, get_test_args
 from utilities.video_utils_service import VideoRecording
 
 
@@ -33,9 +34,14 @@ class BluetoothBaseTest(base_test.BaseTestClass):
         # The device that is expected to be discovered
         self.target = android_device.get_device(self.ads, label='phone')
         self.target.debug_tag = 'target'
-        logging.info("\tLoading Snippets.")
-        self.target.load_snippet('mbs', android_device.MBS_PACKAGE)
-        self.discoverer.load_snippet('mbs', android_device.MBS_PACKAGE)
+
+        test_args = get_test_args(shell_escape=True)
+        logging.info("\tLoading Snippets.  Test args = {}".format(test_args))
+        snippet_config = Config(am_instrument_options=test_args)
+        logging.info("\tSnippet config: {}".format(snippet_config))
+        self.target.load_snippet('mbs', android_device.MBS_PACKAGE, config=snippet_config)
+        self.discoverer.load_snippet('mbs', android_device.MBS_PACKAGE, config=snippet_config)
+
         logging.info("\tInitializing Utilities")
         self.call_utils = (spectatio_utils.CallUtils(self.discoverer))
         self.bt_utils = (bt_utils.BTUtils(self.discoverer, self.target))

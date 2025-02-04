@@ -195,6 +195,12 @@ public class DialerSnippet implements Snippet {
         return mDialerHelper.get().getContactType();
     }
 
+    /** Search contacts using the SEARCH_CONTACTS_WORKFLOW. */
+    @Rpc(description = "Search contacts using SEARCH_CONTACTS_WORKFLOW.")
+    public void searchContacts() {
+        mDialerHelper.get().searchContacts();
+    }
+
     @Rpc(description = "Search contact by name.")
     public void searchContactsByName(String contact) {
         mDialerHelper.get().searchContactsByName(contact);

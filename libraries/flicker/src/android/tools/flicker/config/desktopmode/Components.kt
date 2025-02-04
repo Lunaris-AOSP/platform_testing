@@ -79,6 +79,7 @@ object Components {
                     associatedTransition.changes.first { it.transitMode == TransitionType.CLOSE }
                 FullComponentIdMatcher(change.windowId, change.layerId)
             }
+            ScenarioId("OPEN_APP_WHEN_EXTERNAL_DISPLAY_CONNECTED"),
             ScenarioId("OPEN_UNLIMITED_APPS"),
             ScenarioId("CASCADE_APP") -> {
                 val change =

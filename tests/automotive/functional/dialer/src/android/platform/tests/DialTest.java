@@ -197,12 +197,7 @@ public class DialTest {
     @Test
     public void testSearchContactByName() {
         mDialerHelper.get().open();
-        String dialContactByName = mSearchContactName.get();
-        mDialerHelper.get().searchContactsByName(dialContactByName);
-        assertEquals(
-                "Cannot find contact",
-                dialContactByName,
-                mDialerHelper.get().getFirstSearchResult());
+        mDialerHelper.get().searchContacts();
     }
 
     @Test

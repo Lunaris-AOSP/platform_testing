@@ -32,6 +32,8 @@ import androidx.test.uiautomator.UiObject2;
 import com.google.common.base.Strings;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /** Workflow Task For Workflows in Spectatio Config JSON Config */
 public class WorkflowTask {
     private static final String LOG_TAG = WorkflowTask.class.getSimpleName();
@@ -55,9 +57,17 @@ public class WorkflowTask {
     @SerializedName("SCROLL_CONFIG")
     private ScrollConfig mScrollConfig;
 
+    // If task sets text, provide SetText Config
+    @SerializedName("SET_TEXT_CONFIG")
+    private SetTextConfig mSetTextConfig;
+
     // If task needs swiping, provide Swipe Config
     @SerializedName("SWIPE_CONFIG")
     private SwipeConfig mSwipeConfig;
+
+    // If task validates a value, provide Validation Config
+    @SerializedName("VALIDATION_CONFIG")
+    private ValidationConfig mValidationConfig;
 
     public WorkflowTask(
             String name,
@@ -65,13 +75,17 @@ public class WorkflowTask {
             WorkflowTaskConfig taskConfig,
             int repeatCount,
             ScrollConfig scrollConfig,
-            SwipeConfig swipeConfig) {
+            SetTextConfig setTextConfig,
+            SwipeConfig swipeConfig,
+            ValidationConfig validationConfig) {
         mName = name;
         mType = type;
         mTaskConfig = taskConfig;
         mRepeatCount = repeatCount;
         mScrollConfig = scrollConfig;
+        mSetTextConfig = setTextConfig;
         mSwipeConfig = swipeConfig;
+        mValidationConfig = validationConfig;
     }
 
     public String getTaskName() {
@@ -94,11 +108,24 @@ public class WorkflowTask {
         return mScrollConfig;
     }
 
+    public SetTextConfig getSetTextConfig() {
+        return mSetTextConfig;
+    }
+
     public SwipeConfig getSwipeConfig() {
         return mSwipeConfig;
     }
 
-    public void executeTask(String workflowName, SpectatioUiUtil spectatioUiUtil) {
+    /**
+     * Execute this task.
+     *
+     * @param workflowName The name of the workflow this task is part of
+     * @param spectatioUiUtil Spectatio
+     * @param fullConfig The full configuration this task is from, for retrieving UI Elements
+     *     referenced by UI_ELEMENT_REFERENCE configuration
+     */
+    public void executeTask(
+            String workflowName, SpectatioUiUtil spectatioUiUtil, SpectatioConfig fullConfig) {
         Log.i(
                 LOG_TAG,
                 String.format(
@@ -112,7 +139,7 @@ public class WorkflowTask {
         int executionCount = 0;
         // Execute Task once by default. Repeat it again based on repeat count i.e. mRepeatCount > 0
         do {
-            executeTask(taskType, workflowName, spectatioUiUtil);
+            executeTask(taskType, workflowName, spectatioUiUtil, fullConfig);
             executionCount++;
             Log.i(
                     LOG_TAG,
@@ -131,7 +158,10 @@ public class WorkflowTask {
     }
 
     private void executeTask(
-            SupportedWorkFlowTasks taskType, String workflowName, SpectatioUiUtil spectatioUiUtil) {
+            SupportedWorkFlowTasks taskType,
+            String workflowName,
+            SpectatioUiUtil spectatioUiUtil,
+            SpectatioConfig fullConfig) {
         switch (taskType) {
             case COMMAND:
                 validateAndExecuteCommand(workflowName, spectatioUiUtil);
@@ -140,12 +170,13 @@ public class WorkflowTask {
                 validateAndVerifyPackage(workflowName, spectatioUiUtil);
                 break;
             case HAS_UI_ELEMENT_IN_FOREGROUND:
-                validateAndVerifyUiElement(workflowName, spectatioUiUtil);
+                validateAndVerifyUiElement(workflowName, spectatioUiUtil, fullConfig);
                 break;
             case CLICK:
                 validateAndClickUiElement(
                         workflowName,
                         spectatioUiUtil,
+                        fullConfig,
                         FindType.NONE,
                         /* isLongClick= */ false,
                         /* isOptional= */ false);
@@ -154,6 +185,7 @@ public class WorkflowTask {
                 validateAndClickUiElement(
                         workflowName,
                         spectatioUiUtil,
+                        fullConfig,
                         FindType.NONE,
                         /* isLongClick= */ false,
                         /* isOptional= */ true);
@@ -162,6 +194,7 @@ public class WorkflowTask {
                 validateAndClickUiElement(
                         workflowName,
                         spectatioUiUtil,
+                        fullConfig,
                         FindType.NONE,
                         /* isLongClick= */ true,
                         /* isOptional= */ false);
@@ -176,6 +209,7 @@ public class WorkflowTask {
                 validateAndClickUiElement(
                         workflowName,
                         spectatioUiUtil,
+                        fullConfig,
                         FindType.SCROLL,
                         /* isLongClick= */ false,
                         /* isOptional= */ false);
@@ -184,9 +218,13 @@ public class WorkflowTask {
                 validateAndClickUiElement(
                         workflowName,
                         spectatioUiUtil,
+                        fullConfig,
                         FindType.SCROLL,
                         /* isLongClick= */ false,
                         /* isOptional= */ true);
+                break;
+            case SET_TEXT:
+                validateAndSetTextOfUiElement(workflowName, spectatioUiUtil, fullConfig);
                 break;
             case SWIPE:
                 validateAndSwipe(workflowName, spectatioUiUtil);
@@ -195,6 +233,7 @@ public class WorkflowTask {
                 validateAndClickUiElement(
                         workflowName,
                         spectatioUiUtil,
+                        fullConfig,
                         FindType.SWIPE,
                         /* isLongClick= */ false,
                         /* isOptional= */ false);
@@ -203,9 +242,13 @@ public class WorkflowTask {
                 validateAndClickUiElement(
                         workflowName,
                         spectatioUiUtil,
+                        fullConfig,
                         FindType.SWIPE,
                         /* isLongClick= */ false,
                         /* isOptional= */ true);
+                break;
+            case VALIDATE_VALUE:
+                validateElementHasProperty(workflowName, spectatioUiUtil, fullConfig);
                 break;
             case WAIT_MS:
                 validateAndWait(workflowName, spectatioUiUtil);
@@ -213,6 +256,44 @@ public class WorkflowTask {
             default:
                 throwRuntimeException("Workflow Task Type", mType, workflowName, "Not Supported");
         }
+    }
+
+    private void validateElementHasProperty(
+            String workflowName, SpectatioUiUtil spectatioUiUtil, SpectatioConfig fullConfig) {
+        UiElement uiElement = validateAndGetTaskConfigUiElement(workflowName, fullConfig);
+        BySelector selector = uiElement.getBySelectorForUiElement();
+        List<UiObject2> uiObjects = spectatioUiUtil.findUiObjects(selector);
+        if (uiObjects == null) {
+            throw new IllegalStateException(
+                    String.format("Could not find UI element for selector %s", selector));
+        }
+
+        ValidationConfig validationConfig = validateAndGetTaskValidationConfig(workflowName);
+        String property = validationConfig.getProperty();
+        String expected = validationConfig.getExpected();
+        if (expected == null) {
+            String expectedCommandLineKey = validationConfig.getExpectedCommandLineKey();
+            expected = CommandLineParameters.getValue(expectedCommandLineKey, null);
+        }
+
+        for (UiObject2 uiObject : uiObjects) {
+            if (spectatioUiUtil.validateUiObjectProperty(uiObject, property, expected)) {
+                return;
+            }
+        }
+        throwRuntimeException(
+                "UI Object Property",
+                property,
+                workflowName,
+                String.format("wrong value (should be %s)", expected));
+    }
+
+    private ValidationConfig validateAndGetTaskValidationConfig(String workflowName) {
+        if (mValidationConfig == null) {
+            throwRuntimeException(
+                    "Config", "VALIDATION_CONFIG", workflowName, "Missing or Invalid");
+        }
+        return mValidationConfig;
     }
 
     private void validateAndWait(String workflowName, SpectatioUiUtil spectatioUiUtil) {
@@ -228,8 +309,9 @@ public class WorkflowTask {
         spectatioUiUtil.executeShellCommand(command);
     }
 
-    private void validateAndVerifyUiElement(String workflowName, SpectatioUiUtil spectatioUiUtil) {
-        UiElement uiElement = validateAndGetTaskConfigUiElement(workflowName);
+    private void validateAndVerifyUiElement(
+            String workflowName, SpectatioUiUtil spectatioUiUtil, SpectatioConfig fullConfig) {
+        UiElement uiElement = validateAndGetTaskConfigUiElement(workflowName, fullConfig);
         BySelector selector = uiElement.getBySelectorForUiElement();
         if (!spectatioUiUtil.hasUiElement(selector)) {
             throwRuntimeException(
@@ -264,10 +346,11 @@ public class WorkflowTask {
     private void validateAndClickUiElement(
             String workflowName,
             SpectatioUiUtil spectatioUiUtil,
+            SpectatioConfig fullConfig,
             FindType howToFind,
             boolean isLongClick,
             boolean isOptional) {
-        UiElement uiElement = validateAndGetTaskConfigUiElement(workflowName);
+        UiElement uiElement = validateAndGetTaskConfigUiElement(workflowName, fullConfig);
         BySelector selector = uiElement.getBySelectorForUiElement();
         UiObject2 uiObject = spectatioUiUtil.findUiObject(selector);
         if (howToFind == FindType.SCROLL && !isValidUiObject(uiObject)) {
@@ -353,6 +436,16 @@ public class WorkflowTask {
         } else {
             spectatioUiUtil.clickAndWait(uiObject);
         }
+    }
+
+    private void validateAndSetTextOfUiElement(
+            String workflowName, SpectatioUiUtil spectatioUiUtil, SpectatioConfig fullConfig) {
+        UiElement element = validateAndGetTaskConfigUiElement(workflowName, fullConfig);
+        BySelector selector = element.getBySelectorForUiElement();
+        UiObject2 object = spectatioUiUtil.findUiObject(selector);
+
+        String text = validateAndGetTaskSetText(workflowName);
+        object.setText(text);
     }
 
     private void validateAndPressKey(
@@ -441,10 +534,19 @@ public class WorkflowTask {
         return taskConfigText.trim();
     }
 
-    private UiElement validateAndGetTaskConfigUiElement(String workflowName) {
+    private UiElement validateAndGetTaskConfigUiElement(
+            String workflowName, SpectatioConfig fullConfig) {
         UiElement uiElement = mTaskConfig.getUiElement();
-        if (uiElement == null) {
-            throwRuntimeException("Config", "UI_ELEMENT", workflowName, "Missing or Invalid");
+        String uiElementReference = mTaskConfig.getUiElementReference();
+        if (uiElement == null && uiElementReference == null) {
+            throwRuntimeException(
+                    "Config",
+                    "UI_ELEMENT or UI_ELEMENT_REFERENCE",
+                    workflowName,
+                    "Missing or Invalid");
+        }
+        if (uiElementReference != null) {
+            uiElement = fullConfig.getUiElementFromConfig(uiElementReference);
         }
         return uiElement;
     }
@@ -456,11 +558,37 @@ public class WorkflowTask {
         return mScrollConfig;
     }
 
+    private String validateAndGetTaskSetText(String workflowName) {
+        SetTextConfig setTextConfig = validateAndGetTaskSetTextConfig(workflowName);
+
+        String text = setTextConfig.getText();
+        if (text != null) {
+            return text;
+        }
+
+        String commandLineKey = setTextConfig.getCommandLineKey();
+        if (commandLineKey == null) {
+            throwRuntimeException(
+                    "SET_TEXT_CONFIG",
+                    "TEXT or COMMAND_LINE_KEY",
+                    workflowName,
+                    "Missing or Invalid");
+        }
+        return CommandLineParameters.getValue(commandLineKey, setTextConfig.getDefaultValue());
+    }
+
     private SwipeConfig validateAndGetTaskSwipeConfig(String workflowName) {
         if (mSwipeConfig == null) {
             throwRuntimeException("Config", "SWIPE_CONFIG", workflowName, "Missing or Invalid");
         }
         return mSwipeConfig;
+    }
+
+    private SetTextConfig validateAndGetTaskSetTextConfig(String workflowName) {
+        if (mSetTextConfig == null) {
+            throwRuntimeException("Config", "SET_TEXT_CONFIG", workflowName, "Missing or Invalid");
+        }
+        return mSetTextConfig;
     }
 
     private <E extends Enum<E>> E validateAndGetEnumValue(

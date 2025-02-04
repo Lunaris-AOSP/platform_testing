@@ -17,7 +17,9 @@
 package android.platform.spectatio.configs.validators;
 
 import android.platform.spectatio.configs.ScrollConfig;
+import android.platform.spectatio.configs.SetTextConfig;
 import android.platform.spectatio.configs.SwipeConfig;
+import android.platform.spectatio.configs.ValidationConfig;
 import android.platform.spectatio.configs.WorkflowTask;
 import android.platform.spectatio.configs.WorkflowTaskConfig;
 import android.platform.spectatio.constants.JsonConfigConstants;
@@ -51,7 +53,9 @@ public class ValidateWorkflowTask implements JsonDeserializer<WorkflowTask> {
                     JsonConfigConstants.CONFIG,
                     JsonConfigConstants.REPEAT_COUNT,
                     JsonConfigConstants.SCROLL_CONFIG,
-                    JsonConfigConstants.SWIPE_CONFIG);
+                    JsonConfigConstants.SET_TEXT_CONFIG,
+                    JsonConfigConstants.SWIPE_CONFIG,
+                    JsonConfigConstants.VALIDATION_CONFIG);
 
     @Override
     public WorkflowTask deserialize(
@@ -104,11 +108,13 @@ public class ValidateWorkflowTask implements JsonDeserializer<WorkflowTask> {
             case HAS_UI_ELEMENT_IN_FOREGROUND:
             case SCROLL_TO_FIND_AND_CLICK:
             case SCROLL_TO_FIND_AND_CLICK_IF_EXIST:
+            case SET_TEXT:
             case SWIPE_TO_FIND_AND_CLICK:
             case SWIPE_TO_FIND_AND_CLICK_IF_EXIST:
-                if (config.getUiElement() == null) {
+            case VALIDATE_VALUE:
+                if (config.getUiElement() == null && config.getUiElementReference() == null) {
                     throwRuntimeException(
-                            "Config UI_ELEMENT for Workflow Task Type",
+                            "Config UI_ELEMENT or UI_ELEMENT_REFERENCE for Workflow Task Type",
                             type,
                             jsonObject,
                             "Missing or Invalid");
@@ -123,7 +129,9 @@ public class ValidateWorkflowTask implements JsonDeserializer<WorkflowTask> {
 
         // Check if a valid type-specific config is provided when e.g. scrolling/swiping is required
         ScrollConfig scrollConfig = null;
+        SetTextConfig setTextConfig = null;
         SwipeConfig swipeConfig = null;
+        ValidationConfig validationConfig = null;
         switch (workflowTaskType) {
             case SCROLL_TO_FIND_AND_CLICK:
             case SCROLL_TO_FIND_AND_CLICK_IF_EXIST:
@@ -132,6 +140,13 @@ public class ValidateWorkflowTask implements JsonDeserializer<WorkflowTask> {
                         context.deserialize(
                                 jsonObject.get(JsonConfigConstants.SCROLL_CONFIG),
                                 ScrollConfig.class);
+                break;
+            case SET_TEXT:
+                validateNotNull(JsonConfigConstants.SET_TEXT_CONFIG, jsonObject);
+                setTextConfig =
+                        context.deserialize(
+                                jsonObject.get(JsonConfigConstants.SET_TEXT_CONFIG),
+                                SetTextConfig.class);
                 break;
             case SWIPE:
             case SWIPE_TO_FIND_AND_CLICK:
@@ -142,6 +157,13 @@ public class ValidateWorkflowTask implements JsonDeserializer<WorkflowTask> {
                                 jsonObject.get(JsonConfigConstants.SWIPE_CONFIG),
                                 SwipeConfig.class);
                 break;
+            case VALIDATE_VALUE:
+                validateNotNull(JsonConfigConstants.VALIDATION_CONFIG, jsonObject);
+                validationConfig =
+                        context.deserialize(
+                                jsonObject.get(JsonConfigConstants.VALIDATION_CONFIG),
+                                ValidationConfig.class);
+                break;
             default:
                 // Nothing To Do
                 break;
@@ -149,7 +171,15 @@ public class ValidateWorkflowTask implements JsonDeserializer<WorkflowTask> {
 
         int repeatCount = validateAndGetIntValue(JsonConfigConstants.REPEAT_COUNT, jsonObject);
 
-        return new WorkflowTask(name, type, config, repeatCount, scrollConfig, swipeConfig);
+        return new WorkflowTask(
+                name,
+                type,
+                config,
+                repeatCount,
+                scrollConfig,
+                setTextConfig,
+                swipeConfig,
+                validationConfig);
     }
 
     private int validateAndGetIntValue(String key, JsonObject jsonObject) {

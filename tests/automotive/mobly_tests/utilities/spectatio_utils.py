@@ -386,6 +386,10 @@ class CallUtils:
                      'when bluetooth is disconnected')
         return self.device.mbs.isBluetoothHfpErrorDisplayed()
 
+    def search_contacts(self):
+        logging.info('Searching contacts using SEARCH_CONTACTS_WORKFLOW')
+        self.device.mbs.searchContacts()
+
     def search_contacts_name(self, contact_name):
         logging.info('Searching <%s> in contacts', contact_name)
         self.device.mbs.searchContactsByName(contact_name)

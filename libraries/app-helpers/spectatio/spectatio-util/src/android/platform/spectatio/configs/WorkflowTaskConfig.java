@@ -28,9 +28,13 @@ public class WorkflowTaskConfig {
     @SerializedName("UI_ELEMENT")
     private UiElement mUiElement;
 
-    public WorkflowTaskConfig(String text, UiElement uiElement) {
+    @SerializedName("UI_ELEMENT_REFERENCE")
+    private String mUiElementReference;
+
+    public WorkflowTaskConfig(String text, UiElement uiElement, String uiElementReference) {
         mText = text;
         mUiElement = uiElement;
+        mUiElementReference = uiElementReference;
     }
 
     public String getText() {
@@ -39,5 +43,9 @@ public class WorkflowTaskConfig {
 
     public UiElement getUiElement() {
         return mUiElement;
+    }
+
+    public String getUiElementReference() {
+        return mUiElementReference;
     }
 }

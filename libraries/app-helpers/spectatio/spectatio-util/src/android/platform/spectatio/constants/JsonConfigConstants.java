@@ -56,7 +56,9 @@ public class JsonConfigConstants {
     public static final String CONFIG = "CONFIG";
     public static final String REPEAT_COUNT = "REPEAT_COUNT";
     public static final String SCROLL_CONFIG = "SCROLL_CONFIG";
+    public static final String SET_TEXT_CONFIG = "SET_TEXT_CONFIG";
     public static final String SWIPE_CONFIG = "SWIPE_CONFIG";
+    public static final String VALIDATION_CONFIG = "VALIDATION_CONFIG";
 
     // Supported Workflow Tasks
     public static enum SupportedWorkFlowTasks {
@@ -83,6 +85,8 @@ public class JsonConfigConstants {
         // Finds the given UI Element by Scrolling and Click on it if found ( i.e. No Exception
         // even if UI Element is missing )
         SCROLL_TO_FIND_AND_CLICK_IF_EXIST,
+        // Sets the text of an element (used for quickly filling search boxes)
+        SET_TEXT,
         // Swipes once
         SWIPE,
         // Finds the given UI Element by Swiping and Click on it ( Throws an exception if
@@ -91,6 +95,9 @@ public class JsonConfigConstants {
         // Finds the given UI Element by Swiping and Click on it if found ( i.e. No Exception
         // even if UI Element is missing )
         SWIPE_TO_FIND_AND_CLICK_IF_EXIST,
+        // Confirm that the given value is what's expected, and fail the test by throwing an
+        // exception if it's not
+        VALIDATE_VALUE,
         // Wait For Given Time in milliseconds
         WAIT_MS;
     }
@@ -98,6 +105,7 @@ public class JsonConfigConstants {
     // Workflow Task Config
     public static final String CONFIG_TEXT = "TEXT";
     public static final String CONFIG_UI_ELEMENT = "UI_ELEMENT";
+    public static final String CONFIG_UI_ELEMENT_REFERENCE = "UI_ELEMENT_REFERENCE";
 
     // Scroll Config Constants
     // Supported Properties

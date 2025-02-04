@@ -2364,6 +2364,66 @@
         }
       }
     ],
+    "OPEN_DIALER_WORKFLOW": [
+      {
+        "NAME": "Go to Home",
+        "TYPE": "PRESS",
+        "CONFIG": {
+          "TEXT": "HOME"
+        }
+      },
+      {
+        "NAME": "Wait 1 second",
+        "TYPE": "WAIT_MS",
+        "CONFIG": {
+          "TEXT": "1000"
+        }
+      },
+      {
+        "NAME": "Open dialer by activity",
+        "TYPE": "COMMAND",
+        "CONFIG": {
+          "TEXT": "am start -n com.android.car.dialer/.ui.TelecomActivity"
+        }
+      },
+      {
+        "NAME": "Wait 1 second",
+        "TYPE": "WAIT_MS",
+        "CONFIG": {
+          "TEXT": "1000"
+        }
+      }
+    ],
+    "SEARCH_CONTACTS_WORKFLOW": [
+      {
+        "NAME": "Open search",
+        "TYPE": "CLICK",
+        "CONFIG": {
+          "UI_ELEMENT_REFERENCE": "SEARCH_CONTACT"
+        }
+      },
+      {
+        "NAME": "Type contact name",
+        "TYPE": "SET_TEXT",
+        "CONFIG": {
+          "UI_ELEMENT_REFERENCE": "CONTACT_SEARCH_BAR"
+        },
+        "SET_TEXT_CONFIG": {
+          "COMMAND_LINE_KEY": "search-contact-name"
+        }
+      },
+      {
+        "NAME": "Check for searched contact",
+        "TYPE": "VALIDATE_VALUE",
+        "CONFIG": {
+          "UI_ELEMENT_REFERENCE": "CONTACT_SEARCH_RESULT_NAME"
+        },
+        "VALIDATION_CONFIG": {
+          "PROPERTY": "TEXT",
+          "EXPECTED_COMMAND_LINE_KEY": "search-contact-name"
+        }
+      }
+    ],
     "OPEN_LOCATION_SETTINGS_WORKFLOW": [
       {
         "NAME": "Go to Home",

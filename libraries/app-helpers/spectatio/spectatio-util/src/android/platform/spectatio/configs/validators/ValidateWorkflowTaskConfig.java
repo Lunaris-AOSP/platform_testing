@@ -40,7 +40,10 @@ import java.util.stream.Collectors;
  */
 public class ValidateWorkflowTaskConfig implements JsonDeserializer<WorkflowTaskConfig> {
     private Set<String> mSupportedProperties =
-            Set.of(JsonConfigConstants.CONFIG_TEXT, JsonConfigConstants.CONFIG_UI_ELEMENT);
+            Set.of(
+                    JsonConfigConstants.CONFIG_TEXT,
+                    JsonConfigConstants.CONFIG_UI_ELEMENT,
+                    JsonConfigConstants.CONFIG_UI_ELEMENT_REFERENCE);
 
     @Override
     public WorkflowTaskConfig deserialize(
@@ -56,13 +59,17 @@ public class ValidateWorkflowTaskConfig implements JsonDeserializer<WorkflowTask
                 validateAndGetUiElementValue(
                         JsonConfigConstants.CONFIG_UI_ELEMENT, jsonObject, context);
 
-        // One of the configurations ( TEXT or UI_ELEMENT ) must be present and must be valid
-        if (textValue == null && uiElementValue == null) {
+        String uiElementReferenceValue =
+                validateAndGetTextValue(
+                        JsonConfigConstants.CONFIG_UI_ELEMENT_REFERENCE, jsonObject);
+
+        // One of the configuration types must be present and must be valid
+        if (textValue == null && uiElementValue == null && uiElementReferenceValue == null) {
             throw new RuntimeException(
                     String.format("Workflow Task Config %s is invalid.", jsonObject));
         }
 
-        return new WorkflowTaskConfig(textValue, uiElementValue);
+        return new WorkflowTaskConfig(textValue, uiElementValue, uiElementReferenceValue);
     }
 
     private String validateAndGetTextValue(String key, JsonObject jsonObject) {

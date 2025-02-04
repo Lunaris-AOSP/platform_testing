@@ -258,7 +258,7 @@ public class SpectatioConfigUtil {
         Log.i(LOG_TAG, String.format("Executing Workflow %s", workflowName));
         List<WorkflowTask> tasks = mSpectatioConfig.getWorkflowFromConfig(workflowName);
         for (WorkflowTask task : tasks) {
-            task.executeTask(workflowName, spectatioUiUtil);
+            task.executeTask(workflowName, spectatioUiUtil, mSpectatioConfig);
         }
         Log.i(LOG_TAG, String.format("Done Executing Workflow %s", workflowName));
     }

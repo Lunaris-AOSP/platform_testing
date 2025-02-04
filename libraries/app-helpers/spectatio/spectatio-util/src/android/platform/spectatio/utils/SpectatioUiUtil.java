@@ -22,10 +22,10 @@ import android.graphics.Rect;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.UserHandle;
+import android.platform.spectatio.constants.JsonConfigConstants;
 import android.platform.spectatio.exceptions.MissingUiElementException;
 import android.util.Log;
 import android.view.KeyEvent;
-import com.google.escapevelocity.Template;
 
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
@@ -35,11 +35,11 @@ import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
 import com.google.common.base.Strings;
+import com.google.escapevelocity.Template;
 
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class SpectatioUiUtil {
     private static final String LOG_TAG = SpectatioUiUtil.class.getSimpleName();
@@ -1199,6 +1200,59 @@ public class SpectatioUiUtil {
 
     public boolean isValidUiObject(UiObject2 uiObject) {
         return uiObject != null;
+    }
+
+    private Set<String> mSupportedProperties =
+            Set.of(
+                    JsonConfigConstants.CLICKABLE,
+                    JsonConfigConstants.SCROLLABLE,
+                    JsonConfigConstants.TEXT,
+                    JsonConfigConstants.TEXT_CONTAINS,
+                    JsonConfigConstants.DESCRIPTION,
+                    JsonConfigConstants.DESCRIPTION_CONTAINS,
+                    JsonConfigConstants.CLASS,
+                    JsonConfigConstants.DISPLAY_ID,
+                    JsonConfigConstants.RESOURCE_ID);
+
+    /**
+     * Check a UI Object for a given property value.
+     *
+     * @param uiObject object to check
+     * @param property which property to check
+     * @param expected expected value of property
+     */
+    public boolean validateUiObjectProperty(UiObject2 uiObject, String property, String expected) {
+        if (!mSupportedProperties.contains(property)) {
+            throw new RuntimeException(
+                    String.format(
+                            "VALIDATE_VALUE property name %s in Spectatio JSON Config is invalid. "
+                                    + "Supported properties: [ RESOURCE_ID, TEXT, TEXT_CONTAINS, "
+                                    + "DESCRIPTION, DESCRIPTION_CONTAINS, CLASS, CLICKABLE, "
+                                    + "SCROLLABLE, DISPLAY_ID ]",
+                            property));
+        }
+        switch (property) {
+            case JsonConfigConstants.CLICKABLE:
+                return Boolean.toString(uiObject.isClickable()).equalsIgnoreCase(expected);
+            case JsonConfigConstants.SCROLLABLE:
+                return Boolean.toString(uiObject.isScrollable()).equalsIgnoreCase(expected);
+            case JsonConfigConstants.TEXT:
+                return uiObject.getText().equalsIgnoreCase(expected);
+            case JsonConfigConstants.TEXT_CONTAINS:
+                return uiObject.getText().contains(expected);
+            case JsonConfigConstants.DESCRIPTION:
+                return uiObject.getContentDescription().equalsIgnoreCase(expected);
+            case JsonConfigConstants.DESCRIPTION_CONTAINS:
+                return uiObject.getContentDescription().contains(expected);
+            case JsonConfigConstants.CLASS:
+                return uiObject.getClassName().equalsIgnoreCase(expected);
+            case JsonConfigConstants.DISPLAY_ID:
+                return Integer.toString(uiObject.getDisplayId()).equals(expected);
+            case JsonConfigConstants.RESOURCE_ID:
+                return uiObject.getResourceName().equals(expected);
+            default:
+                return false;
+        }
     }
 
     private void validateUiObjectAndThrowIllegalArgumentException(

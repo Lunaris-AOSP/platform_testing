@@ -18,6 +18,7 @@ import sys
 # from absl import flags
 from mobly import test_runner
 
+import logging
 
 """
 Get Test Args
@@ -37,7 +38,7 @@ Returns: Dictionary with key-value pair
     k2: v2
   }
 """
-def get_test_args():
+def get_test_args(shell_escape=False):
     parser = argparse.ArgumentParser(description='Parse Test Args.')
     group = parser.add_mutually_exclusive_group(required=False)
     group.add_argument('--test_args',
@@ -56,6 +57,10 @@ def get_test_args():
         for test_arg in test_args
     ]
     test_args = {test_arg.split("=")[0]: test_arg.split("=")[1] for test_arg in test_args_list}
+    if shell_escape:
+        def escape(s):
+            return "'" + s.replace("'", "\\'") + "'"
+        test_args = {escape(k): escape(v) for k, v in test_args.items()}
     return test_args
 
 """Pass test arguments after '--' to the test runner. Needed for Mobly Test Runner.
