@@ -93,6 +93,7 @@ object BetterSwipe {
      * @param [interpolator] to use (fling or scroll, usually.
      * @param [swipeFn] lambda on Swipe to send from()/to(), pause(), before release() is called.
      */
+    @JvmOverloads
     @JvmStatic
     fun swipe(
         start: PointF,
@@ -113,6 +114,7 @@ object BetterSwipe {
     }
 
     /** Variant which takes integer points. */
+    @JvmOverloads
     @JvmStatic
     fun swipe(
         start: Point,
@@ -151,6 +153,7 @@ object BetterSwipe {
     }
 
     /** Variant which takes an integer point. */
+    @JvmOverloads
     @JvmStatic
     fun swipe(start: Point, swipeFn: (Swipe.() -> Unit) = {}) {
         swipe(PointF(start.x.toFloat(), start.y.toFloat()), swipeFn)

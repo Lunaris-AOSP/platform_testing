@@ -1,0 +1,161 @@
+package {
+    default_team: "trendy_team_aaos_framework",
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+python_test_host {
+    name: "FlashTest",
+    main: "flash.py",
+    srcs: [
+        "flash.py",
+        "devices/*.py",
+    ],
+    libs: [
+        "mobly",
+        "utilities",
+    ],
+    test_suites: ["catbox"],
+    test_options: {
+        unit_test: false,
+    },
+    data: [
+        "device.yaml",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}
+
+python_test_host {
+    name: "RebootTest",
+    main: "reboot.py",
+    srcs: ["reboot.py"],
+    libs: [
+        "mobly",
+        "utilities",
+    ],
+    test_suites: ["catbox"],
+    test_options: {
+        unit_test: false,
+    },
+    data: [
+        "device.yaml",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}
+
+python_test_host {
+    name: "FastbootWipeTest",
+    main: "fastboot_wipe.py",
+    srcs: ["fastboot_wipe.py"],
+    libs: [
+        "mobly",
+        "utilities",
+    ],
+    test_suites: ["catbox"],
+    test_options: {
+        unit_test: false,
+    },
+    data: [
+        "device.yaml",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}
+
+python_test_host {
+    name: "WifiTest",
+    main: "wifi.py",
+    srcs: ["wifi.py"],
+    libs: [
+        "mobly",
+        "utilities",
+    ],
+    test_suites: ["catbox"],
+    test_options: {
+        unit_test: false,
+    },
+    data: [
+        "device.yaml",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}
+
+python_test_host {
+    name: "BluetoothTest",
+    main: "bluetooth.py",
+    srcs: ["bluetooth.py"],
+    libs: [
+        "mobly",
+        "utilities",
+    ],
+    test_suites: ["catbox"],
+    test_options: {
+        unit_test: false,
+    },
+    data: [
+        "device.yaml",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}
+
+python_test_host {
+    name: "LocationTest",
+    main: "location.py",
+    srcs: ["location.py"],
+    libs: [
+        "mobly",
+        "utilities",
+    ],
+    test_suites: ["catbox"],
+    test_options: {
+        unit_test: false,
+    },
+    data: [
+        "device.yaml",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}
+
+python_test_host {
+    name: "VhalTest",
+    main: "vhal.py",
+    srcs: ["vhal.py"],
+    libs: [
+        "mobly",
+        "utilities",
+    ],
+    test_suites: ["catbox"],
+    test_options: {
+        unit_test: false,
+    },
+    data: [
+        "device.yaml",
+    ],
+    version: {
+        py3: {
+            embedded_launcher: true,
+        },
+    },
+}

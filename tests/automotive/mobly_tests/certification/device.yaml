@@ -1,0 +1,16 @@
+TestBeds:
+  # A test bed where adb will find Android devices.
+  - Name: SampleTestBed
+    Controllers:
+        AndroidDevice: '*'
+    TestParams:
+        device: seahawk
+        serial: serial_number
+        image_dir: /usr/local/google/home/zhaomingyin/seahakw
+        wipe: True
+        hw_variant: 2s
+        b: False
+        diag: False
+        preserve_keys: False
+        num_reboots: 2
+        total_flashes: 2
