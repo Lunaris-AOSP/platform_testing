@@ -39,6 +39,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
@@ -51,8 +52,6 @@ public class CarPropertyManagerBenchmarkTest {
     private static final String TAG = CarPropertyManagerBenchmarkTest.class.getSimpleName();
     private static final int NUM_TASKS = 30;
     private static final int NUM_RUNS = 30;
-    private static final int MIN_TEMP = 16;
-    private static final int MAX_TEMP = 25;
     private CarPropertyManager mCarPropertyManager;
     private Context mContext;
     @Rule public TestLogData logs = new TestLogData();
@@ -106,6 +105,17 @@ public class CarPropertyManagerBenchmarkTest {
                 mCarPropertyManager.getCarPropertyConfig(HVAC_TEMPERATURE_SET);
         assumeTrue("Cannot set hvacTemp", hvacTempSetConfig != null);
         int areaId = hvacTempSetConfig.getAreaIdConfigs().get(0).getAreaId();
+        List<Integer> configArray = hvacTempSetConfig.getConfigArray();
+        Float minTemp;
+        Float maxTemp;
+        if (configArray.isEmpty()) {
+            minTemp = (Float) hvacTempSetConfig.getMinValue(areaId);
+            maxTemp = (Float) hvacTempSetConfig.getMaxValue(areaId);
+        } else {
+            minTemp = configArray.get(0) / 10f;
+            maxTemp = configArray.get(1) / 10f;
+        }
+
         for (int i = 0; i < NUM_TASKS; i++) {
             executorService.execute(
                     () -> {
@@ -113,16 +123,14 @@ public class CarPropertyManagerBenchmarkTest {
                             Random rd = new Random();
                             long timeBeforeRun = System.nanoTime();
                             try {
-                                mCarPropertyManager.setProperty(
-                                        Float.class,
+                                mCarPropertyManager.setFloatProperty(
                                         HVAC_TEMPERATURE_SET,
                                         /* areaId= */ areaId,
-                                        /* val= */ MIN_TEMP
-                                                + rd.nextFloat() * (MAX_TEMP - MIN_TEMP));
+                                        /* val= */ minTemp + rd.nextFloat() * (maxTemp - minTemp));
                             } catch (IllegalStateException e) {
                                 // This is expected because car service only allows up to 16 sync
                                 // get/set operations happening at the same time.
-                                Log.i(TAG, "getProperty threw an error", e);
+                                Log.i(TAG, "setProperty threw an error", e);
                             }
                             concurrentLinkedQueue.add((System.nanoTime() - timeBeforeRun));
                         }
