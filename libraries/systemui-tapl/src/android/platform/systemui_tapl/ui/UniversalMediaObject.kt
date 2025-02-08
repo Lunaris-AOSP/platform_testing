@@ -30,7 +30,7 @@ import com.google.common.truth.Truth.assertWithMessage
 /**
  * Represents the universal media object(UMO) displayed in the [NotificationShade]. UMO is not the
  * same as a media player. It contains a scrollable view called the Carousel, which can contain
- * multiple media players and recent media cards.
+ * multiple media players.
  */
 class UniversalMediaObject internal constructor() {
 
@@ -62,8 +62,4 @@ class UniversalMediaObject internal constructor() {
     companion object {
         val MEDIA_CAROUSEL_SCROLLER: BySelector = sysuiResSelector("media_carousel_scroller")
     }
-
-    /** Get the recommend media card on the UMO, or fail if it's not visible */
-    val recentMediaCard: RecentMediaCard
-        get() = RecentMediaCard()
 }
