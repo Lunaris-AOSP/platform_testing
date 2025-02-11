@@ -81,6 +81,10 @@ class CallUtils:
         """Assumes the device summary page is open."""
         return self.device.mbs.getDeviceSummary()
 
+    def is_phone_profile_enabled(self):
+        """Returns if phone profile is enabled on Bluetooth Summary Screen."""
+        return self.device.mbs.isPhoneProfileEnabled()
+
     def import_contacts_from_vcf_file(self, device_target):
         """Importing contacts from VCF file"""
         logging.info("Importing contacts from VCF file to device Contacts")
@@ -103,6 +107,11 @@ class CallUtils:
         """Open contacts"""
         logging.info("Opening contacts")
         self.device.mbs.openContacts()
+
+    def open_favorites(self):
+        """Open favorites"""
+        logging.info("Opening favorites")
+        self.device.mbs.openFavorites()
 
     def open_dialpad(self):
         """Open the dial pad from the dialer main screen"""
